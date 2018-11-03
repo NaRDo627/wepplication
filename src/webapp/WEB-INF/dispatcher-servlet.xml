@@ -7,11 +7,12 @@
 
 
     <mvc:annotation-driven /> <!-- Annotation 활성화 -->
-    <context:component-scan base-package="MVC.Controller" /> <!-- Component 패키지 지정 -->
+    <context:component-scan base-package="MVC" /> <!-- Component 패키지 지정 -->
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
 
 </beans>
