@@ -7,10 +7,10 @@
 
 
     <mvc:annotation-driven /> <!-- Annotation 활성화 -->
-    <context:component-scan base-package="com.wepplication.MVC, com.wepplication.RESTful" use-default-filters="false"> <!-- Component 패키지 지정 -->
-        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
-        <context:include-filter expression="org.springframework.stereotype.Service" type="annotation"/>
-        <context:include-filter expression="org.springframework.stereotype.Repository" type="annotation"/>
+    <context:component-scan base-package="com.wepplication.MVC"> <!-- Component 패키지 지정 -->
+        <!--<context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>-->
+        <!--<context:include-filter expression="org.springframework.stereotype.Service" type="annotation"/>-->
+        <!--<context:include-filter expression="org.springframework.stereotype.Repository" type="annotation"/>-->
     </context:component-scan>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
