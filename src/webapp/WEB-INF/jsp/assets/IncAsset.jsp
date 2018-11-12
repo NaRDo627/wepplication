@@ -13,7 +13,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%--<!-- CSS -->--%>
-<%--<link rel="stylesheet" href="/resources/css/common.css" media="all" />--%>
+<link rel="stylesheet" href="/resources/vendor/wepplication/wepplication.css" media="all" />
 <%--<link rel="stylesheet" href="/resources/bootstrap/css/bootstrap.min.css" media="all" />--%>
 
 <!-- Bootstrap Core CSS -->

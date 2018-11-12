@@ -30,6 +30,71 @@
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-10 col-xs-9">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <br>
+                            </div>
+                            <div class="panel-body" style="height:500px;">
+                                <div class="centered-outer">
+                                    <div class="centered-inner">
+                                        <div class="centered">
+                                            <i class="fa fa-film fa-5x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <%--<p class="text-center"></p>--%>
+                                <br>
+                            </div>
+                            <div class="panel-footer">
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-xs-3">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <p class="text-center"><strong>메뉴</strong></p>
+                                    </div>
+                                    <div class="panel-body" style="height:500px;">
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-2 col-xs-3">
+                                <div class="panel panel-default">
+                                    <div class="panel-body" style="height:150px;">
+                                        <strong><i class="fa fa-play-circle-o fa-3x"></i></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-10 col-xs-9">
+                                <div class="panel panel-default">
+                                    <div class="row">
+                                        <div class="panel-body" style="height:75px;">
+                                            <div class="col-xs-12">
+                                                <strong><i class="fa fa-video-camera fa-3x"></i></strong>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body" style="height:75px;">
+                                            <div class="col-xs-12">
+                                                <strong><i class="fa fa-music fa-3x"></i></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.container-fluid -->
         </div>

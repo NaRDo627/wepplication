@@ -30,6 +30,102 @@
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-10 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-6" style="border-right: 1px solid lightgray; text-align: left;">
+                                        <div>이름</div>
+                                    </div>
+                                    <div class="col-xs-3" style="border-right: 1px solid lightgray; text-align: center;">
+                                        <div>최종 수정 날짜</div>
+                                    </div>
+                                    <div class="col-xs-3" style="text-align: center;">
+                                        <div>크기</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-6" style="border-right: 1px solid lightgray; text-align: left;">
+                                        <p>파일 1</p>
+                                    </div>
+                                    <div class="col-xs-3" style="border-right: 1px solid lightgray; text-align: center;">
+                                        <p>2018-11-03</p>
+                                    </div>
+                                    <div class="col-xs-3" style="text-align: center;">
+                                        <p>32KB</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6" style="border-right: 1px solid lightgray; text-align: left;">
+                                        <p>파일 2</p>
+                                    </div>
+                                    <div class="col-xs-3" style="border-right: 1px solid lightgray; text-align: center;">
+                                        <p>2018-11-03</p>
+                                    </div>
+                                    <div class="col-xs-3" style="text-align: center;">
+                                        <p>32KB</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6" style="border-right: 1px solid lightgray; text-align: left;">
+                                        <p>파일 3</p>
+                                    </div>
+                                    <div class="col-xs-3" style="border-right: 1px solid lightgray; text-align: center;">
+                                        <p>2018-11-03</p>
+                                    </div>
+                                    <div class="col-xs-3" style="text-align: center;">
+                                        <p>32KB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 visible-lg">
+                        <div class="panel panel-info">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p><strong>세부정보</strong></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <i class="fa fa-folder fa-5x"></i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>유형</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>이름</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>크기</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>최종</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>수정날짜</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
         </div>

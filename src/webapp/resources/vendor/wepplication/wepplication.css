@@ -1,0 +1,16 @@
+/* 웹플리케이션 사용자 지정 스타일 시트 */
+
+/* 체크박스 크기증가 */
+input[type=checkbox]
+{
+    -ms-transform: scale(1.5); /* IE */
+    -moz-transform: scale(1.5); /* FF */
+    -webkit-transform: scale(1.5); /* Safari and Chrome */
+    -o-transform: scale(1.5); /* Opera */
+    padding: 10px;
+}
+
+/* 수직-가운데 정렬 */
+.centered-outer{display:table;position:relative;height:100%;width:100%;}
+.centered-inner{display:table-cell;vertical-align:middle;text-align:center;}
+.centered{display:block;margin:0 auto;}

@@ -9,7 +9,7 @@
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
-            <li class="sidebar-search">
+            <%--<li class="sidebar-search">
                 <div class="input-group custom-search-form">
                     <input type="text" class="form-control" placeholder="Search...">
                     <span class="input-group-btn">
@@ -19,7 +19,19 @@
                             </span>
                 </div>
                 <!-- /input-group -->
-            </li>
+            </li>--%>
+                <li>
+                    <div style="height:60px;">
+                            <div class="centered-outer">
+                                <div class="centered-inner">
+                                    <div class="centered">
+                                        <a class="text-primary h4" href="/index" style="background-color:#f8f8f8;"><i class="fa fa-desktop fa-2x"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- /input-group -->
+                </li>
             <li>
                 <a href="#"><i class="fa fa-folder-open-o fa-fw"></i> 뷰어<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
@@ -45,16 +57,7 @@
                 <a href="/cloud/cloud"><i class="fa fa-cloud fa-fw"></i> 클라우드</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-lock fa-fw"></i> 암호화<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="/crypto/encrypt">암호화</a>
-                    </li>
-                    <li>
-                        <a href="/crypto/decrypt">복호화</a>
-                    </li>
-                </ul>
-                <!-- /.nav-second-level -->
+                <a href="/crypto/encrypt"><i class="fa fa-lock fa-fw"></i> 암호화 / 복호화</a>
             </li>
 
             <!-- Sample pages \|/ -->
