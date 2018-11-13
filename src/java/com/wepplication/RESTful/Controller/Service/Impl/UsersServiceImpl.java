@@ -3,7 +3,9 @@ package com.wepplication.RESTful.Controller.Service.Impl;
 import com.wepplication.RESTful.Controller.Service.UsersService;
 import com.wepplication.RESTful.Domain.Users;
 import com.wepplication.RESTful.Repository.UsersDAO;
+import com.wepplication.RESTful.Util.EncryptUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import javax.annotation.Resource;
 
@@ -15,5 +17,42 @@ public class UsersServiceImpl implements UsersService {
 
     public Users findUsersByUno(Integer uno) throws Exception {
         return usersDAO.findOne(uno);
+    }
+
+    // 가입
+    public Users saveUser(Users users) {
+        return usersDAO.saveAndFlush(users);
+    }
+
+    // 인증 & 개인정보 조회
+    public Users authentication(String token) {
+// authorization으로부터 type과 credential을 분리
+        String[] split = token.split(" ");
+        String type = split[0];
+        String credential = split[1];
+
+        Users user = null;
+
+        if ("Basic".equalsIgnoreCase(type)) {
+            // credential을 디코딩하여 username과 password를 분리
+            String decoded = new String(Base64Utils.decodeFromString(credential));
+            String[] usernameAndPassword = decoded.split(":");
+
+            user = usersDAO.findByUserIdAndPassword(usernameAndPassword[0], EncryptUtil.encryptByMd5("whfwkrtlfjbb" + usernameAndPassword[1]));
+        }
+        return user;
+    }
+
+    // 비밀번호 변경
+    public Users updatePassword(String token, String password) {
+        Users user = this.authentication(token);
+        user.setPassword(password);
+        return usersDAO.saveAndFlush(user);
+    }
+
+    // 탈퇴
+    public void withdraw(String token) {
+        Users user = this.authentication(token);
+        usersDAO.delete(user);
     }
 }

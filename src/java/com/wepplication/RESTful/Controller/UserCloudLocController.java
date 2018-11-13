@@ -6,6 +6,7 @@ import com.wepplication.RESTful.Domain.UserCloudLoc;
 import com.wepplication.RESTful.Domain.Users;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ public class UserCloudLocController {
     @Resource(name = "userCloudLocService")
     private UserCloudLocService userCloudLocService;
 
-    @RequestMapping("/{lno}")
+    @RequestMapping(value = {"/{lno}"}, method = RequestMethod.GET)
     public UserCloudLoc userCloudLocGet(@PathVariable(value="lno") Integer lno) {
         System.out.println(lno);
         try{

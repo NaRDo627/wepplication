@@ -6,6 +6,7 @@ import com.wepplication.RESTful.Domain.CloudFile;
 import com.wepplication.RESTful.Domain.Users;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ public class CloudFileController {
     @Resource(name = "cloudFileService")
     private CloudFileService cloudFileService;
 
-    @RequestMapping("/{fno}")
+    @RequestMapping(value = {"/{fno}"}, method = RequestMethod.GET)
     public CloudFile cloudFileGet(@PathVariable(value="fno") Integer fno) {
         System.out.println(fno);
         try{

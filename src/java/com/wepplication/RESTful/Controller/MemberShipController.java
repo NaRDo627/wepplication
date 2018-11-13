@@ -6,6 +6,7 @@ import com.wepplication.RESTful.Domain.MemberShip;
 import com.wepplication.RESTful.Domain.Users;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ public class MemberShipController {
     @Resource(name = "memberShipService")
     private MemberShipService memberShipService;
 
-    @RequestMapping("/{mno}")
+    @RequestMapping(value = {"/{mno}"}, method = RequestMethod.GET)
     public MemberShip memberShipGet(@PathVariable(value="mno") Integer mno) {
         System.out.println(mno);
         try{

@@ -16,7 +16,7 @@ public class Users implements Serializable {
     private Integer uno;
 
     @Nationalized
-    @Column(name="user_id", columnDefinition = "NVARCHAR(50)")
+    @Column(name="user_id", columnDefinition = "NVARCHAR(50)", unique = true)
     private String userId;
 
     @Nationalized
