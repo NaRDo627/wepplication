@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wepplication_proto</groupId>
+    <groupId>com.wepplication</groupId>
     <artifactId>wepplication</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+<!--    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>-->
     <name>rest-webservice</name>
     <description>rest webservice project for Spring Boot</description>
 
@@ -22,7 +22,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <!--<start-class>com.wepplication.RESTful.RESTApplication</start-class>-->
     </properties>
+
+
 
     <dependencies>
         <!-- Spring -->
@@ -63,10 +66,10 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>1.11.1.RELEASE</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+        </dependency>-->
         <!-- Web -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -163,12 +166,29 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
+       <!-- <directory>target</directory>
+        <outputDirectory>target/classes</outputDirectory>
+        <finalName>${project.artifactId}-${project.version}</finalName>-->
+      <!--  <plugins>
+&lt;!&ndash;            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>&ndash;&gt;
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+           &lt;!&ndash;     <version>2.4</version>&ndash;&gt;
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.wepplication.RESTful.RESTApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
-        </plugins>
+        </plugins>-->
     </build>
 
     <repositories>
