@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <!--<start-class>com.wepplication.RESTful.RESTApplication</start-class>-->
+        <start-class>com.wepplication.RESTful.RESTApplication</start-class>
     </properties>
 
 
@@ -169,12 +169,12 @@
        <!-- <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
         <finalName>${project.artifactId}-${project.version}</finalName>-->
-      <!--  <plugins>
-&lt;!&ndash;            <plugin>
+        <plugins>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>&ndash;&gt;
-            <plugin>
+            </plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
            &lt;!&ndash;     <version>2.4</version>&ndash;&gt;
@@ -187,8 +187,8 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-        </plugins>-->
+            </plugin>-->
+        </plugins>
     </build>
 
     <repositories>
