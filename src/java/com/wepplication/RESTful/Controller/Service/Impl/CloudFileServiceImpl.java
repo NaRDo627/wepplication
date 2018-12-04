@@ -9,12 +9,17 @@ import com.wepplication.RESTful.Repository.UsersDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("cloudFileService")
 public class CloudFileServiceImpl implements CloudFileService {
     // DAO
     @Resource(name = "cloudFileDAO")
     CloudFileDAO cloudFileDAO;
+
+    public List<CloudFile> findCloudFileAll() throws Exception {
+        return cloudFileDAO.findAll();
+    }
 
     public CloudFile findCloudFileByfno(Integer fno) throws Exception {
         return cloudFileDAO.findOne(fno);

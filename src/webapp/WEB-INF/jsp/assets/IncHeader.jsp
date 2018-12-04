@@ -151,6 +151,7 @@
                 <!-- /.dropdown-tasks -->
             </li>
             <!-- /.dropdown -->--%>
+            <%--
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -203,28 +204,42 @@
                     <li class="divider"></li>
                     <li>
                         <a class="text-center" href="#">
-                            <strong>See All Alerts</strong>
+                            <strong>모든 알림 보기</strong>
                             <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="text-center" href="#">
+                            <strong>알림이 없습니다</strong>
                         </a>
                     </li>
                 </ul>
                 <!-- /.dropdown-alerts -->
             </li>
-            <!-- /.dropdown -->
+            <!-- /.dropdown -->--%>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i> 유저 프로필</a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> 설정</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="/login"><i class="fa fa-sign-in fa-fw"></i> 로그인</a>
-                    </li>
-                    <li><a href="/index"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
-                    </li>
+                    <c:choose>
+                        <c:when test="${sessionScope.users eq null}">
+                            <li><a href="/login"><i class="fa fa-sign-in fa-fw"></i> 로그인</a>
+                            </li>
+                            <li><a href="/member"><i class="fa fa-check-square fa-fw"></i> 회원가입</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="/profile"><i class="fa fa-user fa-fw"></i> 유저 프로필</a>
+                            </li>
+                            <li><a href="/setting"><i class="fa fa-gear fa-fw"></i> 설정</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
                 <!-- /.dropdown-user -->
             </li>

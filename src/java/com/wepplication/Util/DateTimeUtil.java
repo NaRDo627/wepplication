@@ -1,4 +1,4 @@
-package com.wepplication.RESTful.Util;
+package com.wepplication.Util;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;

@@ -28,10 +28,12 @@
                         <form role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                    <label for="id">아이디</label>
+                                    <input class="form-control" placeholder="ID" name="id" type="text" id="id" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <label for="password">비밀번호</label>
+                                    <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="">
                                 </div>
                                 <div class="checkbox">
                                     <label>
@@ -39,8 +41,8 @@
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="index.jsp" class="btn btn-lg btn-success btn-block">로그인</a>
-                                <a href="index.jsp" class="btn btn-lg btn-primary btn-block">회원가입</a>
+                                <a href="#" class="btn btn-lg btn-success btn-block" id="btn-submit">로그인</a>
+                                <a href="/member" class="btn btn-lg btn-primary btn-block">회원가입</a>
                             </fieldset>
                         </form>
                     </div>
@@ -50,7 +52,29 @@
     </div>
 
     <%@include file="assets/IncFooter.jsp"%>
+    <script>
+        $(document).ready(function () {
+            $("#btn-submit").click(function () {
+                var arg1 = {
+                    "userId": $("#id").val(),
+                    "password": $("#password").val()
+                };
 
+                $.post( "/login", arg1, function( data ) {
+                    if(data === "ok") {
+                        location.href = "/";
+                    }
+                    else if(data === "unauthorized") {
+                        alert("아이디나 비밀번호를 확인해주세요!");
+                    }
+                    else {
+                        alert("에러발생, 코드 : " + data);
+                    }
+                });
+
+            });
+        });
+    </script>
 </body>
 
 </html>

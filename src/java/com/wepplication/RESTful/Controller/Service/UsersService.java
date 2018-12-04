@@ -2,7 +2,10 @@ package com.wepplication.RESTful.Controller.Service;
 
 import com.wepplication.RESTful.Domain.Users;
 
+import java.util.List;
+
 public interface UsersService {
+    public List<Users> findUsersAll() throws Exception;
     public Users findUsersByUno(Integer uno) throws Exception;
 
     // 가입

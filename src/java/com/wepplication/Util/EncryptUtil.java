@@ -1,4 +1,4 @@
-package com.wepplication.RESTful.Util;
+package com.wepplication.Util;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;

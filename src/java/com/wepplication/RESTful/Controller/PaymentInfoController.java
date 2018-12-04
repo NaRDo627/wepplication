@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/payment_info")
@@ -18,9 +19,19 @@ public class PaymentInfoController {
     @Resource(name = "paymentInfoService")
     private PaymentInfoService paymentInfoService;
 
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
+    public List<PaymentInfo> paymentInfoGet() {
+        System.out.println("select payment_info *");
+        try{
+            return paymentInfoService.findPaymentInfoAll();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @RequestMapping(value = {"/{pno}"}, method = RequestMethod.GET)
     public PaymentInfo paymentInfoGet(@PathVariable(value="pno") Integer pno) {
-        System.out.println(pno);
+        System.out.println("select payment_info where pno=" + pno);
         try{
             return paymentInfoService.findPaymentInfoByPno(pno);
         } catch (Exception e) {

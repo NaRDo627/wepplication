@@ -9,6 +9,7 @@ import com.wepplication.RESTful.Repository.UsersDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("userMemberShipService")
 public class UserMemberShipServiceImpl implements UserMemberShipService {
@@ -16,7 +17,11 @@ public class UserMemberShipServiceImpl implements UserMemberShipService {
     @Resource(name = "userMemberShipDAO")
     UserMemberShipDAO userMemberShipDAO;
 
-    public UserMemberShip findMemberShipByUmno(Integer umno) throws Exception {
+    public List<UserMemberShip> findUserMemberShipAll() throws Exception {
+        return userMemberShipDAO.findAll();
+    }
+
+    public UserMemberShip findUserMemberShipByUmno(Integer umno) throws Exception {
         return userMemberShipDAO.findOne(umno);
     }
 }

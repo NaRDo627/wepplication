@@ -9,12 +9,17 @@ import com.wepplication.RESTful.Repository.UsersDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("memberShipService")
 public class MemberShipServiceImpl implements MemberShipService {
     // DAO
     @Resource(name = "memberShipDAO")
     MemberShipDAO memberShipDAO;
+
+    public List<MemberShip> findMemberShipAll() throws Exception {
+        return memberShipDAO.findAll();
+    }
 
     public MemberShip findMemberShipByMno(Integer mno) throws Exception {
         return memberShipDAO.findOne(mno);

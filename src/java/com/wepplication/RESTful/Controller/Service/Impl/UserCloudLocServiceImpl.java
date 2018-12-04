@@ -9,12 +9,17 @@ import com.wepplication.RESTful.Repository.UsersDAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("userCloudLocService")
 public class UserCloudLocServiceImpl implements UserCloudLocService {
     // DAO
     @Resource(name = "userCloudLocDAO")
     UserCloudLocDAO userCloudLocDAO;
+
+    public List<UserCloudLoc> findUserCloudLocAll() throws Exception {
+        return userCloudLocDAO.findAll();
+    }
 
     public UserCloudLoc findUserCloudLocByLno(Integer lno) throws Exception {
         return userCloudLocDAO.findOne(lno);

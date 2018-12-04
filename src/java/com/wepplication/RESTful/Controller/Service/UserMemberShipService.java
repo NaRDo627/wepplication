@@ -3,6 +3,9 @@ package com.wepplication.RESTful.Controller.Service;
 import com.wepplication.RESTful.Domain.UserMemberShip;
 import com.wepplication.RESTful.Domain.Users;
 
+import java.util.List;
+
 public interface UserMemberShipService {
-    UserMemberShip findMemberShipByUmno(Integer umno) throws Exception;
+    public List<UserMemberShip> findUserMemberShipAll() throws Exception;
+    public UserMemberShip findUserMemberShipByUmno(Integer umno) throws Exception;
 }

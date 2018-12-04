@@ -2,18 +2,24 @@ package com.wepplication.RESTful.Controller.Service.Impl;
 
 import com.wepplication.RESTful.Controller.Service.UsersService;
 import com.wepplication.RESTful.Domain.Users;
+import com.wepplication.RESTful.Exception.UnauthorizedException;
 import com.wepplication.RESTful.Repository.UsersDAO;
-import com.wepplication.RESTful.Util.EncryptUtil;
+import com.wepplication.Util.EncryptUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("usersService")
 public class UsersServiceImpl implements UsersService {
     // DAO
     @Resource(name = "usersDAO")
     UsersDAO usersDAO;
+
+    public List<Users> findUsersAll() throws Exception {
+        return usersDAO.findAll();
+    }
 
     public Users findUsersByUno(Integer uno) throws Exception {
         return usersDAO.findOne(uno);
@@ -40,6 +46,9 @@ public class UsersServiceImpl implements UsersService {
 
             user = usersDAO.findByUserIdAndPassword(usernameAndPassword[0], EncryptUtil.encryptByMd5("whfwkrtlfjbb" + usernameAndPassword[1]));
         }
+        if(user == null)
+            throw new UnauthorizedException("User Unexists");
+
         return user;
     }
 
