@@ -14,6 +14,11 @@
 
     <%@include file="../assets/IncAsset.jsp"%>
 
+    <!-- PaintWeb JS -->
+    <script type="text/javascript" src="/resources/js/paintweb/paintweb.js"></script>
+    <script type="text/javascript" src="/resources/js/paintweb/html2canvas.min.js"></script>
+    <script type="text/javascript" src="/resources/js/paintweb/es6-promise.min.js"></script>
+    <script type="text/javascript" src="/resources/js/paintweb/es6-promise.auto.min.js"></script>
 </head>
 
 <body style="width: 100%; height: 100%;">
@@ -30,29 +35,30 @@
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
+                <input type="file" id="uploadImageFile" onchange="uploadImageFileChange('')" style="display:none"/>
+                <img id="editableImage"/>
                 <div class="row">
-                    <div class="col-lg-8 col-xs-12">
+                    <div class="col-xs-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <br>
+                                <a href="javascript:fn_uploadImage('');" class="btn btn-primary">이미지 업로드</a>
+                                <a href="#" class="btn btn-primary" id="image_download" style="display: none;">이미지 다운로드</a>
                             </div>
-                            <div class="panel-body" style="height:400px;">
-                                <div class="centered-outer">
+                            <div class="panel-body" style="height:400px;" id="PaintWebTarget">
+                                <div class="centered-outer" id="load_image">
                                     <div class="centered-inner">
                                         <div class="centered">
                                             <i class="fa fa-image fa-5x"></i>
                                         </div>
                                     </div>
                                 </div>
-                                <br>
-                                <%--<p class="text-center"></p>--%>
-                                <br>
                             </div>
                             <div class="panel-footer">
                                 <br>
                             </div>
                         </div>
                     </div>
+                    <%--
                     <div class="col-lg-2 col-xs-12">
                         <div class="row">
                             <div class="col-lg-12">
@@ -118,6 +124,7 @@
                             </div>
                         </div>
                     </div>
+                    --%>
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -128,6 +135,60 @@
     <!-- /#wrapper -->
 
     <%@include file="../assets/IncFooter.jsp"%>
+<script>
+    var srcImg = null;
+    var srcExt = "";
+    var downloadUrl = "";
+    img1 = document.getElementById('editableImage');
+    srcImg = img1;
+    $(document).ready(function () {
+        $("#image_download").click(function () {
+            window.location.assign(downloadUrl);
+        })
+    });
+
+    function initEditor() {
+        var target = document.getElementById('PaintWebTarget'),
+            pw = new PaintWeb();
+        pw.config.guiPlaceholder = target;
+        pw.config.configFile = 'config-example.json';
+        pw.config.imageLoad = img1;
+
+        pw.config.imageSaveURL = "/editor/saveImage"; // imageSave == image upload
+        pw.config.imageDownloadURL = "/editor/fileDownload";
+        pw.init();
+    }
+
+    function fn_uploadImage() {
+        $("#uploadImageFile").click();
+    }
+
+    function uploadImageFileChange() {
+        var formData = new FormData();
+        formData.append('upfile', $('#uploadImageFile')[0].files[0]);
+        var fileName = $('#uploadImageFile')[0].files[0].name;
+        srcExt = fileName.substr(fileName.lastIndexOf('.')).toLowerCase();
+
+        $.ajax({
+            url: '/editor/fileUpload',
+            data: formData,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#editableImage').attr("src", "/editor/fileDownload?filename=" + data);
+                $("#PaintWebTarget").empty();
+                $("#image_download").css("display", "");
+                downloadUrl = "/editor/imageDownload?filename=" + data + srcExt;
+               // $("#image_download").attr("href", "/editor/imageDownload?filename=" + data + srcExt);
+                initEditor();
+                img1.style.display = 'none';
+            },error:function(request,status,error){
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        })
+    }
+</script>
 </body>
 
 </html>

@@ -39,7 +39,6 @@
 <![endif]-->
 
 <script>
-    var REST_URL = "http://127.0.0.1:8081";
-    //var REST_URL = "localhost:8081";
+    var REST_URL = (location.host.indexOf("azure.com") === -1)? "http://127.0.0.1:8081" : "http://wepplication.koreacentral.cloudapp.azure.com:8081";
 </script>
 <!-- 전역변수 설정 -->
