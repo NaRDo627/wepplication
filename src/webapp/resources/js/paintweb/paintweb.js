@@ -655,15 +655,17 @@ function PaintWeb (win, doc) {
       return;
     }
 
-    if ((xhr.status !== 304 && xhr.status !== 200) || !xhr.responseText) {
-      _self.initError(lang.failedConfigLoad);
-      return;
-    }
+    setTimeout(function(){
+        if ((xhr.status !== 304 && xhr.status !== 200) || !xhr.responseText) {
+            _self.initError(lang.failedConfigLoad);
+            return;
+        }
 
-    var config = pwlib.jsonParse(xhr.responseText);
-    pwlib.extend(_self.config, config);
+        var config = pwlib.jsonParse(xhr.responseText);
+        pwlib.extend(_self.config, config);
 
-    _self.langLoad();
+        _self.langLoad();
+    }, 1500);
   };
 
   /**
