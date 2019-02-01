@@ -35,12 +35,12 @@
             <li>
                 <a href="#"><i class="fa fa-folder-open-o fa-fw"></i> 뷰어<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
-                    <li>
+                    <%--<li>
                         <a href="/viewer/image_viewer">이미지</a>
                     </li>
                     <li>
                         <a href="/viewer/video_viewer">동영상</a>
-                    </li>
+                    </li>--%>
                     <li>
                         <a href="/viewer/office_viewer">넷피스</a>
                     </li>
