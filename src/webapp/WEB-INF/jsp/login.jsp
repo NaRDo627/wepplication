@@ -73,6 +73,9 @@
                 });
 
             });
+
+            $("#id").keyup(function(e){if(e.keyCode == 13) $("#btn-submit").trigger("click"); });
+            $("#password").keyup(function(e){if(e.keyCode == 13) $("#btn-submit").trigger("click"); });
         });
     </script>
 </body>
