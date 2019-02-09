@@ -14,14 +14,34 @@
 
     <%@include file="../assets/IncAsset.jsp"%>
 
-    <!-- PaintWeb JS -->
+    <%--<!-- PaintWeb JS -->
     <script type="text/javascript" src="/resources/js/paintweb/paintweb.js"></script>
     <script type="text/javascript" src="/resources/js/paintweb/html2canvas.min.js"></script>
     <script type="text/javascript" src="/resources/js/paintweb/es6-promise.min.js"></script>
-    <script type="text/javascript" src="/resources/js/paintweb/es6-promise.auto.min.js"></script>
+    <script type="text/javascript" src="/resources/js/paintweb/es6-promise.auto.min.js"></script>--%>
+    <script src="/resources/js/bundle.js"></script>
+
+    <style>
+        .sidebar_left .item{
+            background-image: url(/resources/images/sprites.png);
+        }
+        .block.details .row {
+            margin-left:0px;
+        }
+        .sidebar_right .block.layers {
+            overflow-y: visible;
+        }
+        .main_wrapper{
+            height: 125vh;
+        }
+        .attributes{
+            width: 100%;
+        }
+
+    </style>
 </head>
 
-<body style="width: 100%; height: 100%;">
+<body style="width: 100%; height: 100%;overflow:scroll;">
     <div id="wrapper">
         <%@include file="../assets/IncHeader.jsp"%>
 
@@ -35,16 +55,85 @@
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
-                <input type="file" id="uploadImageFile" onchange="uploadImageFileChange('')" style="display:none"/>
-                <img id="editableImage"/>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="panel panel-default">
+                            <%--
                             <div class="panel-heading">
+                                <br>
+                                &lt;%&ndash;
                                 <a href="javascript:fn_uploadImage('');" class="btn btn-primary">이미지 업로드</a>
                                 <a href="#" class="btn btn-primary" id="image_download" style="display: none;">이미지 다운로드</a>
+                                &ndash;%&gt;
                             </div>
-                            <div class="panel-body" style="height:400px;" id="PaintWebTarget">
+                            --%>
+                            <div class="panel-body" style="height:1000px; background: var(--background); padding: 0;">
+                                <div style="border: 1px solid whitesmoke;">
+                                    <div class="ddsmoothmenu" id="main_menu" style="z-index: -100;"></div>
+                                    <div class="wrapper" style="height:1000px;">
+
+                                        <div class="submenu">
+                                            <%--<a class="logo" href="">miniPaint</a>--%>
+                                            <div class="block attributes" id="action_attributes"></div>
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        <div class="sidebar_left" id="tools_container"></div>
+
+                                        <div class="main_wrapper" id="main_wrapper" >
+                                            <div class="canvas_wrapper" id="canvas_wrapper">
+                                                <div id="mouse"></div>
+                                                <div class="transparent-grid" id="canvas_minipaint_background"></div>
+                                                <canvas id="canvas_minipaint">
+                                                    <div class="trn error">
+                                                        Your browser does not support canvas or JavaScript is not enabled.
+                                                    </div>
+                                                </canvas>
+                                            </div>
+                                        </div>
+
+                                        <div class="sidebar_right">
+                                            <div class="preview block">
+                                                <h2 class="trn toggle" data-target="toggle_preview">Preview</h2>
+                                                <div id="toggle_preview"></div>
+                                            </div>
+
+                                            <div class="colors block">
+                                                <h2 class="trn toggle" data-target="toggle_colors">Colors</h2>
+                                                <input
+                                                        title="Click to change color"
+                                                        type="color"
+                                                        class="color_area"
+                                                        id="main_color"
+                                                        value="#0000ff"	/>
+                                                <div class="content" id="toggle_colors"></div>
+                                            </div>
+
+                                            <div class="block" id="info_base">
+                                                <h2 class="trn toggle toggle-full" data-target="toggle_info">Information</h2>
+                                                <div class="content" id="toggle_info"></div>
+                                            </div>
+
+                                            <div class="details block" id="details_base">
+                                                <h2 class="trn toggle toggle-full" data-target="toggle_details">Layer details</h2>
+                                                <div class="content" id="toggle_details"></div>
+                                            </div>
+
+                                            <div class="layers block">
+                                                <h2 class="trn">Layers</h2>
+                                                <div class="content" id="layers_base"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mobile_menu">
+                                        <button class="right_mobile_menu" id="mobile_menu_button" type="button"></button>
+                                    </div>
+
+                                    <div class="hidden" id="tmp"></div>
+                                    <div id="popup"></div>
+                                </div>
+
+                            <%--
                                 <div class="centered-outer" id="load_image">
                                     <div class="centered-inner">
                                         <div class="centered">
@@ -52,9 +141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="panel-footer">
-                                <br>
+                                --%>
                             </div>
                         </div>
                     </div>
@@ -136,6 +223,8 @@
 
     <%@include file="../assets/IncFooter.jsp"%>
 <script>
+
+    /*
     var srcImg = null;
     var srcExt = "";
     var downloadUrl = "";
@@ -188,6 +277,7 @@
             }
         })
     }
+    */
 </script>
 </body>
 
