@@ -1,4 +1,4 @@
-package com.wepplication.RESTful.Utils;
+package com.wepplication.Util;
 
 import com.jcraft.jsch.*;
 import org.apache.commons.io.IOUtils;
@@ -16,6 +16,15 @@ public class SSHClientUtil {
     private Integer port;
     private Boolean isDebugMode = false;
     private String lastError = "";
+    private Session curSession = null;
+
+    public Session getCurSession() {
+        return curSession;
+    }
+
+    public void setCurSession(Session curSession) {
+        this.curSession = curSession;
+    }
 
     public void enableDebug() {
         isDebugMode = true;
@@ -90,6 +99,31 @@ public class SSHClientUtil {
     }
 
     /* public */
+    public Boolean ConnectSession() {
+        try {
+            curSession = getSession();
+            curSession.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean DisconnectSession() {
+        try {
+            if(curSession == null)
+                return true;
+            curSession.disconnect();
+            curSession = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            lastError = e.toString();
+            return false;
+        }
+        return true;
+    }
+
     public String exec(String command) {
         return exec(new String[] {command}).get(0);
     }
@@ -99,13 +133,16 @@ public class SSHClientUtil {
     }
 
     public List<String> exec(String[] commands) {
+        if(curSession == null)
+            return null;
+
         List<String> ret = new ArrayList<String>();
         try {
-            Session session = getSession();
-            session.connect();
+            /*Session session = getSession();
+            session.connect();*/
 
             for(String command:commands) {
-                ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+                ChannelExec channelExec = (ChannelExec) curSession.openChannel("exec");
                 channelExec.setPty(true);
                 if(isDebugMode) System.out.println("command : " + command);
                 channelExec.setCommand(command);
