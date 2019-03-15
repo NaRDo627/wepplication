@@ -118,8 +118,14 @@ public final class APIController implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        System.out.println("Session Destroyed");
-        sshClientMap.remove((String)(se.getSession().getAttribute("token")));
+        if(se.getSession().getAttribute("token") == null)
+            return;
+
+        String token = (String)se.getSession().getAttribute("token");
+        SSHClientUtil sshClientUtil = sshClientMap.get(token);
+        if(sshClientUtil != null)
+            sshClientUtil.DisconnectSession();
+        sshClientMap.remove(token);
     }
 }
 

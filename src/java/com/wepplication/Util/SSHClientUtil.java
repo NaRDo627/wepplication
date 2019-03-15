@@ -102,6 +102,9 @@ public class SSHClientUtil {
     public Boolean ConnectSession() {
         try {
             curSession = getSession();
+            if(curSession.isConnected())
+                return true;
+
             curSession.connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,6 +117,9 @@ public class SSHClientUtil {
         try {
             if(curSession == null)
                 return true;
+            if(!curSession.isConnected())
+                return true;
+
             curSession.disconnect();
             curSession = null;
         } catch (Exception e) {
