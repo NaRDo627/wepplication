@@ -1,16 +1,13 @@
 package com.wepplication.RESTful.Form.API.SSH;
 
-import com.wepplication.RESTful.Domain.Users;
-import org.hibernate.annotations.Nationalized;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
-
+import org.json.simple.JSONObject;
 
 public class SSHResponseForm {
     private String status;
-    private String Response;
+    private String response;
+    private JSONObject result;
+    private Boolean error=false;
 
     public String getStatus() {
         return status;
@@ -21,10 +18,26 @@ public class SSHResponseForm {
     }
 
     public String getResponse() {
-        return Response;
+        return response;
     }
 
     public void setResponse(String response) {
-        Response = response;
+        this.response = response;
+    }
+
+    public Boolean getError() {
+        return error;
+    }
+
+    public void setError(Boolean error) {
+        this.error = error;
+    }
+
+    public JSONObject getResult() {
+        return result;
+    }
+
+    public void setResult(JSONObject result) {
+        this.result = result;
     }
 }

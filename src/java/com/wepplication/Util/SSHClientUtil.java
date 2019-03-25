@@ -6,6 +6,7 @@ import org.hibernate.tool.hbm2x.StringUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SSHClientUtil {
@@ -17,6 +18,15 @@ public class SSHClientUtil {
     private Boolean isDebugMode = false;
     private String lastError = "";
     private Session curSession = null;
+    private String lastDirectory;
+
+    public String getLastDirectory() {
+        return lastDirectory;
+    }
+
+    public void setLastDirectory(String lastDirectory) {
+        this.lastDirectory = lastDirectory;
+    }
 
     public Session getCurSession() {
         return curSession;
@@ -131,7 +141,11 @@ public class SSHClientUtil {
     }
 
     public String exec(String command) {
-        return exec(new String[] {command}).get(0);
+        List<String> ret = exec(new String[] {command});
+        if(ret.size() == 1)
+            return ret.get(0);
+
+        return null;
     }
 
     public List<String> exec(List<String> commands) {
@@ -146,15 +160,28 @@ public class SSHClientUtil {
         try {
             /*Session session = getSession();
             session.connect();*/
+            // 현재 경로를 알기 위해 pwd 명령어 추가
+            ArrayList<String> commandsList = new ArrayList<String>(Arrays.asList(commands));
 
-            for(String command:commands) {
+            //for(String command:commands) {
+            for(int i = 0; i < commandsList.size(); i++){
+                String command = commandsList.get(i);
                 ChannelExec channelExec = (ChannelExec) curSession.openChannel("exec");
                 channelExec.setPty(true);
+
                 if(isDebugMode) System.out.println("command : " + command);
+
+                // 무조건 pwd로 현재경로 저장
+                command += " && pwd";
+
+                // 저번 디렉토리가 바뀌었다면 우선 거기로 이동
+                if(lastDirectory != null && lastDirectory.length() != 0)
+                    command = "cd " + lastDirectory + " && " + command;
+
                 channelExec.setCommand(command);
                 InputStream inputStream = channelExec.getInputStream();
                 InputStream err = channelExec.getErrStream();
-                channelExec.connect(3000);
+                channelExec.connect(5000);
 
                 if(isDebugMode) System.out.print("stdout : ");
                 String output="";
@@ -168,9 +195,15 @@ public class SSHClientUtil {
                 if(isDebugMode)
                     if(IOUtils.toString(err).length() != 0)
                         System.out.println("\nerr : " + IOUtils.toString(err));
+                String retStr = StringUtils.chop(output);
 
-                ret.add(StringUtils.chop(output));
                 channelExec.disconnect();
+                if(retStr.lastIndexOf("\n") != -1) {
+                    lastDirectory = retStr.substring(retStr.lastIndexOf("\n")+1);
+                    retStr = retStr.substring(0, retStr.lastIndexOf("\n"));
+                    retStr = StringUtils.chop(retStr);
+                } // cd 처리를 어찌 해야 좋을꼬...
+                ret.add(retStr);
             }
         } catch(Exception e){
             e.printStackTrace();

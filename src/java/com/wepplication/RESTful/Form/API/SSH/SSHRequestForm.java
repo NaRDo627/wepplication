@@ -6,6 +6,7 @@ public class SSHRequestForm {
     private Integer port;
     private String username;
     private String password;
+    private String token;
     private String command;
 
     public String getHostname() {
@@ -46,5 +47,13 @@ public class SSHRequestForm {
 
     public void setCommand(String command) {
         this.command = command;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
