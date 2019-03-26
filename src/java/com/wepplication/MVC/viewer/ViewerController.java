@@ -25,4 +25,9 @@ public class ViewerController {
     public String videoViewerGet(){
         return "/viewer/video_viewer";
     }
+
+    @RequestMapping(value = {"/ssh_terminal"}, method = RequestMethod.GET)
+    public String sshTerminalGet(){
+        return "/viewer/ssh_terminal";
+    }
 }

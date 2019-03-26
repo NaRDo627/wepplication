@@ -131,6 +131,7 @@ public class SSHClientUtil {
             homeDirectory = exec("pwd");
         } catch (Exception e) {
             e.printStackTrace();
+            lastError = e.getMessage();
             return false;
         }
         return true;
@@ -149,7 +150,7 @@ public class SSHClientUtil {
             lastDirectory = null;
         } catch (Exception e) {
             e.printStackTrace();
-            lastError = e.toString();
+            lastError = e.getMessage();
             return false;
         }
         return true;

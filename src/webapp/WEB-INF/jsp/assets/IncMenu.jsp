@@ -32,33 +32,43 @@
                     </div>
                     <!-- /input-group -->
                 </li>
-            <li>
-                <a href="#"><i class="fa fa-folder-open-o fa-fw"></i> 뷰어<span class="fa arrow"></span></a>
+            <li class="active">
+                <span style="color:#337ab7;padding: 10px 15px;display:block;"><%--<i class="fa fa-folder-open-o fa-fw"></i>--%> <strong>미디어 편집</strong><%--<span class="fa arrow"></span>--%></span>
                 <ul class="nav nav-second-level">
                     <%--<li>
                         <a href="/viewer/image_viewer">이미지</a>
                     </li>
                     <li>
                         <a href="/viewer/video_viewer">동영상</a>
-                    </li>--%>
+                    </li>
                     <li>
                         <a href="/viewer/office_viewer">넷피스</a>
-                    </li>
+                    </li>--%>
+                        <li>
+                            <a href="/editor/image_editor"><i class="fa fa-image fa-fw"></i> 이미지 편집</a>
+                        </li>
+                        <li>
+                            <a href="/editor/video_editor"><i class="fa fa-video-camera fa-fw"></i> 동영상 편집</a>
+                        </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
-                <a href="/editor/image_editor"><i class="fa fa-image fa-fw"></i> 이미지 편집</a>
-            </li>
-            <li>
-                <a href="/editor/video_editor"><i class="fa fa-video-camera fa-fw"></i> 동영상 편집</a>
-            </li>
-            <li>
+                <li class="active">
+                    <span style="color:#337ab7;padding: 10px 15px;display:block;"><%--<i class="fa fa-folder-open-o fa-fw"></i>--%> <strong>유틸리티 툴</strong><%--<span class="fa arrow"></span>--%></span>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="/crypto/encrypt"><i class="fa fa-lock fa-fw"></i> 암호화 / 복호화</a>
+                        </li>
+                        <li>
+                            <a href="/viewer/ssh_terminal"><i class="fa fa-terminal fa-fw"></i> SSH 터미널</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+
+            <%--<li>
                 <a href="/cloud/cloud"><i class="fa fa-cloud fa-fw"></i> 클라우드</a>
-            </li>
-            <li>
-                <a href="/crypto/encrypt"><i class="fa fa-lock fa-fw"></i> 암호화 / 복호화</a>
-            </li>
+            </li>--%>
 
             <!-- Sample pages \|/ -->
             <li>
@@ -129,3 +139,6 @@
     <!-- /.sidebar-collapse -->
 </div>
 <!-- /.navbar-static-side -->
+<script>
+
+</script>

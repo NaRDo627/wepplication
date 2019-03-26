@@ -1,6 +1,10 @@
 package com.wepplication.RESTful.Controller;
 
 
+import com.wepplication.RESTful.Exception.BadRequestException;
+import com.wepplication.RESTful.Exception.ForbiddenException;
+import com.wepplication.RESTful.Exception.ImUsedException;
+import com.wepplication.RESTful.Exception.UnauthorizedException;
 import com.wepplication.RESTful.Form.API.SSH.SSHRequestForm;
 import com.wepplication.RESTful.Form.API.SSH.SSHResponseForm;
 import com.wepplication.Util.EncryptUtil;
@@ -30,9 +34,7 @@ public final class APIController implements HttpSessionListener {
 
         try{
             if(session.getAttribute("token") != null) {
-                sshResponseForm.setStatus("Already_used");
-                sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.IM_USED);
+                throw new ImUsedException("이미 사용중인 세션입니다.");
             }
 
             String token = EncryptUtil.encryptByMd5(new Date().toString());
@@ -44,19 +46,15 @@ public final class APIController implements HttpSessionListener {
             String password = sshRequestForm.getPassword();
             String charset = "utf-8";
 
-            if(host == null || username == null || password == null)
-                if(host == null){
-                    sshResponseForm.setStatus("Bad_Request");
-                    sshResponseForm.setError(true);
-                    return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
+            if(host == null || username == null || password == null ||
+                    host.length() == 0 || username.length() == 0 || password.length() == 0) {
+                throw new BadRequestException("요청 파라미터가 맞지 않습니다.");
                 }
 
             SSHClientUtil sshClientUtil = new SSHClientUtil(host,username,password,port);
             sshClientUtil.enableDebug();
             if(!sshClientUtil.ConnectSession()) {
-                sshResponseForm.setStatus("Internal_Server_Error");
-                sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ForbiddenException(sshClientUtil.getLastError());
             }
 
             sshClientMap.put(token, sshClientUtil);
@@ -72,8 +70,15 @@ public final class APIController implements HttpSessionListener {
             sshResponseForm.setResult(result);
             return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
 
-
-        } catch(Exception e) {
+        } catch(ImUsedException e) {
+            return handleException(e);
+        }catch(BadRequestException e) {
+            return handleException(e);
+        }
+        catch(ForbiddenException e) {
+            return handleException(e);
+        }
+        catch(Exception e) {
             return handleException(e);
         }
     }
@@ -139,18 +144,25 @@ public final class APIController implements HttpSessionListener {
     }
 
     @CrossOrigin
-    @RequestMapping(value = {"/ssh/logout"}, method = RequestMethod.GET)
-    public ResponseEntity<SSHResponseForm> apiSSHlogout(HttpSession session) {
+    @RequestMapping(value = {"/ssh/logout"}, method = RequestMethod.POST)
+    public ResponseEntity<SSHResponseForm> apiSSHlogout(@RequestBody SSHRequestForm sshRequestForm, HttpSession session) {
         SSHResponseForm sshResponseForm = new SSHResponseForm();
 
         try{
+            String token = null;
             if(session.getAttribute("token") == null) {
+                token = sshRequestForm.getToken();
+                if(token == null) {
+                    sshResponseForm.setStatus("Login_First");
+                    return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+                }
                 sshResponseForm.setStatus("Login_First");
                 sshResponseForm.setError(true);
                 return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
             }
+            else
+                token = (String)session.getAttribute("token");
 
-            String token = (String)session.getAttribute("token");
             SSHClientUtil sshClientUtil = sshClientMap.get(token);
             if(sshClientUtil == null) {
                 sshResponseForm.setStatus("Internal_Server_Error");
@@ -185,6 +197,42 @@ public final class APIController implements HttpSessionListener {
         if(sshClientUtil != null)
             sshClientUtil.DisconnectSession();
         sshClientMap.remove(token);
+    }
+
+    private ResponseEntity<SSHResponseForm> handleException(ImUsedException e) {
+        e.printStackTrace();
+        SSHResponseForm sshResponseForm = new SSHResponseForm();
+        sshResponseForm.setError(true);
+        sshResponseForm.setStatus("Forbidden");
+        JSONObject result = new JSONObject();
+        result.put("cause", e.getMessage());
+        result.put("stacktrace", e.getStackTrace());
+        sshResponseForm.setResult(result);
+        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.IM_USED);
+    }
+
+    private ResponseEntity<SSHResponseForm> handleException(ForbiddenException e) {
+        e.printStackTrace();
+        SSHResponseForm sshResponseForm = new SSHResponseForm();
+        sshResponseForm.setError(true);
+        sshResponseForm.setStatus("Forbidden");
+        JSONObject result = new JSONObject();
+        result.put("cause", e.getMessage());
+        result.put("stacktrace", e.getStackTrace());
+        sshResponseForm.setResult(result);
+        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.FORBIDDEN);
+    }
+
+    private ResponseEntity<SSHResponseForm> handleException(BadRequestException e) {
+        e.printStackTrace();
+        SSHResponseForm sshResponseForm = new SSHResponseForm();
+        sshResponseForm.setError(true);
+        sshResponseForm.setStatus("Forbidden");
+        JSONObject result = new JSONObject();
+        result.put("cause", e.getMessage());
+        result.put("stacktrace", e.getStackTrace());
+        sshResponseForm.setResult(result);
+        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<SSHResponseForm> handleException(Exception e) {
