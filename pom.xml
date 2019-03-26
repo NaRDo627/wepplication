@@ -226,6 +226,12 @@
             <artifactId>jsch</artifactId>
             <version>0.1.54</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.cverges/expect4j -->
+        <dependency>
+            <groupId>com.github.cverges</groupId>
+            <artifactId>expect4j</artifactId>
+            <version>1.9</version>
+        </dependency>
 
 
     </dependencies>

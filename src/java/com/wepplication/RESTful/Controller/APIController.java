@@ -28,82 +28,114 @@ public final class APIController implements HttpSessionListener {
     public ResponseEntity<SSHResponseForm> apiSSHLogin(@RequestBody SSHRequestForm sshRequestForm, HttpSession session) {
         SSHResponseForm sshResponseForm = new SSHResponseForm();
 
-        if(session.getAttribute("token") != null) {
-            sshResponseForm.setStatus("Already_used");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.IM_USED);
-        }
-
-        String token = EncryptUtil.encryptByMd5(new Date().toString());
-        session.setAttribute("token", token);
-
-        String host = sshRequestForm.getHostname();
-        Integer port = (sshRequestForm.getPort() != null)? sshRequestForm.getPort(): 22;
-        String username = sshRequestForm.getUsername();
-        String password = sshRequestForm.getPassword();
-        String charset = "utf-8";
-
-        if(host == null || username == null || password == null)
-            if(host == null){
-                sshResponseForm.setStatus("Bad_Request");
+        try{
+            if(session.getAttribute("token") != null) {
+                sshResponseForm.setStatus("Already_used");
                 sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.IM_USED);
             }
 
-        SSHClientUtil sshClientUtil = new SSHClientUtil(host,username,password,port);
-        sshClientUtil.enableDebug();
-        if(!sshClientUtil.ConnectSession()) {
-            sshResponseForm.setStatus("Internal_Server_Error");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+            String token = EncryptUtil.encryptByMd5(new Date().toString());
+            session.setAttribute("token", token);
+
+            String host = sshRequestForm.getHostname();
+            Integer port = (sshRequestForm.getPort() != null)? sshRequestForm.getPort(): 22;
+            String username = sshRequestForm.getUsername();
+            String password = sshRequestForm.getPassword();
+            String charset = "utf-8";
+
+            if(host == null || username == null || password == null)
+                if(host == null){
+                    sshResponseForm.setStatus("Bad_Request");
+                    sshResponseForm.setError(true);
+                    return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
+                }
+
+            SSHClientUtil sshClientUtil = new SSHClientUtil(host,username,password,port);
+            sshClientUtil.enableDebug();
+            if(!sshClientUtil.ConnectSession()) {
+                sshResponseForm.setStatus("Internal_Server_Error");
+                sshResponseForm.setError(true);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            sshClientMap.put(token, sshClientUtil);
+
+            sshResponseForm.setStatus("OK");
+            JSONObject result = new JSONObject();
+            result.put("token", token);
+            JSONObject environment = new JSONObject();
+            environment.put("user", sshClientUtil.getUsername());
+            environment.put("hostname", sshClientUtil.getHostname());
+            environment.put("path", sshClientUtil.getLastDirectory());
+            result.put("environment", environment);
+            sshResponseForm.setResult(result);
+            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+
+
+        } catch(Exception e) {
+            return handleException(e);
         }
-
-        sshClientMap.put(token, sshClientUtil);
-
-        sshResponseForm.setStatus("OK");
-        JSONObject result = new JSONObject();
-        result.put("token", token);
-        sshResponseForm.setResult(result);
-        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = {"/ssh/execute"}, method = RequestMethod.POST)
     public ResponseEntity<SSHResponseForm> apiSSHExec(@RequestBody SSHRequestForm sshRequestForm, HttpSession session) {
         SSHResponseForm sshResponseForm = new SSHResponseForm();
-        String token = null;
+        try{
+            String token = null;
 
-        if(session.getAttribute("token") == null) {
-            token = sshRequestForm.getToken();
-            if(token == null) {
-                sshResponseForm.setStatus("Login_First");
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+            if(session.getAttribute("token") == null) {
+                token = sshRequestForm.getToken();
+                if(token == null) {
+                    sshResponseForm.setStatus("Login_First");
+                    return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+                }
+            }else
+                token = (String)session.getAttribute("token");
+            SSHClientUtil sshClientUtil = sshClientMap.get(token);
+            if(sshClientUtil == null) {
+                sshResponseForm.setStatus("Internal_Server_Error");
+                sshResponseForm.setError(true);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else
-            token = (String)session.getAttribute("token");
-        SSHClientUtil sshClientUtil = sshClientMap.get(token);
-        if(sshClientUtil == null) {
-            sshResponseForm.setStatus("Internal_Server_Error");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
 
-        if(sshRequestForm.getCommand() == null) {
-            sshResponseForm.setStatus("Bad_Request");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
-        }
-        String command = sshRequestForm.getCommand();
-        String response = sshClientUtil.exec(command);
-        if (response == null){
-            response = "";
-            System.out.println("empty response");
-        }
+            if(sshRequestForm.getCommand() == null) {
+                sshResponseForm.setStatus("Bad_Request");
+                sshResponseForm.setError(true);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
+            }
+            String command = sshRequestForm.getCommand();
+            String[] commands = command.split("&&");
+            List<String> responseList = sshClientUtil.exec(commands);
+            if (responseList == null){
+                sshResponseForm.setResponse("");
+                System.out.println("empty response");
+            } else {
+                String response = "";
+                for(int i = 0; i < responseList.size(); i++) {
+                    if(i!=0)
+                        response += "\n";
+                    response += responseList.get(i);
+                }
 
+                sshResponseForm.setResponse(response);
+            }
 
-        sshResponseForm.setStatus("OK");
-        sshResponseForm.setResponse(response);
-        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+            sshResponseForm.setStatus("OK");
+            JSONObject result = new JSONObject();
+            result.put("token", token);
+            JSONObject environment = new JSONObject();
+            environment.put("user", sshClientUtil.getUsername());
+            environment.put("hostname", sshClientUtil.getHostname());
+            environment.put("path", sshClientUtil.getLastDirectory());
+            result.put("environment", environment);
+            sshResponseForm.setResult(result);
+            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+
+        } catch(Exception e) {
+            return handleException(e);
+        }
     }
 
     @CrossOrigin
@@ -111,26 +143,31 @@ public final class APIController implements HttpSessionListener {
     public ResponseEntity<SSHResponseForm> apiSSHlogout(HttpSession session) {
         SSHResponseForm sshResponseForm = new SSHResponseForm();
 
-        if(session.getAttribute("token") == null) {
-            sshResponseForm.setStatus("Login_First");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+        try{
+            if(session.getAttribute("token") == null) {
+                sshResponseForm.setStatus("Login_First");
+                sshResponseForm.setError(true);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+            }
+
+            String token = (String)session.getAttribute("token");
+            SSHClientUtil sshClientUtil = sshClientMap.get(token);
+            if(sshClientUtil == null) {
+                sshResponseForm.setStatus("Internal_Server_Error");
+                sshResponseForm.setError(true);
+                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            sshClientUtil.DisconnectSession();
+            sshClientMap.remove(token);
+            session.removeAttribute("token");
+
+            sshResponseForm.setStatus("OK");
+            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+
+        } catch(Exception e) {
+            return handleException(e);
         }
-
-        String token = (String)session.getAttribute("token");
-        SSHClientUtil sshClientUtil = sshClientMap.get(token);
-        if(sshClientUtil == null) {
-            sshResponseForm.setStatus("Internal_Server_Error");
-            sshResponseForm.setError(true);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        sshClientUtil.DisconnectSession();
-        sshClientMap.remove(token);
-        session.removeAttribute("token");
-
-        sshResponseForm.setStatus("OK");
-        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
     }
 
     @Override
@@ -148,6 +185,18 @@ public final class APIController implements HttpSessionListener {
         if(sshClientUtil != null)
             sshClientUtil.DisconnectSession();
         sshClientMap.remove(token);
+    }
+
+    private ResponseEntity<SSHResponseForm> handleException(Exception e) {
+        e.printStackTrace();
+        SSHResponseForm sshResponseForm = new SSHResponseForm();
+        sshResponseForm.setError(true);
+        sshResponseForm.setStatus("Internal_Server_Error");
+        JSONObject result = new JSONObject();
+        result.put("cause", e.getCause());
+        result.put("stacktrace", e.getStackTrace());
+        sshResponseForm.setResult(result);
+        return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 

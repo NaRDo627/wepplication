@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class SSHClientUtil {
     private String hostname = "";
     private String username = "";
@@ -18,7 +19,18 @@ public class SSHClientUtil {
     private Boolean isDebugMode = false;
     private String lastError = "";
     private Session curSession = null;
-    private String lastDirectory;
+    private String homeDirectory = null;
+    private String lastDirectory = null;
+    private String[] bannedCommandArray = {"vi", "vim", "man"};
+    private List<String> bannedCommandList = new ArrayList<>(Arrays.asList(bannedCommandArray));
+
+    public String getHomeDirectory() {
+        return homeDirectory;
+    }
+
+    public void setHomeDirectory(String homeDirectory) {
+        this.homeDirectory = homeDirectory;
+    }
 
     public String getLastDirectory() {
         return lastDirectory;
@@ -116,6 +128,7 @@ public class SSHClientUtil {
                 return true;
 
             curSession.connect();
+            homeDirectory = exec("pwd");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -132,6 +145,8 @@ public class SSHClientUtil {
 
             curSession.disconnect();
             curSession = null;
+            homeDirectory = null;
+            lastDirectory = null;
         } catch (Exception e) {
             e.printStackTrace();
             lastError = e.toString();
@@ -165,17 +180,29 @@ public class SSHClientUtil {
 
             //for(String command:commands) {
             for(int i = 0; i < commandsList.size(); i++){
+                Boolean isChangeDir = false;
                 String command = commandsList.get(i);
+                command = command.trim();
+
+                // 허용하지 않는 명령어는 제외
+                if(bannedCommandList.contains(command.split(" ")[0])) {
+                    String alertMessage;
+                    alertMessage = "명령 " + command.split(" ")[0] + "은(는) 아직 지원하지 않습니다!";
+                    ret.add(alertMessage);
+                    continue;
+                }
+
                 ChannelExec channelExec = (ChannelExec) curSession.openChannel("exec");
                 channelExec.setPty(true);
 
                 if(isDebugMode) System.out.println("command : " + command);
 
-                // 무조건 pwd로 현재경로 저장
-                command += " && pwd";
+                if(command.split(" ")[0].equals("cd")) {
+                    isChangeDir = true;
+                    command += "&& pwd";
+                }
 
-                // 저번 디렉토리가 바뀌었다면 우선 거기로 이동
-                if(lastDirectory != null && lastDirectory.length() != 0)
+                if(lastDirectory != null)
                     command = "cd " + lastDirectory + " && " + command;
 
                 channelExec.setCommand(command);
@@ -197,13 +224,22 @@ public class SSHClientUtil {
                         System.out.println("\nerr : " + IOUtils.toString(err));
                 String retStr = StringUtils.chop(output);
 
+                if(!isChangeDir) {
+                    ret.add(retStr);
+                    channelExec.disconnect();
+                    continue;
+                }
+
+                // 만약 output에 공백이 존재하면 에러로 간주 (리눅스 경로명에는 에러가 있을수 없기 때문)
+                if(output.contains(" ")) {
+                    ret.add(retStr);
+                } else {
+                    lastDirectory = retStr.replace(homeDirectory, "~");
+                    ret.add("");
+                }
+
                 channelExec.disconnect();
-                if(retStr.lastIndexOf("\n") != -1) {
-                    lastDirectory = retStr.substring(retStr.lastIndexOf("\n")+1);
-                    retStr = retStr.substring(0, retStr.lastIndexOf("\n"));
-                    retStr = StringUtils.chop(retStr);
-                } // cd 처리를 어찌 해야 좋을꼬...
-                ret.add(retStr);
+
             }
         } catch(Exception e){
             e.printStackTrace();
