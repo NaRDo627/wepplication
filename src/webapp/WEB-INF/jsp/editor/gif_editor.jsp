@@ -92,7 +92,7 @@
                 <div style="text-align:center">
                     <button onclick="playPause()">Play/Pause</button>
                     <br><br>
-                    <video id="v" controls autoplay></video>
+                    <video id="v" controls autoplay width="800" height="480"></video>
                 </div>
                 <script>
                     var myVideo = document.getElementById("v");
