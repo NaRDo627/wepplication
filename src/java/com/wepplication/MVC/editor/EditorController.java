@@ -30,6 +30,11 @@ public class EditorController {
         return "/editor/video_editor";
     }
 
+    @RequestMapping(value = {"/gif_editor"}, method = RequestMethod.GET)
+    public String editorGifEditorGet(){
+        return "/editor/gif_editor";
+    }
+
     /* API */
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
     public void fileUpload(HttpServletResponse response, MultipartFile upfile) {

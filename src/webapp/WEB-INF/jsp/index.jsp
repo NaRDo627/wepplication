@@ -65,17 +65,17 @@
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <i class="fa fa-clock-o fa-5x"></i>
-                                    </div>
+                                    </div>o9
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
                                             <c:when test="${sessionScope.users.get('lastUsed').equals('/viewer/image_viewer')}">
                                                 <div>최근에</div>
-                                                <div class="huge">이미지 뷰어</div>
+                                                <div class="huge">이미지 편집</div>
                                                 <div>사용하셨군요!</div>
                                             </c:when>
                                             <c:otherwise>
                                                 <div>최근에 사용하신 도구가 없습니다</div>
-                                                <div class="huge">이미지 뷰어</div>
+                                                <div class="huge">이미지 편집</div>
                                                 <div>를 한 번 시도해 보는것이 어떨까요?</div>
                                             </c:otherwise>
                                         </c:choose>
