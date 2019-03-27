@@ -68,7 +68,18 @@
 
             <%--<li>
                 <a href="/cloud/cloud"><i class="fa fa-cloud fa-fw"></i> 클라우드</a>
-            </li>--%>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-folder-open-o fa-fw"></i>암호화<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="/crypto/encryptWord">문장 암호화</a>
+                    </li>
+                    <li>
+                        <a href="/crypto/encryptFile">파일 암호화</a>
+                    </li>
+                </ul>
+            </li>
 
             <!-- Sample pages \|/ -->
             <li>

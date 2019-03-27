@@ -65,7 +65,7 @@
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <i class="fa fa-clock-o fa-5x"></i>
-                                    </div>
+                                    </div>o9
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
                                             <c:when test="${sessionScope.users.get('lastUsed').equals('/viewer/image_viewer')}">
