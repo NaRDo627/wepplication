@@ -57,7 +57,15 @@
                     <span style="color:#337ab7;padding: 10px 15px;display:block;"><%--<i class="fa fa-folder-open-o fa-fw"></i>--%> <strong>유틸리티 툴</strong><%--<span class="fa arrow"></span>--%></span>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/crypto/encrypt"><i class="fa fa-lock fa-fw"></i> 암호화 / 복호화</a>
+                            <a href="#"><i class="fa fa-folder-open-o fa-fw"></i>암호화<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="/crypto/encryptWord">문장 암호화</a>
+                                </li>
+                                <li>
+                                    <a href="/crypto/encryptFile">파일 암호화</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href="/viewer/ssh_terminal"><i class="fa fa-terminal fa-fw"></i> SSH 터미널</a>
@@ -79,7 +87,7 @@
                         <a href="/crypto/encryptFile">파일 암호화</a>
                     </li>
                 </ul>
-            </li>
+            </li> --%>
 
             <!-- Sample pages \|/ -->
             <li>

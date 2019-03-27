@@ -64,7 +64,7 @@
                                                         <p class="form-control-static">아이디</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">testID</p>
+                                                        <p class="form-control-static">${sessionScope.users.get('userId')}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -72,7 +72,7 @@
                                                         <p class="form-control-static">이름</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">testName</p>
+                                                        <p class="form-control-static">${sessionScope.users.get('userName')}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -80,7 +80,7 @@
                                                         <p class="form-control-static">별명</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">testNickName</p>
+                                                        <p class="form-control-static">${sessionScope.users.get('userNickname')}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -88,7 +88,7 @@
                                                         <p class="form-control-static">이메일</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">email@example.com</p>
+                                                        <p class="form-control-static">${sessionScope.users.get('email')}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
