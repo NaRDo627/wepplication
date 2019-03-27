@@ -87,9 +87,23 @@
                 <div id="output"></div>
 
                 <h3>Video:</h3>
-                <canvas id="c"></canvas>
+                <canvas id="c" style="visibility:hidden;"></canvas>
 
-                <video id="v" controls="" loop="" autoplay="" style="visibility:hidden;position:absolute;"></video>
+                <div style="text-align:center">
+                    <button onclick="playPause()">Play/Pause</button>
+                    <br><br>
+                    <video id="v" controls autoplay></video>
+                </div>
+                <script>
+                    var myVideo = document.getElementById("v");
+
+                    function playPause() {
+                        if (myVideo.paused)
+                            myVideo.play();
+                        else
+                            myVideo.pause();
+                    }
+                </script>
 
                 <h3>GIF 이미지:</h3>
                 <a id="link" href="" download=""><img id="image" src=""></a>
@@ -130,19 +144,15 @@
                         var cw,ch;
 
                         v.addEventListener('play', function(){
-                            /*cw = v.clientWidth;
+                            cw = v.clientWidth;
                             ch = v.clientHeight;
-                            canvas.width = cw;
-                            canvas.height = ch;*/
-                            cw = 800;
-                            ch = 480;
                             canvas.width = cw;
                             canvas.height = ch;
                             draw(v,context,cw,ch);
                         },false);
 
                         function draw(v,c,w,h) {
-                            if(v.paused || v.ended)	return false;
+                            //if(v.paused || v.ended)	return false;
                             c.drawImage(v,0,0,w,h);
                             if(flag == true){
                                 var imdata = c.getImageData(0,0,w,h);
