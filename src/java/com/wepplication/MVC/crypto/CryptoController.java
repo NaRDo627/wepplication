@@ -20,4 +20,14 @@ public class CryptoController {
     public String cryptoEncryptGet(){
         return "/crypto/encrypt";
     }
+
+    @RequestMapping(value = {"/encryptWord"}, method = RequestMethod.GET)
+    public String cryptoEncryptWordGet(){
+        return "/crypto/encryptWord";
+    }
+
+    @RequestMapping(value = {"/encryptFile"}, method = RequestMethod.GET)
+    public String cryptoEncryptFileGet(){
+        return "/crypto/encryptFile";
+    }
 }

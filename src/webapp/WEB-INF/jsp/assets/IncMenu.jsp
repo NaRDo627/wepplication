@@ -20,18 +20,18 @@
                 </div>
                 <!-- /input-group -->
             </li>--%>
-                <li>
-                    <div style="height:60px;">
-                            <div class="centered-outer">
-                                <div class="centered-inner">
-                                    <div class="centered">
-                                        <a class="text-primary h4" href="/index" style="background-color:#f8f8f8;"><i class="fa fa-desktop fa-2x"></i></a>
-                                    </div>
-                                </div>
+            <li>
+                <div style="height:60px;">
+                    <div class="centered-outer">\
+                        <div class="centered-inner">
+                            <div class="centered">
+                                <a class="text-primary h4" href="/index" style="background-color:#f8f8f8;"><i class="fa fa-desktop fa-2x"></i></a>
                             </div>
+                        </div>
                     </div>
+                </div>
                     <!-- /input-group -->
-                </li>
+            </li>
             <li>
                 <a href="#"><i class="fa fa-folder-open-o fa-fw"></i> 뷰어<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
@@ -54,10 +54,21 @@
                 <a href="/editor/video_editor"><i class="fa fa-video-camera fa-fw"></i> 동영상 편집</a>
             </li>
             <li>
+                <a href="/editor/gif_editor"><i class="fa fa-image fa-fw"></i> GIF 편집</a>
+            </li>
+            <li>
                 <a href="/cloud/cloud"><i class="fa fa-cloud fa-fw"></i> 클라우드</a>
             </li>
             <li>
-                <a href="/crypto/encrypt"><i class="fa fa-lock fa-fw"></i> 암호화 / 복호화</a>
+                <a href="#"><i class="fa fa-folder-open-o fa-fw"></i>암호화<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="/crypto/encryptWord">문장 암호화</a>
+                    </li>
+                    <li>
+                        <a href="/crypto/encryptFile">파일 암호화</a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Sample pages \|/ -->
