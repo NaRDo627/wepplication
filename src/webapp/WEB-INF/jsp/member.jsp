@@ -29,27 +29,27 @@
                             <fieldset>
                                 <div class="form-group">
                                     <label for="id">아이디</label>
-                                    <input class="form-control" placeholder="ID" name="id" type="text" id="id" autofocus>
+                                    <input class="form-control" placeholder="ID" name="id" type="text" id="id" autofocus required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">비밀번호</label>
-                                    <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password-check">비밀번호 확인</label>
-                                    <input class="form-control" placeholder="Password Check" name="password-check" type="password" id="password-check" value="">
+                                    <input class="form-control" placeholder="Password Check" name="password-check" type="password" id="password-check" value="" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">이름</label>
-                                    <input class="form-control" placeholder="Name" name="name" type="text" id="name">
+                                    <input class="form-control" placeholder="Name" name="name" type="text" id="name" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="nickname">별명</label>
-                                    <input class="form-control" placeholder="NickName" name="nickname" type="text" id="nickname">
+                                    <input class="form-control" placeholder="NickName" name="nickname" type="text" id="nickname" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email1">이메일</label><br>
-                                    <input class="form-control" placeholder="test" name="email1" type="text" id="email1" style="width:40%; display: inline;">&nbsp;@&nbsp;<input class="form-control" placeholder="example.com" name="email2" type="text" id="email2" style="width:50%; display: inline;">
+                                    <input class="form-control" placeholder="test" name="email1" type="text" id="email1" style="width:40%; display: inline;" required>&nbsp;@&nbsp;<input class="form-control" placeholder="example.com" name="email2" type="text" id="email2" style="width:50%; display: inline;" required>
                                 </div>
 
                                 <%--<div class="checkbox">
@@ -71,6 +71,43 @@
     <script>
         $(document).ready(function () {
             $("#btn-submit").click(function () {
+
+                // 필수 확인
+                var $required = $("[required]");
+                for (var i = 0; i < $required.length; i++) {
+                    var $ele = $($required[i]);
+                    if (!$ele.val()) {
+                        var msg = "알수없는 오류";
+                        if ($ele.attr("name") === "name") {
+                            msg = "이름을 입력해 주십시오";
+                        } else if ($ele.attr("name") === "id") {
+                            msg = "아이디를 입력해 주십시오";
+                        } else if ($ele.attr("name") === "password" ||
+                            $ele.attr("name") === "password-check") {
+                            msg = "비밀번호를 입력해 주십시오";
+                        }
+                        else if ($ele.attr("name") === "nickname") {
+                            msg = "별명을 입력해 주십시오";
+                        }
+                        else if ($ele.attr("name") === "email1" ||
+                            $ele.attr("name") === "email2" ) {
+                            msg = "이메일을 입력해 주십시오.";
+                        }
+
+                        alert(msg);
+                        $ele.focus();
+                        return false;
+                    }
+                }
+
+                // [190328][HKPARK] 이메일 체크 유효성 개선
+                var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+                var emailComplete = $("#email1").val() + "@" + $("#email2").val();
+                if(emailComplete.match(regExp) == null) {
+                    alert("이메일 입력을 확인해 주세요!");
+                    return false;
+                }
+
                 var Users = {
                     "userId": $("#id").val(),
                     "password": $("#password").val(),

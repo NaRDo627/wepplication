@@ -1,6 +1,6 @@
 (function($) {
     $(document).ready(function() {
-        var settings = {'url': 'http://127.0.0.1:8081',
+        var settings = {'url': REST_URL,
                         'prompt_path_length': 32,
                         'domain': document.domain || window.location.host,
                         'is_small_window': $(document).width() < 625 ? true : false};
