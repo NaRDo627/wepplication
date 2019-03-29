@@ -3,7 +3,12 @@ var cipherText;
 var origText;
 
 function input_Encrypt(){
-    var input = document.getElementById("BOARD_CONTENT").value;
+    var input = document.getElementById("BOARD_CONTENT_ENC").value;
+    temp = input;
+}
+
+function input_Decrypt(){
+    var input = document.getElementById("BOARD_CONTENT_DEC").value;
     temp = input;
 }
 
@@ -15,7 +20,8 @@ function output_Encrypt(){
 }
 
 function output_Decrypt(){
+    input_Decrypt();
     //암호화된 문장을 복호화
-    origText = Decrypt(cipherText, "passwd", 128);
+    origText = Decrypt(temp, "passwd", 128);
     document.getElementById("DECRYPT_RESULT").value = origText;
 }
