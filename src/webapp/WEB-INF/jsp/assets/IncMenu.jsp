@@ -89,6 +89,7 @@
                 </ul>
             </li> --%>
 
+            <%--
             <!-- Sample pages \|/ -->
             <li>
                 <a href="index"><i class="fa fa-sitemap fa-fw"></i> Sample (개발 참고용)<span class="fa arrow"></span></a>
@@ -153,6 +154,8 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
+
+            --%>
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

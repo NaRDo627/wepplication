@@ -58,6 +58,49 @@
                             </div>
                         </div>
                         <div class="panel-body" style="height:350px;">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <label for="BOARD_CONTENT_ENC">암호화할 내용</label><br>
+                                    <textarea id="BOARD_CONTENT_ENC" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="centered-outer">
+                                        <div class="centered-inner">
+                                            <div class="centered">
+                                                <br><br>
+                                                <i class="fa fa-arrow-right fa-5x" style="font-size:36px"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <label for="ENCRYPT_RESULT">암호문 결과</label><br>
+                                    <textarea id="ENCRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <label for="BOARD_CONTENT_DEC">복호화할 내용</label><br>
+                                    <textarea id="BOARD_CONTENT_DEC" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="centered-outer">
+                                        <div class="centered-inner">
+                                            <div class="centered">
+                                                <br><br>
+                                                <i class="fa fa-arrow-right fa-5x" style="font-size:36px"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <label for="DECRYPT_RESULT">복호문 결과</label><br>
+                                    <textarea id="DECRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                            </div>
+
+
+                            <%--
                             <table>
                                 <tr>
                                     <td class="td_left">
@@ -66,7 +109,6 @@
 
                                     <td>
 
-                                    </td>
                                     </td>
 
                                     <td>
@@ -133,6 +175,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            --%>
 
                         </div>
                     </div>
