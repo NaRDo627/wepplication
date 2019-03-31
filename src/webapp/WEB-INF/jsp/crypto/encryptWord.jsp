@@ -49,12 +49,8 @@
                                     <div class="form-group">
                                         <div class="centered-outer">
                                             <div class="centered-inner" style="text-align:left;">
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox">
-                                                </label>
-                                                <button type="button" onclick="input_Encrypt()" class="btn btn-default">암호문 입력<span class="visible-lg-inline"></span> <i class="fa fa-lock"></i></button>
-                                                <button type="button" onclick="output_Encrypt()" class="btn btn-default">암호문 출력<span class="visible-lg-inline"></span> <i class="fa fa-lock"></i></button>
-                                                <button type="button" onclick="output_Decrypt()" class="btn btn-default">복호문 출력<span class="visible-lg-inline"></span> <i class="fa fa-unlock"></i></button>
+                                                <button type="button" onclick="output_Encrypt()" class="btn btn-primary">암호화<span class="visible-lg-inline"></span> <i class="fa fa-lock"></i></button>
+                                                <button type="button" onclick="output_Decrypt()" class="btn btn-danger">복호화<span class="visible-lg-inline"></span> <i class="fa fa-unlock"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -62,28 +58,125 @@
                             </div>
                         </div>
                         <div class="panel-body" style="height:350px;">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <label for="BOARD_CONTENT_ENC">암호화할 내용</label><br>
+                                    <textarea id="BOARD_CONTENT_ENC" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="centered-outer">
+                                        <div class="centered-inner">
+                                            <div class="centered">
+                                                <br><br>
+                                                <i class="fa fa-arrow-right fa-5x" style="font-size:36px"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <label for="ENCRYPT_RESULT">암호문 결과</label><br>
+                                    <textarea id="ENCRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <label for="BOARD_CONTENT_DEC">복호화할 내용</label><br>
+                                    <textarea id="BOARD_CONTENT_DEC" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="centered-outer">
+                                        <div class="centered-inner">
+                                            <div class="centered">
+                                                <br><br>
+                                                <i class="fa fa-arrow-right fa-5x" style="font-size:36px"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <label for="DECRYPT_RESULT">복호문 결과</label><br>
+                                    <textarea id="DECRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5" style="width: 100%;"></textarea>
+                                </div>
+                            </div>
+
+
+                            <%--
                             <table>
                                 <tr>
                                     <td class="td_left">
-                                        <label>내용</label>
+                                        <label>암호화할 내용</label>
                                     </td>
+
                                     <td>
-                                        <textarea id="BOARD_CONTENT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
+
                                     </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
                                     <td class="td_left">
                                         <label>암호문 결과</label>
                                     </td>
+                                </tr>
+                                <tr>
                                     <td>
-                                        <textarea id="ENCRYPT_RESULT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
+                                        <textarea id="BOARD_CONTENT_ENC" name="BOARD_CONTENT" cols="35" rows="5"></textarea>
+                                    </td>
+                                    <td>
+                                        <i class='fas fa-arrow-right' style='font-size:48px;color:white'></i>
+                                    </td>
+                                    <td>
+
+                                        <i class="fa fa-arrow-right" style="font-size:36px"></i>
+
+                                    </td>
+                                    <td>
+                                        <i class='fas fa-arrow-right' style='font-size:48px;color:white'></i>
+                                    </td>
+                                    <td>
+                                        <textarea id="ENCRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5"></textarea>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="td_left">
+                                       <label>복호화할 내용</label>
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                    <td>
                                     </td>
                                     <td class="td_left">
                                         <label>복호문 결과</label>
                                     </td>
+
+                                </tr>
+                                <tr>
                                     <td>
-                                        <textarea id="DECRYPT_RESULT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
+                                        <textarea id="BOARD_CONTENT_DEC" name="BOARD_CONTENT" cols="35" rows="5"></textarea>
+                                    </td>
+                                    <td>
+                                        <i class='fas fa-arrow-right' style='font-size:48px;color:white'></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-arrow-right" style="font-size:36px"></i>
+                                    </td>
+                                    <td>
+                                        <i class='fas fa-arrow-right' style='font-size:48px;color:white'></i>
+                                    </td>
+                                    <td>
+                                        <textarea id="DECRYPT_RESULT" name="BOARD_CONTENT" cols="35" rows="5"></textarea>
                                     </td>
                                 </tr>
                             </table>
+                            --%>
+
                         </div>
                     </div>
                 </div>
