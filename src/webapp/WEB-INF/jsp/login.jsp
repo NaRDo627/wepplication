@@ -14,10 +14,23 @@
     <%@include file="assets/IncAsset.jsp"%>
 
 </head>
-
+<header>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/index">팀 시차 : 웹플리케이션</a>
+        </div>
+    </nav>
+</header>
 <body>
 
     <div class="container">
+
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
