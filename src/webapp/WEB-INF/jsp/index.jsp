@@ -144,7 +144,98 @@
             </c:choose>
         </div>
         <!-- /.row -->
-
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-default" style="background-color: #FAFAFA">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>미디어 편집</h2>
+                                <span style="font-size:16px;">
+                                        간단한 편집기능이 필요하십니까? 이런 편집기들은 어떠세요?
+                                    </span>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/editor/image_editor">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">이미지 편집</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/editor/video_editor">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">동영상 편집</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-default" style="background-color: #FAFAFA">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>유틸리티 툴</h2>
+                                <span style="font-size:16px;">
+                                    편리한 온라인 도구가 필요하십니까? 이런 도구들은 어떠세요?
+                                </span>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/crypto/encryptWord">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">암/복호화</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/viewer/ssh_terminal">
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">SSH 터미널</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /#page-wrapper -->
 
@@ -156,7 +247,7 @@
 <script>
     $(document).ready(function () {
         var recentUsed = '${sessionScope.users.get('lastUsed')}';
-        if(recentUsed === 'null')
+        if (recentUsed === 'null')
             recentUsed = "/viewer/image_viewer";
 
         $("#recent_href").prop("href", recentUsed);

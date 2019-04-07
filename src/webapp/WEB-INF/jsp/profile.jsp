@@ -45,10 +45,10 @@
                             </li>
                             <li><a href="#password-tab" data-toggle="tab">비밀번호</a>
                             </li>
-                            <li><a href="#membership-tab" data-toggle="tab">멤버십</a>
-                            </li>
+                            <li><a href="#membership-tab" data-toggle="tab">구독</a>
+                            </li><%--
                             <li><a href="#settings-tab" data-toggle="tab">설정</a>
-                            </li>
+                            </li>--%>
                         </ul>
 
                         <!-- Tab panes -->
@@ -93,10 +93,10 @@
                                                 </tr>
                                                 <tr>
                                                     <th>
-                                                        <p class="form-control-static">멤버십</p>
+                                                        <p class="form-control-static">구독</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">무료</p>
+                                                        <p class="form-control-static">Basic</p>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -148,10 +148,10 @@
                                                 <tbody>
                                                 <tr>
                                                     <th>
-                                                        <p class="form-control-static">멤버십 이름</p>
+                                                        <p class="form-control-static">구독 이름</p>
                                                     </th>
                                                     <td>
-                                                        <p class="form-control-static">무료</p>
+                                                        <p class="form-control-static">Basic</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -193,6 +193,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <%--
                             <div class="tab-pane fade" id="settings-tab">
                                 <div class="table-responsive">
                                     <div class="panel panel-default">
@@ -245,7 +246,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                         </div>
                     </div>
                     <!-- /.panel-body -->
