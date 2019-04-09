@@ -1,12 +1,11 @@
-var worker = new Worker('w.js');
-
+var workerPath = '../../../resources/gifMaker/js/techslidesGifMaker/w.js';
+var worker = new Worker(workerPath);
 var URL = window.URL || window.webkitURL;
 if (!URL) {
     document.getElementById("output").innerHTML = 'Your browser is not <a href="http://caniuse.com/bloburls">supported</a>!';
 } else {
-
     worker.addEventListener('message', function(e) {
-        document.getElementById("output").innerHTML = "Done. Look below.";
+        document.getElementById("output").innerHTML = "완성입니다. 짤 버튼을 눌러 확인하세요!";
         image.src = e.data;
     }, false);
 
@@ -19,34 +18,41 @@ if (!URL) {
     var flag = false;
     var delay = 100; //default speed
 
-    //control play speed
+    //짤 재생 설정
     speed.addEventListener('change', function(){
-        var s = this.value;
-        delay = s;
-        speedrate.innerHTML = s;
+        var speedChange = this.value;
+        delay = speedChange;
+        speedrate.innerHTML = speedChange;
     }, false);
 
-    var v = document.getElementById("v");
+    var vMake = document.getElementById("vMake");
     var canvas = document.getElementById('c');
     var context = canvas.getContext('2d');
     var cw,ch;
 
-    v.addEventListener('play', function(){
-        cw = v.clientWidth;
-        ch = v.clientHeight;
-        canvas.width = cw;
-        canvas.height = ch;
-        draw(v,context,cw,ch);
-    },false);
+    var ratio = null;
+    function input() {
+        //짤 비율 설정
+        var prevRatio = document.getElementById("sizeVideo").value;
+        ratio = prevRatio / 100;
 
-    function draw(v,c,w,h) {
-        if(v.paused || v.ended)	return false;
-        c.drawImage(v,0,0,w,h);
+        vMake.addEventListener('play', function(){
+            cw = vMake.videoWidth * ratio;
+            ch = vMake.videoHeight * ratio;
+            canvas.width = cw;
+            canvas.height = ch;
+            draw(vMake,context,cw,ch);
+        },false);
+    }
+
+    function draw(vMake,c,w,h) {
+        //if(v.paused || v.ended)	return false;
+        c.drawImage(vMake,0,0,w,h);
         if(flag == true){
             var imdata = c.getImageData(0,0,w,h);
             worker.postMessage({frame: imdata});
         }
-        setTimeout(draw,delay,v,c,w,h);
+        setTimeout(draw,delay,vMake,c,w,h);
     }
 
     start.addEventListener('click', function(){
@@ -76,7 +82,6 @@ if (!URL) {
 
     /* main upload function */
     function upload(file) {
-
         //check if its a video file
         if(file.type.match(/video\/*/)){
             /*
@@ -97,10 +102,16 @@ if (!URL) {
             //why read the whole video into memory when you can stream!!
             document.getElementById("output").innerHTML = "";
             var url = URL.createObjectURL(file);
-            v.src = url;
-
+            vMake.src = url;
         } else {
             document.getElementById("output").innerHTML = "This file does not seem to be a video.";
         }
+    }
+
+    function downloadFile() {
+        var link = document.getElementById("link");
+        link.download = name;
+        link.href = file;
+        link.click();
     }
 }
