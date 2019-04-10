@@ -1,11 +1,10 @@
 package com.wepplication.RESTful.Repository;
 
-import com.wepplication.RESTful.Domain.UserLog;
-import com.wepplication.RESTful.Domain.Users;
+import com.wepplication.RESTful.Domain.UserAccessLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("userLogDAO")
-public interface UserLogDAO extends JpaRepository<UserLog, Integer> {
+public interface UserAccessLogDAO extends JpaRepository<UserAccessLog, Integer> {
 
 }

@@ -1,3 +1,6 @@
+<%@ page import="com.wepplication.Util.DateTimeUtil" %>
+<%@ page import="java.sql.Timestamp" %>
+<%@ page import="org.codehaus.jettison.json.JSONObject" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -12,6 +15,17 @@
     <title>웹플리케이션</title>
 
     <%@include file="assets/IncAsset.jsp" %>
+    <style>
+        li.active > a {
+            background-color: #f8f8f8 !important;
+        }
+
+        div.tab-pane.fade {
+            border-left: solid 1px #dddddd;
+            border-bottom: solid 1px #dddddd;
+            border-right: solid 1px #dddddd;
+        }
+    </style>
 </head>
 
 <body>
@@ -52,143 +66,194 @@
                         </ul>
 
                         <!-- Tab panes -->
-                        <div class="tab-content">
+                        <div class="tab-content" style="background-color: #f8f8f8;">
                             <div class="tab-pane fade" id="home-tab">
-                                <div class="table-responsive">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">아이디</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">${sessionScope.users.get('userId')}</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">이름</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">${sessionScope.users.get('userName')}</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">별명</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">${sessionScope.users.get('userNickname')}</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">이메일</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">${sessionScope.users.get('email')}</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">구독</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">Basic</p>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <!-- ./table responsive -->
+                                <div class="row">
+                                    <br><br>
+                                    <div class="col-md-8 col-md-offset-2">
+                                        <div class="table-responsive">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">아이디</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.users.get('userId')}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">이름</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.users.get('userName')}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">별명</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.users.get('userNickname')}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">이메일</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.users.get('email')}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">구독</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- ./table responsive -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="password-tab">
-                                <div class="table-responsive">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">비밀번호</p>
-                                                    </th>
-                                                    <td>
-                                                        <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">비밀번호 확인</p>
-                                                    </th>
-                                                    <td>
-                                                        <input class="form-control" placeholder="Password-Check" name="password-check" type="password" id="password-check" value="">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" style="text-align: center;">
-                                                        <a href="#" class="btn btn-lg btn-primary btn-block" style="width:30%; display:inline-block;">비밀번호 변경</a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <!-- ./table responsive -->
+                                <div class="row">
+                                    <br><br>
+                                    <div class="col-md-8 col-md-offset-2">
+                                        <div class="table-responsive">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">비밀번호</p>
+                                                            </th>
+                                                            <td>
+                                                                <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">비밀번호 확인</p>
+                                                            </th>
+                                                            <td>
+                                                                <input class="form-control" placeholder="Password-Check" name="password-check" type="password" id="password-check" value="">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2" style="text-align: center;">
+                                                                <a href="#" class="btn btn-lg btn-primary btn-block" style="width:30%; display:inline-block;">비밀번호 변경</a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- ./table responsive -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="membership-tab">
-                                <div class="table-responsive">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">구독 이름</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">Basic</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">지속기간</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">평생</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">남은기간</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">무제한</p>
-                                                    </td>
-                                                </tr>
-                                                <%--<tr>
-                                                    <th>
-                                                        <p class="form-control-static">멤버십 등록</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">email@example.com</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">멤버십</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static">무료</p>
-                                                    </td>
-                                                </tr>--%>
-                                                </tbody>
-                                            </table>
-                                            <!-- ./table responsive -->
+                                <div class="row">
+                                    <br><br>
+                                    <div class="col-md-8 col-md-offset-2">
+                                        <div class="table-responsive">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th width="30%">
+                                                                <p class="form-control-static">구독 이름</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">지속기간</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">
+                                                                    <c:choose>
+                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                            평생
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            ${sessionScope.user_membership.get('mno').get('duration')}
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">남은기간</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">
+                                                                    <c:choose>
+                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                            평생
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <%=(((Long)((JSONObject)session.getAttribute("user_membership")).get("endTime")) -
+                                                                                    DateTimeUtil.now().getTime()) / (1000*60*60*24) + 1%>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">자동 구독</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">
+                                                                    <c:choose>
+                                                                        <c:when test="${sessionScope.user_membership.get('isAutoSubscribe') == 1}">
+                                                                            ON
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            OFF
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <%--<tr>
+                                                            <th>
+                                                                <p class="form-control-static">멤버십 등록</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">email@example.com</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">멤버십</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static">무료</p>
+                                                            </td>
+                                                        </tr>--%>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- ./table responsive -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

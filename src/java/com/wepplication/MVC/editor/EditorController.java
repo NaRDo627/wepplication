@@ -1,9 +1,7 @@
 package com.wepplication.MVC.editor;
 
-import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.FileUtil;
 import com.wepplication.Util.LogUtil;
-import com.wepplication.Util.RestUtil;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,13 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by NESOY on 2017-02-04.
@@ -34,12 +29,9 @@ public class EditorController {
         // 히스토리, 로그 업데이트
         if(session.getAttribute("users") != null) {
             JSONObject userObj = (JSONObject)session.getAttribute("users");
-            try {
-                LogUtil.logActivity(userObj, "/editor/image_editor", "이미지 편집");
-            } catch (Exception e) {
-                // do nothing
-                e.printStackTrace();
-            }
+            Thread logThread = new Thread(() ->
+                LogUtil.writeAllActivityLog(userObj, "/editor/image_editor", "이미지 편집"));
+            logThread.start();
         }
 
         return "/editor/image_editor";
@@ -47,11 +39,29 @@ public class EditorController {
 
     @RequestMapping(value = {"/video_editor"}, method = RequestMethod.GET)
     public String editorVideoEditorGet(Model model, HttpSession session){
+
+        // 히스토리, 로그 업데이트
+        if(session.getAttribute("users") != null) {
+            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Thread logThread = new Thread(() ->
+                    LogUtil.writeAllActivityLog(userObj, "/editor/video_editor", "동영상 편집"));
+            logThread.start();
+        }
+
         return "/editor/video_editor";
     }
 
     @RequestMapping(value = {"/gif_editor"}, method = RequestMethod.GET)
     public String editorGifEditorGet(Model model, HttpSession session){
+
+        // 히스토리, 로그 업데이트
+        if(session.getAttribute("users") != null) {
+            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Thread logThread = new Thread(() ->
+                    LogUtil.writeAllActivityLog(userObj, "/editor/gif_editor", "움짤 편집"));
+            logThread.start();
+        }
+
         return "/editor/gif_editor";
     }
 

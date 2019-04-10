@@ -12,6 +12,11 @@
     <title>웹플리케이션</title>
 
     <%@include file="assets/IncAsset.jsp" %>
+    <style>
+        div.row > div > a:hover {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -68,9 +73,9 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
-                                            <c:when test="${sessionScope.users.get('lastUsed').equals('/viewer/image_viewer')}">
+                                            <c:when test="${sessionScope.users.get('lastUsed') ne null}">
                                                 <div>최근에</div>
-                                                <div class="huge">이미지 편집</div>
+                                                <div class="huge">${sessionScope.users.get('lastUsed')}</div>
                                                 <div>사용하셨군요!</div>
                                             </c:when>
                                             <c:otherwise>
@@ -84,7 +89,7 @@
                             </div>
                             <a href="#" id="recent_href">
                                 <div class="panel-footer">
-                                    <span class="pull-left">이동</span>
+                                    <span class="pull-left">바로가기</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>
                                 </div>
@@ -100,12 +105,12 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>현재 고객님께서는</div>
-                                        <div class="huge">무료</div>
-                                        <div>멤버십을 사용하고 계십니다</div>
+                                        <div class="huge">${(sessionScope.user_membership.get("mno")).get("mname")}</div>
+                                        <div>구독을 사용하고 계십니다</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#">
+                            <a href="/subscribe">
                                 <div class="panel-footer">
                                     <span class="pull-left">상세 확인</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -246,7 +251,7 @@
 <%@include file="assets/IncFooter.jsp" %>
 <script>
     $(document).ready(function () {
-        var recentUsed = '${sessionScope.users.get('lastUsed')}';
+        var recentUsed = '${sessionScope.users.get('lastUsedUrl')}';
         if (recentUsed === 'null')
             recentUsed = "/viewer/image_viewer";
 

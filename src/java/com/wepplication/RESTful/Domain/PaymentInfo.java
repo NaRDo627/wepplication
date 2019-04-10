@@ -16,9 +16,8 @@ public class PaymentInfo implements Serializable {
     @Column(name = "uno")
     private Integer uno;
 
-    @ManyToOne
-    @JoinColumn(name = "mno", referencedColumnName = "mno")
-    private MemberShip mno;
+    @Column(name = "mno")
+    private Integer mno;
 
     @Column(name="method")
     private Integer method;
@@ -52,11 +51,11 @@ public class PaymentInfo implements Serializable {
         this.uno = uno;
     }
 
-    public MemberShip getMno() {
+    public Integer getMno() {
         return mno;
     }
 
-    public void setMno(MemberShip mno) {
+    public void setMno(Integer mno) {
         this.mno = mno;
     }
 

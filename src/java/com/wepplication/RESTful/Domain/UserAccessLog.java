@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "userlog")
-public class UserLog implements Serializable {
+public class UserAccessLog implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
