@@ -35,9 +35,11 @@ public class Users implements Serializable {
     @Column(name="email", columnDefinition = "NVARCHAR(50)")
     private String email;
 
-    @Nationalized
     @Column(name="last_used", columnDefinition = "NVARCHAR(50)")
     private String lastUsed;
+
+    @Column(name="last_used_url", columnDefinition = "NVARCHAR(255)")
+    private String lastUsedUrl;
 
     @Column(name="membership_status")
     private Integer memberShipStatus;
@@ -130,5 +132,13 @@ public class Users implements Serializable {
 
     public void setLastUsed(String lastUsed) {
         this.lastUsed = lastUsed;
+    }
+
+    public String getLastUsedUrl() {
+        return lastUsedUrl;
+    }
+
+    public void setLastUsedUrl(String lastUsedUrl) {
+        this.lastUsedUrl = lastUsedUrl;
     }
 }

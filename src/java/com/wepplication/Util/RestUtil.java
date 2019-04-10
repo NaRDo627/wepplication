@@ -79,7 +79,7 @@ public class RestUtil {
 
             con.setRequestMethod("POST");
             OutputStream os= con.getOutputStream();
-            os.write(data.toString().getBytes());
+            os.write(data.toString().getBytes("UTF-8"));
             os.flush();
 
             StringBuilder sb = new StringBuilder();
@@ -127,7 +127,7 @@ public class RestUtil {
             }
             con.setRequestMethod("PUT");
             OutputStream os= con.getOutputStream();
-            os.write(data.toString().getBytes());
+            os.write(data.toString().getBytes("UTF-8"));
             os.flush();
 
             StringBuilder sb = new StringBuilder();
