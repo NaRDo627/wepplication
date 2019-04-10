@@ -1,5 +1,6 @@
 package com.wepplication.MVC.Main;
 
+import com.wepplication.Util.RestUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -13,6 +14,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.util.Base64Utils;
 
 /**
@@ -70,51 +74,27 @@ public class MainController {
                       Model model, HttpSession session){
 
         try{
-            URL object=new URL(API_ADDRESS + ":" + API_PORT + "/users/myinfo");
-
-            HttpURLConnection con = (HttpURLConnection) object.openConnection();
-
-            con.setDoOutput(true);
-            con.setDoInput(true);
-            //con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("authorization", "Basic " + Base64Utils.encodeToString((userId + ":" + password).getBytes()));
-            con.setRequestProperty("Accept", "*/*");
-            con.setRequestProperty("X-Requested-With", "XMLHttpRequest");
-            con.setRequestMethod("GET");
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"authorization", "Basic " + Base64Utils.encodeToString((userId + ":" + password).getBytes())});
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            JSONObject obj = RestUtil.requestGet(API_ADDRESS + ":" + API_PORT + "/users/myinfo", headers);
+            if((Boolean)obj.get("error"))
+                throw new Exception("HTTP Request failed");
 
 
-            StringBuilder sb = new StringBuilder();
-
-            int HttpResult =con.getResponseCode();
-
-            if(HttpResult ==HttpURLConnection.HTTP_OK){
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
-
-                String line = null;
-
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-
-                br.close();
-
-                JSONObject users = new JSONObject(sb.toString());
-                System.out.println(""+sb.toString());
-
-                session.setAttribute("users", users);
-            }else if (HttpResult ==HttpURLConnection.HTTP_UNAUTHORIZED){
-                System.out.println(con.getResponseMessage());
+            if((int)obj.get("res_code") == HttpURLConnection.HTTP_OK){
+                session.setAttribute("users", obj.get("result"));
+            }else if ((int)obj.get("res_code") == HttpURLConnection.HTTP_UNAUTHORIZED){
                 return "unauthorized";
             }else{
-                System.out.println(con.getResponseMessage());
-                return con.getResponseMessage();
+                return (String)obj.get("res_msg");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return e.toString();
         }
 
         return "ok";
     }
-
 }

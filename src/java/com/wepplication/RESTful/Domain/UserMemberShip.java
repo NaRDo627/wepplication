@@ -13,9 +13,8 @@ public class UserMemberShip implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer umno;
 
-    @ManyToOne
-    @JoinColumn(name = "uno", referencedColumnName = "uno")
-    private Users uno;
+    @Column(name = "uno")
+    private Integer uno;
 
     @ManyToOne
     @JoinColumn(name = "mno", referencedColumnName = "mno")
@@ -48,11 +47,11 @@ public class UserMemberShip implements Serializable {
         this.umno = umno;
     }
 
-    public Users getUno() {
+    public Integer getUno() {
         return uno;
     }
 
-    public void setUno(Users uno) {
+    public void setUno(Integer uno) {
         this.uno = uno;
     }
 

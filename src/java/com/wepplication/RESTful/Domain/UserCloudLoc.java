@@ -14,9 +14,8 @@ public class UserCloudLoc implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer lno;
 
-    @ManyToOne
-    @JoinColumn(name = "uno", referencedColumnName = "uno")
-    private Users uno;
+    @Column(name = "uno")
+    private Integer uno;
 
     @Nationalized
     @Column(name="url", columnDefinition = "NVARCHAR(255)")
@@ -41,11 +40,11 @@ public class UserCloudLoc implements Serializable {
         this.lno = lno;
     }
 
-    public Users getUno() {
+    public Integer getUno() {
         return uno;
     }
 
-    public void setUno(Users uno) {
+    public void setUno(Integer uno) {
         this.uno = uno;
     }
 

@@ -55,6 +55,21 @@ public class UsersController {
         }
     }
 
+    // 유저 수정
+    @CrossOrigin
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.PUT)
+    public Users usersPut(@RequestBody Users users) {
+        if(users == null)
+            return null;
+        System.out.println("Update " + users.getUserName());
+        try{
+            users.setUpdateTime(DateTimeUtil.now());
+            return usersService.saveUser(users);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     // 개인정보 조회
     @RequestMapping(value = {"/myinfo"}, method = RequestMethod.GET)
     public Users usersMyinfoGet(@RequestHeader(value="authorization") String authorization) {

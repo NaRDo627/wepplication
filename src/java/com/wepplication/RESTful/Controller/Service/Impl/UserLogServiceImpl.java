@@ -20,4 +20,7 @@ public class UserLogServiceImpl implements UserLogService {
     @Resource(name = "userLogDAO")
     UserLogDAO userLogDAO;
 
+    public UserLog saveUserLog(UserLog userLog) throws Exception{
+        return userLogDAO.saveAndFlush(userLog);
+    }
 }

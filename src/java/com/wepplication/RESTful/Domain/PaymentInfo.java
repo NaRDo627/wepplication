@@ -13,9 +13,8 @@ public class PaymentInfo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pno;
 
-    @ManyToOne
-    @JoinColumn(name = "uno", referencedColumnName = "uno")
-    private Users uno;
+    @Column(name = "uno")
+    private Integer uno;
 
     @ManyToOne
     @JoinColumn(name = "mno", referencedColumnName = "mno")
@@ -45,11 +44,11 @@ public class PaymentInfo implements Serializable {
         this.pno = pno;
     }
 
-    public Users getUno() {
+    public Integer getUno() {
         return uno;
     }
 
-    public void setUno(Users uno) {
+    public void setUno(Integer uno) {
         this.uno = uno;
     }
 

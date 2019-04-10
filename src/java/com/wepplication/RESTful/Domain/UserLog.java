@@ -13,6 +13,9 @@ public class UserLog implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer ulno;
+
+    @Column(name = "uno")
     private Integer uno;
 
     @Column(name="req_url", columnDefinition = "NVARCHAR(255)")
@@ -26,6 +29,14 @@ public class UserLog implements Serializable {
 
     public Integer getUno() {
         return uno;
+    }
+
+    public Integer getUlno() {
+        return ulno;
+    }
+
+    public void setUlno(Integer ulno) {
+        this.ulno = ulno;
     }
 
     public void setUno(Integer uno) {
