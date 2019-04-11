@@ -10,6 +10,6 @@
         <!--<context:include-filter expression="org.springframework.stereotype.Repository" type="annotation"/>-->
     </context:component-scan>
     <util:properties id="config">
-        <prop key="REST_URL">http://localhost:8081</prop>
+        <prop key="REST_URL">http://parkkiho.asuscomm.com:8081</prop>
     </util:properties>
 </beans>
