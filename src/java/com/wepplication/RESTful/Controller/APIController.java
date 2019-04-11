@@ -5,6 +5,7 @@ import com.wepplication.RESTful.Exception.BadRequestException;
 import com.wepplication.RESTful.Exception.ForbiddenException;
 import com.wepplication.RESTful.Exception.ImUsedException;
 import com.wepplication.RESTful.Exception.UnauthorizedException;
+import com.wepplication.RESTful.Form.API.Mail.MailRequestForm;
 import com.wepplication.RESTful.Form.API.SSH.SSHRequestForm;
 import com.wepplication.RESTful.Form.API.SSH.SSHResponseForm;
 import com.wepplication.Util.EncryptUtil;
@@ -15,6 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -102,13 +109,13 @@ public final class APIController implements HttpSessionListener {
             if(sshClientUtil == null) {
                 sshResponseForm.setStatus("Internal_Server_Error");
                 sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             if(sshRequestForm.getCommand() == null) {
                 sshResponseForm.setStatus("Bad_Request");
                 sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(sshResponseForm, HttpStatus.BAD_REQUEST);
             }
             String command = sshRequestForm.getCommand();
             String[] commands = command.split("&&");
@@ -136,7 +143,7 @@ public final class APIController implements HttpSessionListener {
             environment.put("path", sshClientUtil.getLastDirectory());
             result.put("environment", environment);
             sshResponseForm.setResult(result);
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+            return new ResponseEntity<>(sshResponseForm, HttpStatus.OK);
 
         } catch(Exception e) {
             return handleException(e);
@@ -154,11 +161,11 @@ public final class APIController implements HttpSessionListener {
                 token = sshRequestForm.getToken();
                 if(token == null) {
                     sshResponseForm.setStatus("Login_First");
-                    return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+                    return new ResponseEntity<>(sshResponseForm, HttpStatus.UNAUTHORIZED);
                 }
                 sshResponseForm.setStatus("Login_First");
                 sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(sshResponseForm, HttpStatus.UNAUTHORIZED);
             }
             else
                 token = (String)session.getAttribute("token");
@@ -167,7 +174,7 @@ public final class APIController implements HttpSessionListener {
             if(sshClientUtil == null) {
                 sshResponseForm.setStatus("Internal_Server_Error");
                 sshResponseForm.setError(true);
-                return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(sshResponseForm, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             sshClientUtil.DisconnectSession();
@@ -175,7 +182,7 @@ public final class APIController implements HttpSessionListener {
             session.removeAttribute("token");
 
             sshResponseForm.setStatus("OK");
-            return new ResponseEntity<SSHResponseForm>(sshResponseForm, HttpStatus.OK);
+            return new ResponseEntity<>(sshResponseForm, HttpStatus.OK);
 
         } catch(Exception e) {
             return handleException(e);
@@ -199,6 +206,53 @@ public final class APIController implements HttpSessionListener {
         sshClientMap.remove(token);
     }
 
+    @CrossOrigin
+    @RequestMapping(value = {"/mail/send"}, method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> apiMailPost(@RequestBody MailRequestForm requestForm) {
+        if(requestForm.getSender() == null || requestForm.getSender().length() == 0 ||
+                requestForm.getPassword() == null || requestForm.getPassword().length() == 0 ||
+                requestForm.getTitle() == null || requestForm.getTitle().length() == 0 ||
+                requestForm.getContent() == null || requestForm.getContent().length() == 0 ||
+                requestForm.getReceiver() == null || requestForm.getReceiver().length() == 0)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        try{
+            JSONObject response = new JSONObject();
+            Properties prop = new Properties();
+            prop.put("mail.smtp.host", "smtp.gmail.com");
+            prop.put("mail.smtp.port", 465);
+            prop.put("mail.smtp.auth", "true");
+            prop.put("mail.smtp.ssl.enable", "true");
+            prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+            // SMTP 세션 생성
+            Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(requestForm.getSender(), requestForm.getPassword());
+                }
+            });
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(requestForm.getSender()));
+
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(requestForm.getReceiver()));
+            message.setSubject(requestForm.getTitle(), "UTF-8");
+            message.setText(requestForm.getContent() + "\n\n이 메일은 자동발송 되었습니다.", "UTF-8");
+            Transport.send(message);
+            response.put("result", "ok");
+            System.out.println("mail sent successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject response = new JSONObject();
+            response.put("error", e.getCause());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /* Exception */
     private ResponseEntity<SSHResponseForm> handleException(ImUsedException e) {
         e.printStackTrace();
         SSHResponseForm sshResponseForm = new SSHResponseForm();

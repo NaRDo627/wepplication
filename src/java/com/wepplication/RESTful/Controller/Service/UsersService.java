@@ -7,9 +7,11 @@ import java.util.List;
 public interface UsersService {
     public List<Users> findUsersAll() throws Exception;
     public Users findUsersByUno(Integer uno) throws Exception;
+    public Integer countUsersByUserId(String id) throws Exception;
+    public Integer countUsersByEmail(String email) throws Exception;
 
     // 가입
-    public Users saveUser(Users users);
+    public Users saveUser(Users users) throws Exception;
 
     // 인증 & 개인정보 조회
     public Users authentication(String token) throws Exception;

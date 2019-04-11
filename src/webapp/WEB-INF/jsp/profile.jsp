@@ -105,7 +105,20 @@
                                                                 <p class="form-control-static">이메일</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('email')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.get('email')}&nbsp;
+                                                                    <c:choose>
+                                                                        <c:when test="${sessionScope.users.get('verified') == 0}">
+                                                                            <span class="text-danger"><i class="fa fa-warning"></i>인증이 필요합니다.</span>
+                                                                            <a href="#" id="sendVerify" class="btn btn-success">인증하기</a>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="text-success">인증 완료</span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:if test="">
+
+                                                                    </c:if>
+                                                                </p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -333,6 +346,27 @@
        $("a[href='#"+'${tab_select}'+"'").parent().addClass("active");
        $("#" + '${tab_select}').addClass("in");
        $("#" + '${tab_select}').addClass("active");
+       
+       $("#sendVerify").click(function () {
+           $.ajax({
+               url: "/send_verify_mail",
+               type: 'POST',
+               success: function (result) {
+                   if(result === "ok"){
+                       alert("인증 메일이 전송되었습니다. 이메일을 확인해 주세요.");
+                   } else if(result === "login first"){
+                       alert("세션에서 로그아웃 되었습니다.");
+                   } else {
+                       alert("인증메일 전송 중 오류가 발생하였습니다.");
+                   }
+                   console.log(result);
+               },
+               error: function (jaXHR, textStatus, errorThrown) {
+                   alert("인증메일 전송 중 오류가 발생하였습니다.");
+                   console.log(jaXHR.responseText);
+               }
+           });
+       });
     });
 </script>
 </body>
