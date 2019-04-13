@@ -41,6 +41,10 @@
     width: 40%;
     padding-left: 1%;
 }
+/*짤을 어느 정도 비율로 만들건지 제어하는 영역-2*/
+#sizeVideo {
+    width: 50%;
+}
 /*gif 만들기 위한 비디오 제어 영역 전체_2*/
 #controlVideo_2 {
     margin: inherit;

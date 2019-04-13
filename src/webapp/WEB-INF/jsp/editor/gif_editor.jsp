@@ -79,7 +79,7 @@
 
                                     <input id="dropUpload" type="file" onchange="upload(this.files[0])">
 
-                                    <video id="vMake" controls poster="../../../resources/gifMaker/css/icons/file.png"></video>
+                                    <video id="vMake" controls poster="../../../resources/gifMaker/css/icons/move.svg"></video>
 
                                     <div id="controlVideo_1">
                                         <div id="gifSpeed">
@@ -90,7 +90,7 @@
 
                                         <div id="videoSize">
                                             <label>GIF 크기</label><br>
-                                            <input class="form-control" type="text" id="sizeVideo" min="1" max="100" value="50" size="5"><lable>%</lable>
+                                            <input type="text" id="sizeVideo" min="1" max="100" value="50"><lable>%</lable>
                                             <button class="btn btn-primary" onclick="input();">비율 입력</button>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                             </section>
 
                             <section id="gif" data-url="gif" >
-                                <a href="#video" class="btn btn-default" data-transition="slide">영상</a>
+                                <a href="#video" class="btn btn-primary" data-transition="slide">영상</a>
                                 <div class="gifDiv">
                                     <h3>GIF 이미지:</h3>
                                     <div id="output">영상을 변환해보세요</div>
@@ -121,7 +121,7 @@
                             </section>
 
                             <section id="gifImage" data-url="gifImage">
-                                <a href="#video" class="btn btn-default" data-transition="slide">영상</a>
+                                <a href="#video" class="btn btn-primary" data-transition="slide">영상</a>
                                 <div class="gifDiv">
                                     <h3>GIF 이미지:</h3>
                                     <a id="linkImage" onclick="downloadFile()"><img id="image" src=""></a>

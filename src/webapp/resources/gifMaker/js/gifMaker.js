@@ -35,10 +35,10 @@ if (!URL) {
     window.ondragover = function(e) {e.preventDefault()}
     window.ondrop = function(e) {
         e.preventDefault();
-        document.getElementById("output").innerHTML = "영상을 업로드하고 있습니다";
+        document.getElementById("output").innerHTML = "영상을 업로드하고 있어요";
         var length = e.dataTransfer.items.length;
         if(length > 1){
-            document.getElementById("output").innerHTML = "1개의 영상만 올려주세요";
+            document.getElementById("output").innerHTML = "1개의 영상만 올려주세요!";
         } else {
             upload(e.dataTransfer.files[0]);
         }
@@ -99,14 +99,14 @@ if (!URL) {
         //startTime = new Date().getTime();
         flag = true;
         worker.postMessage({delay:delay,w:cw,h:ch});
-        document.getElementById("output").innerHTML = "영상을 캡쳐하고 있습니다.";
+        document.getElementById("output").innerHTML = "영상을 캡쳐하고 있어요.";
         startTime = new Date().getTime();
     },false);
     //FRAME 끝
     end.addEventListener('click', function(){
         flag = false;
         worker.postMessage({});
-        document.getElementById("output").innerHTML = "GIF로 변환 중입니다.";
+        document.getElementById("output").innerHTML = "GIF 이미지를 만들고 있어요!";
     },false);
     //FRAME 추가??
     function draw(vMake,c,w,h) {
@@ -138,7 +138,7 @@ if (!URL) {
 
     /*-----GIF 출력-----*/
     worker.addEventListener('message', function(e) {
-        document.getElementById("output").innerHTML = "완성입니다. 잠시 기다려주세요!";
+        document.getElementById("output").innerHTML = "GIF 이미지를 만들었어요. 잠시만 기다려주세요!";
         image.src = e.data;
 
         endTime = new Date().getTime();
