@@ -4,83 +4,46 @@ var URL = window.URL || window.webkitURL;
 if (!URL) {
     document.getElementById("output").innerHTML = 'Your browser is not <a href="http://caniuse.com/bloburls">supported</a>!';
 } else {
-    worker.addEventListener('message', function(e) {
-        document.getElementById("output").innerHTML = "완성입니다. 짤 버튼을 눌러 확인하세요!";
-        image.src = e.data;
-    }, false);
-
-    var start = document.getElementById("start-button");
-    var end = document.getElementById("end-button");
-    var image = document.getElementById('image');
+    /*=====변수 선언=====*/
+    /*-----GIF 및 비디오 설정-----*/
+    //태그
     var speed = document.getElementById("speed");
     var speedrate = document.getElementById("speedrate");
-
+    var vMake = document.getElementById("vMake");
+    //GIF 재생 속도
     var flag = false;
     var delay = 100; //default speed
-
-    //짤 재생 설정
-    speed.addEventListener('change', function(){
-        var speedChange = this.value;
-        delay = speedChange;
-        speedrate.innerHTML = speedChange;
-    }, false);
-
-    var vMake = document.getElementById("vMake");
-    var canvas = document.getElementById('c');
-    var context = canvas.getContext('2d');
+    //GIF 크기 비율
+    var ratio = null;
     var cw,ch;
 
-    var ratio = null;
-    function input() {
-        //짤 비율 설정
-        var prevRatio = document.getElementById("sizeVideo").value;
-        ratio = prevRatio / 100;
+    /*-----GIF 생성-----*/
+    //FRAME 생성
+    var start = document.getElementById("start-button");
+    var end = document.getElementById("end-button");
+    //GIF 그리기
+    var image = document.getElementById('image');
+    var canvas = document.getElementById('c');
+    var context = canvas.getContext('2d');
 
-        vMake.addEventListener('play', function(){
-            cw = vMake.videoWidth * ratio;
-            ch = vMake.videoHeight * ratio;
-            canvas.width = cw;
-            canvas.height = ch;
-            draw(vMake,context,cw,ch);
-        },false);
-    }
+    /*-----진행 상황-----*/
+    var startTime, endTime, runTime;
 
-    function draw(vMake,c,w,h) {
-        //if(v.paused || v.ended)	return false;
-        c.drawImage(vMake,0,0,w,h);
-        if(flag == true){
-            var imdata = c.getImageData(0,0,w,h);
-            worker.postMessage({frame: imdata});
-        }
-        setTimeout(draw,delay,vMake,c,w,h);
-    }
-
-    start.addEventListener('click', function(){
-        flag = true;
-        worker.postMessage({delay:delay,w:cw,h:ch});
-        document.getElementById("output").innerHTML = "Capturing video frames.";
-    },false);
-
-    end.addEventListener('click', function(){
-        flag = false;
-        worker.postMessage({});
-        document.getElementById("output").innerHTML = "Processing the GIF.";
-    },false);
-
-    /* Drag drop stuff */
+    /*=====함수 선언=====*/
+    /*-----업로드-----*/
+    // 드래그 앤 드롭
     window.ondragover = function(e) {e.preventDefault()}
     window.ondrop = function(e) {
         e.preventDefault();
-        document.getElementById("output").innerHTML = "Reading...";
+        document.getElementById("output").innerHTML = "영상을 업로드하고 있습니다";
         var length = e.dataTransfer.items.length;
         if(length > 1){
-            document.getElementById("output").innerHTML = "Please only drop 1 file.";
+            document.getElementById("output").innerHTML = "1개의 영상만 올려주세요";
         } else {
             upload(e.dataTransfer.files[0]);
         }
     }
-
-    /* main upload function */
+    //업로드
     function upload(file) {
         //check if its a video file
         if(file.type.match(/video\/*/)){
@@ -104,14 +67,100 @@ if (!URL) {
             var url = URL.createObjectURL(file);
             vMake.src = url;
         } else {
-            document.getElementById("output").innerHTML = "This file does not seem to be a video.";
+            document.getElementById("output").innerHTML = "영상 파일을 올려주세요.";
         }
     }
 
-    function downloadFile() {
-        var link = document.getElementById("link");
-        link.download = name;
-        link.href = file;
-        link.click();
+    /*-----짤 재생 설정-----*/
+    //GIF 재생 속도
+    speed.addEventListener('change', function(){
+        var speedChange = this.value;
+        delay = speedChange;
+        speedrate.innerHTML = speedChange;
+    }, false);
+    //GIF 크기 설정
+    function input() {
+        //짤 비율 설정
+        var prevRatio = document.getElementById("sizeVideo").value;
+        ratio = prevRatio / 100;
+
+        vMake.addEventListener('play', function(){
+            cw = vMake.videoWidth * ratio;
+            ch = vMake.videoHeight * ratio;
+            canvas.width = cw;
+            canvas.height = ch;
+            draw(vMake,context,cw,ch);
+        },false);
     }
+
+    /*-----FRAME 지정-----*/
+    //FRAME 시작
+    start.addEventListener('click', function(){
+        //startTime = new Date().getTime();
+        flag = true;
+        worker.postMessage({delay:delay,w:cw,h:ch});
+        document.getElementById("output").innerHTML = "영상을 캡쳐하고 있습니다.";
+        startTime = new Date().getTime();
+    },false);
+    //FRAME 끝
+    end.addEventListener('click', function(){
+        flag = false;
+        worker.postMessage({});
+        document.getElementById("output").innerHTML = "GIF로 변환 중입니다.";
+    },false);
+    //FRAME 추가??
+    function draw(vMake,c,w,h) {
+        //if(v.paused || v.ended)	return false;
+        c.drawImage(vMake,0,0,w,h);
+        if(flag == true){
+            var imdata = c.getImageData(0,0,w,h);
+            worker.postMessage({frame: imdata});
+        }
+        setTimeout(draw,delay,vMake,c,w,h);
+    }
+
+    /*-----진행 상황-----
+    //그냥 바로 진행 바가 차버림
+    function move() {
+        runTime = startTime - endTime;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, runTime);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%';
+            }
+        }
+    }*/
+
+    /*-----GIF 출력-----*/
+    worker.addEventListener('message', function(e) {
+        document.getElementById("output").innerHTML = "완성입니다. 잠시 기다려주세요!";
+        image.src = e.data;
+
+        endTime = new Date().getTime();
+
+        // 한참 진행이 안되다가 마지막에 완성됐을 때, 한 번에 참,
+        runTime = startTime - endTime;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, runTime);
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                elem.innerHTML = width * 1;
+            }
+        }
+
+        setTimeout(function() {
+            window.location.href="#gifImage"
+        }, 3000)
+
+    }, false);
 }

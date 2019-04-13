@@ -56,90 +56,107 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div id="gif_header">
-                    <h1>GIF 이미지 만드는 순서</h1>
-                    <p>
-                        동영상을 DRAG & DROP!
-                    </p>
-                    <p>
-                        그리고 짤 재생 시간과 짤 크기를 정해주세요!
-                    </p>
-                    <p>
-                        원하시는 시간만큼 재생시키고 end를 누르면 완성!
-                    </p>
-                </div>
-
-                <div id="pages" class="container">
-                    <section id="video" data-url="video" data-default-page="true">
-                        <a href="#gif" class="btn btn-default" data-transition="slide">짤</a>
-
-                        <div id="drop">
-                            <div id="selectVideo">
-                                동영상을 가져오세요!<button onclick="document.querySelector('input').click()">아니면 선택하세요!</button>
-                            </div>
-
-                            <input id="dropUpload" type="file" onchange="upload(this.files[0])">
-
-                            <div id="output"></div>
-
-                            <div id="controlVideo">
-
-                                <div id="gifSpeed">
-                                    <label>Speed</label>
-                                    <input type="range" id="speed" min="30" max="1000" step="1" value="100">
-                                    <span id="speedrate">100</span>
-                                </div>
-
-                                <div id="videoSize">
-                                    <label>Size</label>
-                                    <input type="text" id="sizeVideo" min="1" max="100" value="50" /><lable>%</lable>
-                                    <button onclick="input()">비율 입력</button>
-                                </div>
-
-                                <div id="frameControl">
-                                    <button class="buttonStyle1" id="start-button" style="vertical-align:middle"><span>start GIF frames</span></button>
-                                    <br>
-                                    <button class="buttonStyle1" id="end-button" style="vertical-align:middle"><span>End GIF frames</span></button>
-                                    <br>
-                                    <button class="buttonStyle1" onclick="playPause()" style="vertical-align:middle"><span>Play/Pause</span></button>
-                                </div>
-                            </div>
-0
-                            <video id="vMake" controls></video>
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" id="gif_header">
+                            <p>
+                                <strong>1. 동영상을 DRAG & DROP!</strong>
+                            </p>
+                            <p>
+                                <strong>2. GIF 속도, 크기 설정</strong>
+                            </p>
+                            <p>
+                                <strong>3. 원하는 시점에서 캡쳐와 변환 버튼을 누르면 끝!</strong>
+                            </p>
                         </div>
-                    </section>
 
-                    <section id="gif" data-url="gif" >
-                        <a href="#video" class="btn btn-default" data-transition="slide">영상</a>
-                        <div id="gifDiv">
-                            <h3>GIF 이미지:</h3>
-                            <a id="link" onclick="downloadFile()"><img id="image" src=""></a>
+                        <div class="panel-body" id="pages" class="container">
+                            <section id="video" data-url="video" data-default-page="true">
+                                <div id="drop">
+                                    <div id="selectVideo">
+                                        <button class="btn btn-primary" onclick="document.querySelector('input').click()">업로드</button>
+                                    </div>
+
+                                    <input id="dropUpload" type="file" onchange="upload(this.files[0])">
+
+                                    <video id="vMake" controls poster="../../../resources/gifMaker/css/icons/file.png"></video>
+
+                                    <div id="controlVideo_1">
+                                        <div id="gifSpeed">
+                                            <label>GIF 속도</label>
+                                            <label>FAST</label><span id="speedrate">100</span><label>SLOW</label>
+                                            <input type="range" id="speed" min="30" max="1000" step="1" value="100">
+                                        </div>
+
+                                        <div id="videoSize">
+                                            <label>GIF 크기</label><br>
+                                            <input class="form-control" type="text" id="sizeVideo" min="1" max="100" value="50" size="5"><lable>%</lable>
+                                            <button class="btn btn-primary" onclick="input();">비율 입력</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="controlVideo_2">
+                                        <div id="frameControl">
+                                            <button class="buttonStyle1" id="start-button" style="vertical-align:middle"><span>캡쳐</span></button>
+                                            <a href="#gif" data-transition="slide">
+                                                <button class="buttonStyle1" id="end-button" onclick="pauseVideo()" style="vertical-align:middle"><span>GIF 변환</span></button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section id="gif" data-url="gif" >
+                                <a href="#video" class="btn btn-default" data-transition="slide">영상</a>
+                                <div class="gifDiv">
+                                    <h3>GIF 이미지:</h3>
+                                    <div id="output">영상을 변환해보세요</div>
+                                </div>
+                                <br>
+                                <!--<div class="loader"></div>-->
+                                <div id="myProgress">
+                                    <div id="myBar" style="width:1%">1</div>
+                                </div>
+                                <canvas id="c"></canvas>
+                            </section>
+
+                            <section id="gifImage" data-url="gifImage">
+                                <a href="#video" class="btn btn-default" data-transition="slide">영상</a>
+                                <div class="gifDiv">
+                                    <h3>GIF 이미지:</h3>
+                                    <a id="linkImage" onclick="downloadFile()"><img id="image" src=""></a>
+                                </div>
+                            </section>
                         </div>
-                        <canvas id="c"></canvas>
-                    </section>
+                    </div>
                 </div>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/jquery-3.3.1.js"></script>
-
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/transition/transition-min.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/underscore/underscore-min.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/backbone/backbone-min.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/multipage-router/multipage-min.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/multipage-router/multipage-starter-min.js"></script>
-
-                <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/techslidesGifMaker/gaq.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/gifMaker.js"></script>
-                <script type="text/javascript" src="../../../resources/gifMaker/js/details/videoCont.js"></script>
             </div>
         </div>
         <!-- /.container-fluid -->
+        <!--jquery-->
+        <script type="text/javascript" src="../../../resources/gifMaker/js/jquery-3.3.1.js"></script>
+        <!--section slide-->
+        <script type="text/javascript" src="../../../resources/gifMaker/js/sectionSlide/transition/transition-min.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/sectionSlide/underscore/underscore-min.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/sectionSlide/backbone/backbone-min.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/sectionSlide/multipage-router/multipage-min.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/sectionSlide/multipage-router/multipage-starter-min.js"></script>
+        <!--techslide gif maker-->
+        <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/techslidesGifMaker/gaq.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/gifMaker.js"></script>
+        <!--gif file download-->
+        <script type="text/javascript" src="../../../resources/gifMaker/js/gifDownload.js"></script>
+        <script type="text/javascript" src="../../../resources/gifMaker/js/dowload/download.js"></script>
+        <!--video play control-->
+        <script type="text/javascript" src="../../../resources/gifMaker/js/videoCont.js"></script>
     </div>
     <!-- /#page-wrapper -->
-
 </div>
 <!-- /#wrapper -->
 
 <%@include file="../assets/IncFooter.jsp"%>
+
 </body>
 
 </html>

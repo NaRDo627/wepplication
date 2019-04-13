@@ -1,6 +1,6 @@
 /*-----gif 생성 화면 스타일-----*/
 .container-fluid {
-    overflow: hidden;
+    height: 100%
 }
 /*-----비디오 영역 스타일-----*/
 /*1. 업로드 부분*/
@@ -22,27 +22,32 @@
     width: 0px;
 }
 /*2. 비디오 제어 영역*/
-/*gif 만들기 위한 비디오 제어 영역 전체*/
-#controlVideo {
+/*gif 만들기 위한 비디오 제어 영역 전체_1*/
+#controlVideo_1 {
     margin: inherit;
-    padding: inherit;
-    display: inline-block;
-    float: left;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    display: block;
 }
 /*gif 변환 스피드 제어-1*/
 #gifSpeed {
-    margin: inherit;
-    padding: inherit;
-}
-/*gif 변환 스피드 제어-2*/
-#speed {
-    width: 50%;
+    display: inline-block;
+    width: 40%;
+    padding-right: 1%;
 }
 /*짤을 어느 정도 비율로 만들건지 제어하는 영역*/
-#videoSize{
-    margin: inherit;
-    padding: inherit;
+#videoSize {
+    display: inline-block;
+    width: 40%;
+    padding-left: 1%;
 }
+/*gif 만들기 위한 비디오 제어 영역 전체_2*/
+#controlVideo_2 {
+    margin: inherit;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    display: block;
+ }
 /*짤을 어느 정도 속도로 재생할건지 제어하는 영역*/
 #frameControl {
     margin: inherit;
@@ -51,16 +56,16 @@
 .buttonStyle1 {
     display: inline-block;
     border-radius: 4px;
-    background-color: #f4511e;
+    background-color: #428bca;
     border: none;
     color: #FFFFFF;
     text-align: center;
-    font-size: 28px;
-    padding: 20px;
-    width: 200px;
+    padding: 10px;
+    width: 150px;
     transition: all 0.5s;
     cursor: pointer;
     margin: 5px;
+    font-size: 25px;
 }
 
 .buttonStyle1 span {
@@ -75,7 +80,7 @@
     position: absolute;
     opacity: 0;
     top: 0;
-    right: -20px;
+    right: -10px;
     transition: 0.5s;
 }
 
@@ -91,16 +96,49 @@
 #vMake {
     margin: inherit;
     padding: inherit;
-    display: inline-block;
-    width: 50%;
-    height: 50%;
-    /*float: right;*/
+    display: block;
+    width: 80%;
+    height: 80%;
 }
 /*4. 결과*/
 /*변환 성공 여부 확인*/
 #output {
     margin: inherit;
-    padding: inherit;
+    padding: 1%;
+    display: block;
+}
+/*로딩 스핀
+.loader {
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #3498db;
+    width: 35px;
+    height: 35px;
+    -webkit-animation: spin 2s linear infinite; /* Safari
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}*/
+/* Safari
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}*/
+
+/*로딩 바*/
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #3498db;
+    color: #FFF;
+    text-align: center;
 }
 
 /*-----gif가 보여지는 영역-----*/
