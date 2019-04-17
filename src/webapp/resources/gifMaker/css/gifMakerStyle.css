@@ -25,21 +25,20 @@
 /*gif 만들기 위한 비디오 제어 영역 전체_1*/
 #controlVideo_1 {
     margin: inherit;
-    padding-top: 1%;
-    padding-bottom: 1%;
     display: block;
 }
 /*gif 변환 스피드 제어-1*/
 #gifSpeed {
+    margin: 0%;
     display: inline-block;
     width: 40%;
     padding-right: 1%;
 }
 /*짤을 어느 정도 비율로 만들건지 제어하는 영역*/
 #videoSize {
+    margin: 0%;
     display: inline-block;
     width: 40%;
-    padding-left: 1%;
 }
 /*짤을 어느 정도 비율로 만들건지 제어하는 영역-2*/
 #sizeVideo {
@@ -101,15 +100,15 @@
     margin: inherit;
     padding: inherit;
     display: block;
-    width: 80%;
-    height: 80%;
+    width: 70%;
+    height: 70%;
 }
 /*4. 결과*/
 /*변환 성공 여부 확인*/
 #output {
     margin: inherit;
     padding: 1%;
-    display: block;
+    display: inline;
 }
 /*로딩 스핀
 .loader {
@@ -131,6 +130,12 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }*/
+
+/*로딩 스핀*/
+.fa {
+    margin-left: -12px;
+    margin-right: 8px;
+}
 
 /*로딩 바*/
 #myProgress {

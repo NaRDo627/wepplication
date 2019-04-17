@@ -20,6 +20,7 @@
 
     <%@include file="../assets/IncAsset.jsp"%>
 
+    <link href="../../../resources/gifMaker/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../../../resources/gifMaker/css/gifMakerStyle.css" rel="stylesheet" />
     <style>
         .sidebar_left .item{
@@ -79,7 +80,7 @@
 
                                     <input id="dropUpload" type="file" onchange="upload(this.files[0])">
 
-                                    <video id="vMake" controls poster="../../../resources/gifMaker/css/icons/move.svg"></video>
+                                    <video id="vMake" controls poster="../../../resources/gifMaker/icons/upload.svg"></video>
 
                                     <div id="controlVideo_1">
                                         <div id="gifSpeed">
@@ -87,7 +88,6 @@
                                             <label>FAST</label><span id="speedrate">100</span><label>SLOW</label>
                                             <input type="range" id="speed" min="30" max="1000" step="1" value="100">
                                         </div>
-
                                         <div id="videoSize">
                                             <label>GIF 크기</label><br>
                                             <input type="text" id="sizeVideo" min="1" max="100" value="50"><lable>%</lable>
@@ -110,7 +110,7 @@
                                 <a href="#video" class="btn btn-primary" data-transition="slide">영상</a>
                                 <div class="gifDiv">
                                     <h3>GIF 이미지:</h3>
-                                    <div id="output">영상을 변환해보세요</div>
+                                    <div id="output">영상을 변환해보세요</div><i class="fa fa-spinner fa-spin"></i>
                                 </div>
                                 <br>
                                 <!--<div class="loader"></div>-->
