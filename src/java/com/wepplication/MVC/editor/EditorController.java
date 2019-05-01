@@ -1,15 +1,18 @@
 package com.wepplication.MVC.editor;
 
 import com.wepplication.Util.FileUtil;
+import com.wepplication.Util.LogUtil;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 
 /**
@@ -21,17 +24,44 @@ public class EditorController {
     private static final String filePath = "./tmp/";
 
     @RequestMapping(value = {"/image_editor"}, method = RequestMethod.GET)
-    public String editorImageEditorGet(){
+    public String editorImageEditorGet(Model model, HttpSession session){
+
+        // 히스토리, 로그 업데이트
+        if(session.getAttribute("users") != null) {
+            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Thread logThread = new Thread(() ->
+                LogUtil.writeAllActivityLog(userObj, "/editor/image_editor", "이미지 편집"));
+            logThread.start();
+        }
+
         return "/editor/image_editor";
     }
 
     @RequestMapping(value = {"/video_editor"}, method = RequestMethod.GET)
-    public String editorVideoEditorGet(){
+    public String editorVideoEditorGet(Model model, HttpSession session){
+
+        // 히스토리, 로그 업데이트
+        if(session.getAttribute("users") != null) {
+            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Thread logThread = new Thread(() ->
+                    LogUtil.writeAllActivityLog(userObj, "/editor/video_editor", "동영상 편집"));
+            logThread.start();
+        }
+
         return "/editor/video_editor";
     }
 
     @RequestMapping(value = {"/gif_editor"}, method = RequestMethod.GET)
-    public String editorGifEditorGet(){
+    public String editorGifEditorGet(Model model, HttpSession session){
+
+        // 히스토리, 로그 업데이트
+        if(session.getAttribute("users") != null) {
+            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Thread logThread = new Thread(() ->
+                    LogUtil.writeAllActivityLog(userObj, "/editor/gif_editor", "GIF 편집"));
+            logThread.start();
+        }
+
         return "/editor/gif_editor";
     }
 

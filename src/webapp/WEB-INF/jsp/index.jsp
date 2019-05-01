@@ -12,6 +12,11 @@
     <title>웹플리케이션</title>
 
     <%@include file="assets/IncAsset.jsp" %>
+    <style>
+        div.row > div > a:hover {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -65,17 +70,17 @@
                                 <div class="row">
                                     <div class="col-xs-3">
                                         <i class="fa fa-clock-o fa-5x"></i>
-                                    </div>o9
+                                    </div>
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
-                                            <c:when test="${sessionScope.users.get('lastUsed').equals('/viewer/image_viewer')}">
+                                            <c:when test="${sessionScope.users.get('lastUsed') ne null}">
                                                 <div>최근에</div>
-                                                <div class="huge">이미지 뷰어</div>
+                                                <div class="huge">${sessionScope.users.get('lastUsed')}</div>
                                                 <div>사용하셨군요!</div>
                                             </c:when>
                                             <c:otherwise>
                                                 <div>최근에 사용하신 도구가 없습니다</div>
-                                                <div class="huge">이미지 뷰어</div>
+                                                <div class="huge">이미지 편집</div>
                                                 <div>를 한 번 시도해 보는것이 어떨까요?</div>
                                             </c:otherwise>
                                         </c:choose>
@@ -84,7 +89,7 @@
                             </div>
                             <a href="#" id="recent_href">
                                 <div class="panel-footer">
-                                    <span class="pull-left">이동</span>
+                                    <span class="pull-left">바로가기</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>
                                 </div>
@@ -100,12 +105,12 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>현재 고객님께서는</div>
-                                        <div class="huge">무료</div>
-                                        <div>멤버십을 사용하고 계십니다</div>
+                                        <div class="huge">${(sessionScope.user_membership.get("mno")).get("mname")}</div>
+                                        <div>구독을 사용하고 계십니다</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#">
+                            <a href="/subscribe">
                                 <div class="panel-footer">
                                     <span class="pull-left">상세 확인</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -144,7 +149,98 @@
             </c:choose>
         </div>
         <!-- /.row -->
-
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-default" style="background-color: #FAFAFA">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>미디어 편집</h2>
+                                <span style="font-size:16px;">
+                                        간단한 편집기능이 필요하십니까? 이런 편집기들은 어떠세요?
+                                    </span>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/editor/image_editor">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">이미지 편집</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/editor/video_editor">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">동영상 편집</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-default" style="background-color: #FAFAFA">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>유틸리티 툴</h2>
+                                <span style="font-size:16px;">
+                                    편리한 온라인 도구가 필요하십니까? 이런 도구들은 어떠세요?
+                                </span>
+                            </div>
+                        </div>
+                        <br><br><br>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/crypto/encryptWord">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">암/복호화</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <a href="/viewer/ssh_terminal">
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <p class="text-center" style="font-size:20px;">SSH 터미널</p>
+                                        </div>
+                                        <div class="panel-footer" style="background-color: white">
+                                            <span class="pull-left">이동</span>
+                                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /#page-wrapper -->
 
@@ -155,8 +251,8 @@
 <%@include file="assets/IncFooter.jsp" %>
 <script>
     $(document).ready(function () {
-        var recentUsed = '${sessionScope.users.get('lastUsed')}';
-        if(recentUsed === 'null')
+        var recentUsed = '${sessionScope.users.get('lastUsedUrl')}';
+        if (recentUsed === 'null')
             recentUsed = "/viewer/image_viewer";
 
         $("#recent_href").prop("href", recentUsed);

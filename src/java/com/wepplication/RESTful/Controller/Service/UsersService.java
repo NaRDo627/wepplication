@@ -12,11 +12,11 @@ public interface UsersService {
     public Users saveUser(Users users);
 
     // 인증 & 개인정보 조회
-    public Users authentication(String token);
+    public Users authentication(String token) throws Exception;
 
     // 비밀번호 변경
-    public Users updatePassword(String token, String password);
+    public Users updatePassword(String token, String password) throws Exception;
 
     // 탈퇴
-    public void withdraw(String token);
+    public void withdraw(String token) throws Exception;
 }

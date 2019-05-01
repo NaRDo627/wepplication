@@ -8,4 +8,5 @@ import java.util.List;
 public interface UserMemberShipService {
     public List<UserMemberShip> findUserMemberShipAll() throws Exception;
     public UserMemberShip findUserMemberShipByUmno(Integer umno) throws Exception;
+    public UserMemberShip saveUserMemberShip(UserMemberShip userMemberShip) throws Exception;
 }

@@ -4,6 +4,8 @@ import com.wepplication.RESTful.Controller.Service.PaymentInfoService;
 import com.wepplication.RESTful.Controller.Service.UsersService;
 import com.wepplication.RESTful.Domain.PaymentInfo;
 import com.wepplication.RESTful.Domain.Users;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,22 +22,30 @@ public class PaymentInfoController {
     private PaymentInfoService paymentInfoService;
 
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    public List<PaymentInfo> paymentInfoGet() {
+    public ResponseEntity<List<PaymentInfo>> paymentInfoGet() {
         System.out.println("select payment_info *");
         try{
-            return paymentInfoService.findPaymentInfoAll();
+            List<PaymentInfo> paymentInfoList = paymentInfoService.findPaymentInfoAll();
+            if(paymentInfoList == null || paymentInfoList.size() == 0)
+                return new ResponseEntity<>(paymentInfoList, HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(paymentInfoList, HttpStatus.OK);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = {"/{pno}"}, method = RequestMethod.GET)
-    public PaymentInfo paymentInfoGet(@PathVariable(value="pno") Integer pno) {
+    public ResponseEntity<PaymentInfo> paymentInfoGet(@PathVariable(value="pno") Integer pno) {
         System.out.println("select payment_info where pno=" + pno);
         try{
-            return paymentInfoService.findPaymentInfoByPno(pno);
+            PaymentInfo paymentInfo = paymentInfoService.findPaymentInfoByPno(pno);
+            if(paymentInfo == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(paymentInfo, HttpStatus.OK);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

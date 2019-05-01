@@ -233,7 +233,7 @@
                         <c:otherwise>
                             <li><a href="/profile"><i class="fa fa-user fa-fw"></i> 유저 프로필</a>
                             </li>
-                            <li><a href="/setting"><i class="fa fa-gear fa-fw"></i> 설정</a>
+                            <li><a href="/subscribe"><i class="fa fa-check-square fa-fw"></i> 구독</a>
                             </li>
                             <li class="divider"></li>
                             <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>

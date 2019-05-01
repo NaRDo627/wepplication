@@ -39,6 +39,13 @@
 <![endif]-->
 
 <script>
-    var REST_URL = (location.host.indexOf("azure.com") === -1)? "http://127.0.0.1:8081" : "http://wepplication.koreacentral.cloudapp.azure.com:8081";
+    //var REST_URL = (location.host.indexOf("asuscomm.com") === -1)? "http://127.0.0.1:8081" : "http://parkkiho.asuscomm.com:8081";
+    <c:set var="REST_URL">
+        <spring:eval expression="@config['REST_URL']"/>
+    </c:set>
+    var REST_URL = '<c:out value="${REST_URL}" />';
+    if(REST_URL == null || REST_URL === '' || typeof REST_URL === "undefined")
+        REST_URL = "http://127.0.0.1:8081";
+
 </script>
 <!-- 전역변수 설정 -->

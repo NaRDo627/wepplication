@@ -24,4 +24,8 @@ public class MemberShipServiceImpl implements MemberShipService {
     public MemberShip findMemberShipByMno(Integer mno) throws Exception {
         return memberShipDAO.findOne(mno);
     }
+
+    public MemberShip saveMemberShip(MemberShip memberShip) throws Exception {
+        return memberShipDAO.saveAndFlush(memberShip);
+    }
 }

@@ -13,13 +13,11 @@ public class UserMemberShip implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer umno;
 
-    @ManyToOne
-    @JoinColumn(name = "uno", referencedColumnName = "uno")
-    private Users uno;
+    @Column(name = "uno")
+    private Integer uno;
 
-    @ManyToOne
-    @JoinColumn(name = "mno", referencedColumnName = "mno")
-    private MemberShip mno;
+    @Column(name = "mno")
+    private Integer mno;
 
     @Column(name="start_time", columnDefinition = "DATETIME")
     private Timestamp startTime;
@@ -48,19 +46,19 @@ public class UserMemberShip implements Serializable {
         this.umno = umno;
     }
 
-    public Users getUno() {
+    public Integer getUno() {
         return uno;
     }
 
-    public void setUno(Users uno) {
+    public void setUno(Integer uno) {
         this.uno = uno;
     }
 
-    public MemberShip getMno() {
+    public Integer getMno() {
         return mno;
     }
 
-    public void setMno(MemberShip mno) {
+    public void setMno(Integer mno) {
         this.mno = mno;
     }
 

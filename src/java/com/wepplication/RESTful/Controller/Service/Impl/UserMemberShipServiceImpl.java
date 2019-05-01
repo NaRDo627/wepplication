@@ -24,4 +24,8 @@ public class UserMemberShipServiceImpl implements UserMemberShipService {
     public UserMemberShip findUserMemberShipByUmno(Integer umno) throws Exception {
         return userMemberShipDAO.findOne(umno);
     }
+
+    public UserMemberShip saveUserMemberShip(UserMemberShip userMemberShip) throws Exception {
+        return userMemberShipDAO.saveAndFlush(userMemberShip);
+    }
 }

@@ -17,6 +17,14 @@ public class DateTimeUtil {
         }
     }
 
+    public static String nowString(String dateFormat) {
+        try {
+            return getDateString(dateFormat, now());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static List<String> getCalendar(Integer prev, Integer next){
         if(prev == null) prev = 0;
         if(next == null) next = 11;
@@ -59,6 +67,26 @@ public class DateTimeUtil {
         try {
             java.util.Date parsed = format.parse(date);
             return new java.sql.Date(parsed.getTime());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Timestamp getTimestamp(String dateFormat, String dateString) {
+        DateFormat format = new SimpleDateFormat(dateFormat);
+        try {
+            java.util.Date parsed = format.parse(dateString);
+            return new Timestamp(parsed.getTime());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String getDateString(String dateFormat, Timestamp datetime) {
+        DateFormat format = new SimpleDateFormat(dateFormat);
+        try {
+            String formatted = format.format(datetime);
+            return formatted;
         } catch (Exception e) {
             return null;
         }

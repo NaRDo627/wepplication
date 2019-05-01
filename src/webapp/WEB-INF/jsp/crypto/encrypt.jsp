@@ -14,33 +14,7 @@
 
     <%@include file="../assets/IncAsset.jsp"%>
 
-
 </head>
-<script src="../../../resources/crypto/words/js/security.js"></script>
-<script>
-    var temp;
-    var cipherText;
-    var origText;
-
-    function input_Encrypt(){
-        var input = document.getElementById("BOARD_CONTENT").value;
-        temp = input;
-    }
-
-    function output_Encrypt(){
-        input_Encrypt();
-        //문장을 암호화
-        cipherText = Encrypt(temp, "passwd", 128);
-        document.getElementById("ENCRYPT_RESULT").value = cipherText;
-    }
-
-    function output_Decrypt(){
-        input_Encrypt();
-        //암호화된 문장을 복호화
-        origText = Decrypt(temp, "passwd", 128);
-        document.getElementById("DECRYPT_RESULT").value = origText;
-    }
-</script>
 
 <body>
     <div id="wrapper">
@@ -51,7 +25,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">암호화 / 복호화</h1>
+                        <h1 class="page-header">암호화 / 복호</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -65,13 +39,12 @@
                                         <div class="form-group">
                                             <div class="centered-outer">
                                                 <div class="centered-inner" style="text-align:left;">
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox">
-                                                    </label>
-                                                    <button type="button" class="btn btn-primary"><span class="visible-lg-inline">클라우드에 </span>저장 <i class="fa fa-cloud"></i></button>
-                                                    <button type="button" onclick="input_Encrypt()" class="btn btn-default">암호문 입력<span class="visible-lg-inline">화</span> <i class="fa fa-lock"></i></button>
-                                                    <button type="button" onclick="output_Encrypt()" class="btn btn-default">암호문 출력<span class="visible-lg-inline"></span> <i class="fa fa-lock"></i></button>
-                                                    <button type="button" onclick="output_Decrypt()" class="btn btn-default">복호문 출력<span class="visible-lg-inline"></span> <i class="fa fa-unlock"></i></button>
+
+                                                    <form action="EncryptTest", method="post" enctype="multipart/form-data">
+                                                        <input type="file", id="uploadfiles" ,name="uploadfile", placeholder="파일 선택" />
+                                                        <input name = "enc", type="submit", value="Encrypt" class="btn btn-default">암호<span class="visible-lg-inline">화</span> <i class="fa fa-lock"></i></input>
+                                                        <button name = "dec", type="button" class="btn btn-default">복호<span class="visible-lg-inline">화</span> <i class="fa fa-unlock"></i></button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -79,28 +52,7 @@
                                 </div>
                             </div>
                             <div class="panel-body" style="height:350px;">
-                                <table>
-                                    <tr>
-                                        <td class="td_left">
-                                            <label>내용</label>
-                                        </td>
-                                        <td>
-                                            <textarea id="BOARD_CONTENT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
-                                        </td>
-                                        <td class="td_left">
-                                            <label>암호문 결과</label>
-                                        </td>
-                                        <td>
-                                            <textarea id="ENCRYPT_RESULT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
-                                        </td>
-                                        <td class="td_left">
-                                            <label>복호문 결과</label>
-                                        </td>
-                                        <td>
-                                            <textarea id="DECRYPT_RESULT" name="BOARD_CONTENT" cols="40" rows="15"></textarea>
-                                        </td>
-                                    </tr>
-                                </table>
+
                             </div>
                         </div>
                     </div>

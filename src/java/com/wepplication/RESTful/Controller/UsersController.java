@@ -2,8 +2,11 @@ package com.wepplication.RESTful.Controller;
 
 import com.wepplication.RESTful.Controller.Service.UsersService;
 import com.wepplication.RESTful.Domain.Users;
+import com.wepplication.RESTful.Exception.UnauthorizedException;
 import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.EncryptUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,53 +21,81 @@ public class UsersController {
 
     // 유저 조회
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-    public List<Users> usersGet() {
+    public ResponseEntity<List<Users>> usersGet() {
         System.out.println("select users *");
         try{
-            return usersService.findUsersAll();
+            List<Users> users = usersService.findUsersAll();
+            if(users == null || users.size() == 0)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = {"/{uno}"}, method = RequestMethod.GET)
-    public Users usersGet(@PathVariable(value="uno") Integer uno) {
+    public ResponseEntity<Users> usersGet(@PathVariable(value="uno") Integer uno) {
         System.out.println("select users where uno=" +uno);
         try{
-            return usersService.findUsersByUno(uno);
+            Users user = usersService.findUsersByUno(uno);
+            if(user == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // 유저 생성
     @CrossOrigin
     @RequestMapping(value = {"", "/"}, method = RequestMethod.POST)
-    public Users usersPost(@RequestBody Users users) {
+    public ResponseEntity<Users> usersPost(@RequestBody Users users) {
         if(users == null)
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         System.out.println("Insert " + users.getUserName());
         try{
             users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + users.getPassword()));
             users.setMemberShipStatus(0);
             users.setInsertTime(DateTimeUtil.now());
             users.setUpdateTime(DateTimeUtil.now());
-            return usersService.saveUser(users);
+            return new ResponseEntity<>(usersService.saveUser(users), HttpStatus.OK);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 유저 수정
+    @CrossOrigin
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.PUT)
+    public ResponseEntity<Users> usersPut(@RequestBody Users users) {
+        if(users == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        System.out.println("Update " + users.getUserName());
+        try{
+            users.setUpdateTime(DateTimeUtil.now());
+            return new ResponseEntity<>(usersService.saveUser(users), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // 개인정보 조회
     @RequestMapping(value = {"/myinfo"}, method = RequestMethod.GET)
-    public Users usersMyinfoGet(@RequestHeader(value="authorization") String authorization) {
+    public ResponseEntity<Users> usersMyinfoGet(@RequestHeader(value="authorization") String authorization) {
         System.out.println("select users by authorization");
-        Users users = usersService.authentication(authorization);
+
         try{
+            Users users = usersService.authentication(authorization);
             System.out.println(users.getUserName());
-            return users;
+            return  new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

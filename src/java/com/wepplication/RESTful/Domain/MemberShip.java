@@ -18,9 +18,6 @@ public class MemberShip implements Serializable {
     @Column(name="mname", columnDefinition = "NVARCHAR(50)")
     private String mname;
 
-    @Column(name="cloud_size")
-    private Integer cloudSize;
-
     @Column(name="price")
     private Integer price;
 
@@ -45,14 +42,6 @@ public class MemberShip implements Serializable {
 
     public void setMname(String mname) {
         this.mname = mname;
-    }
-
-    public Integer getCloudSize() {
-        return cloudSize;
-    }
-
-    public void setCloudSize(Integer cloudSize) {
-        this.cloudSize = cloudSize;
     }
 
     public Integer getPrice() {

@@ -31,6 +31,16 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body" style="height:1000px;padding: 0;">
+                                <!-- 최후의 최후의 최후의 수단... -->
+                                <iframe style="width:100%; height:1000px; border: hidden; "  src="http://parkkiho.asuscomm.com:8080/angular-moviemasher/app/"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <%--
                     <div class="col-lg-10 col-xs-9">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -45,7 +55,7 @@
                                     </div>
                                 </div>
                                 <br>
-                                <%--<p class="text-center"></p>--%>
+                                &lt;%&ndash;<p class="text-center"></p>&ndash;%&gt;
                                 <br>
                             </div>
                             <div class="panel-footer">
@@ -94,6 +104,7 @@
                             </div>
                         </div>
                     </div>
+                    --%>
                 </div>
             </div>
             <!-- /.container-fluid -->
