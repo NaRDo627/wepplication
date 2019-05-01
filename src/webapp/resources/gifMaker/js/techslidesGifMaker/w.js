@@ -1,4 +1,4 @@
-importScripts('jsgif/b64.js', 'jsgif/LZWEncoder.js','jsgif/NeuQuant.js','jsgif/GIFEncoder.js');
+importScripts('../jsgif/b64.js', '../jsgif/LZWEncoder.js','../jsgif/NeuQuant.js','../jsgif/GIFEncoder.js');
 
 var encoder = new GIFEncoder();
 
