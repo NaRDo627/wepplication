@@ -25,8 +25,16 @@ public class UsersServiceImpl implements UsersService {
         return usersDAO.findOne(uno);
     }
 
+    public Integer countUsersByUserId(String id) throws Exception {
+        return usersDAO.countAllByUserId(id);
+    }
+
+    public Integer countUsersByEmail(String email) throws Exception {
+        return usersDAO.countAllByEmail(email);
+    }
+
     // 가입
-    public Users saveUser(Users users) {
+    public Users saveUser(Users users) throws Exception {
         return usersDAO.saveAndFlush(users);
     }
 
@@ -44,7 +52,7 @@ public class UsersServiceImpl implements UsersService {
             String decoded = new String(Base64Utils.decodeFromString(credential));
             String[] usernameAndPassword = decoded.split(":");
 
-            user = usersDAO.findByUserIdAndPassword(usernameAndPassword[0], EncryptUtil.encryptByMd5("whfwkrtlfjbb" + usernameAndPassword[1]));
+            user = usersDAO.findByUserIdAndPassword(usernameAndPassword[0], usernameAndPassword[1]);
         }
         if(user == null)
             throw new UnauthorizedException("User Unexists");

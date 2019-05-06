@@ -73,13 +73,13 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
-                                            <c:when test="${sessionScope.users.get('lastUsed') ne null}">
+                                            <c:when test="${sessionScope.users.get('lastUsed') ne null and sessionScope.users.get('lastUsed') != 'null'}">
                                                 <div>최근에</div>
                                                 <div class="huge">${sessionScope.users.get('lastUsed')}</div>
                                                 <div>사용하셨군요!</div>
                                             </c:when>
                                             <c:otherwise>
-                                                <div>최근에 사용하신 도구가 없습니다</div>
+                                                <div>처음이시군요!</div>
                                                 <div class="huge">이미지 편집</div>
                                                 <div>를 한 번 시도해 보는것이 어떨까요?</div>
                                             </c:otherwise>
@@ -253,7 +253,7 @@
     $(document).ready(function () {
         var recentUsed = '${sessionScope.users.get('lastUsedUrl')}';
         if (recentUsed === 'null')
-            recentUsed = "/viewer/image_viewer";
+            recentUsed = "/editor/image_editor";
 
         $("#recent_href").prop("href", recentUsed);
     });

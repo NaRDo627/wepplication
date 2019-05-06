@@ -41,14 +41,14 @@ public class Users implements Serializable {
     @Column(name="last_used_url", columnDefinition = "NVARCHAR(255)")
     private String lastUsedUrl;
 
-    @Column(name="membership_status")
-    private Integer memberShipStatus;
-
     @Column(name="insert_time", columnDefinition = "DATETIME")
     private Timestamp insertTime;
 
     @Column(name="update_time", columnDefinition = "DATETIME")
     private Timestamp updateTime;
+
+    @Column(name="verified")
+    private Integer verified;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -102,12 +102,12 @@ public class Users implements Serializable {
         this.email = email;
     }
 
-    public Integer getMemberShipStatus() {
-        return memberShipStatus;
+    public Integer getVerified() {
+        return verified;
     }
 
-    public void setMemberShipStatus(Integer memberShipStatus) {
-        this.memberShipStatus = memberShipStatus;
+    public void setVerified(Integer verified) {
+        this.verified = verified;
     }
 
     public Timestamp getInsertTime() {
