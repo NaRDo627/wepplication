@@ -50,6 +50,9 @@
                         <li>
                             <a href="/editor/video_editor"><i class="fa fa-video-camera fa-fw"></i> 동영상 편집</a>
                         </li>
+                        <li>
+                            <a href="/editor/gif_editor"><i class="fa fa-image fa-fw"></i> GIF 편집</a>
+                        </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
