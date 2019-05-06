@@ -236,9 +236,10 @@ public final class APIController implements HttpSessionListener {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(requestForm.getSender()));
 
+
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(requestForm.getReceiver()));
             message.setSubject(requestForm.getTitle(), "UTF-8");
-            message.setText(requestForm.getContent() + "\n\n이 메일은 자동발송 되었습니다.", "UTF-8");
+            message.setContent(requestForm.getContent() + "<br><br>이 메일은 자동발송 되었습니다.", "text/html; charset=utf-8");
             Transport.send(message);
             response.put("result", "ok");
             System.out.println("mail sent successfully");

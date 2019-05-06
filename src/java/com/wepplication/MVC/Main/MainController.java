@@ -199,10 +199,10 @@ public class MainController {
             emailObj.put("password", SENDER_EMAIL_PASS);
             emailObj.put("receiver", email);
             emailObj.put("title", "웹플리케이션 인증 메일입니다.");
-            emailObj.put("content", "안녕하세요, "+ userName + "님!\n" +
-                    "저희 웹플리케이션에 가입해주셔서 감사합니다.\n" +
-                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.\n\n" +
-                    "http://localhost:8080/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()));
+            emailObj.put("content", "안녕하세요, "+ userName + "님!<br>" +
+                    "저희 웹플리케이션에 가입해주셔서 감사합니다.<br>" +
+                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()) + "'>인증하기</a>");
 
             Thread logThread = new Thread(() ->
                     RestUtil.requestPost(addr + "/api/mail/send", headers, emailObj));
@@ -234,10 +234,10 @@ public class MainController {
             emailObj.put("password", SENDER_EMAIL_PASS);
             emailObj.put("receiver", email);
             emailObj.put("title", "웹플리케이션 인증 메일입니다.");
-            emailObj.put("content", "안녕하세요, "+ userName + "님!\n" +
-                    "이메일 인증메일입니다.\n" +
-                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.\n\n" +
-                    "http://localhost:8080/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()));
+            emailObj.put("content", "안녕하세요, "+ userName + "님!<br>" +
+                    "이메일 인증메일입니다.<br>" +
+                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()) + "'>인증하기</a>");
 
             List<String[]> headers = new ArrayList<>();
             headers.add(new String[]{"Accept", "*/*"});
