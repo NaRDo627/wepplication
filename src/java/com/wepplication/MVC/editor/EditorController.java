@@ -58,7 +58,7 @@ public class EditorController {
         if(session.getAttribute("users") != null) {
             JSONObject userObj = (JSONObject)session.getAttribute("users");
             Thread logThread = new Thread(() ->
-                    LogUtil.writeAllActivityLog(userObj, "/editor/gif_editor", "움짤 편집"));
+                    LogUtil.writeAllActivityLog(userObj, "/editor/gif_editor", "GIF 편집"));
             logThread.start();
         }
 
