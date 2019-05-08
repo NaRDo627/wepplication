@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -107,7 +108,8 @@ public class MainController {
     public @ResponseBody
     String loginPost(@RequestParam("userId") String userId,
                       @RequestParam("password") String password,
-                      Model model, HttpSession session){
+                     @RequestParam("autoLogin") Integer autoLogin,
+                      Model model, HttpSession session, HttpServletResponse response) {
 
         try{
             List<String[]> headers = new ArrayList<>();
@@ -144,6 +146,10 @@ public class MainController {
             JSONObject membershipInfo = (JSONObject) RestUtil.requestGet(addr + "/membership/" + userMemberShipObj.get("mno"), headers).get("result");
             userMemberShipObj.put("mno", membershipInfo);
             session.setAttribute("user_membership", userMemberShipObj);
+
+            if(autoLogin == 1){
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

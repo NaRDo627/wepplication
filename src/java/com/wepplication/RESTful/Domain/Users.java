@@ -50,6 +50,12 @@ public class Users implements Serializable {
     @Column(name="verified")
     private Integer verified;
 
+    @Column(name="session_key", columnDefinition = "NVARCHAR(50)")
+    private String sessionKey;
+
+    @Column(name="session_time_until", columnDefinition = "DATETIME")
+    private Timestamp sessionTimeUntil;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -140,5 +146,21 @@ public class Users implements Serializable {
 
     public void setLastUsedUrl(String lastUsedUrl) {
         this.lastUsedUrl = lastUsedUrl;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public Timestamp getSessionTimeUntil() {
+        return sessionTimeUntil;
+    }
+
+    public void setSessionTimeUntil(Timestamp sessionTimeUntil) {
+        this.sessionTimeUntil = sessionTimeUntil;
     }
 }

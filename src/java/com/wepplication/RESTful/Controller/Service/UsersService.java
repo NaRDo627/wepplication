@@ -2,6 +2,7 @@ package com.wepplication.RESTful.Controller.Service;
 
 import com.wepplication.RESTful.Domain.Users;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersService {
@@ -12,6 +13,7 @@ public interface UsersService {
 
     // 가입
     public Users saveUser(Users users) throws Exception;
+    public Users saveUserAutoLogin(Users users, String sessionKey, Timestamp sessionTimeUntil) throws Exception;
 
     // 인증 & 개인정보 조회
     public Users authentication(String token) throws Exception;

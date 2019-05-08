@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service("usersService")
@@ -35,6 +36,12 @@ public class UsersServiceImpl implements UsersService {
 
     // 가입
     public Users saveUser(Users users) throws Exception {
+        return usersDAO.saveAndFlush(users);
+    }
+
+    public Users saveUserAutoLogin(Users users, String sessionKey, Timestamp sessionTimeUntil) throws Exception {
+        users.setSessionKey(sessionKey);
+        users.setSessionTimeUntil(sessionTimeUntil);
         return usersDAO.saveAndFlush(users);
     }
 

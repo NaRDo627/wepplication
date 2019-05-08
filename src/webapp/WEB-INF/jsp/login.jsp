@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="checkbox">
                                         <label>
-                                            <input name="remember" type="checkbox" value="Remember Me">자동 로그인
+                                            <input name="remember" id="remember" type="checkbox" value="Remember Me">자동 로그인
                                         </label>
                                     </div>
                                     <!-- Change this to a button or input when using this as a form -->
@@ -60,10 +60,16 @@
 <%@include file="assets/IncFooter.jsp" %>
 <script>
     $(document).ready(function () {
+        // Auto-Login
+        var autoLogin = 0;
+        if($("#remember").is(":checked"))
+            autoLogin = 1;
+
         $("#btn-submit").click(function () {
             var arg1 = {
                 "userId": $("#id").val(),
-                "password": $("#password").val()
+                "password": $("#password").val(),
+                "autoLogin": autoLogin
             };
 
             $.post("/login", arg1, function (data) {

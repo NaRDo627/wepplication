@@ -25,4 +25,12 @@
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
+
+    <bean id="autoLoginInterceptor" class="com.wepplication.MVC.Main.AutoLoginInterceptor" />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/"/>
+            <ref bean="autoLoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
