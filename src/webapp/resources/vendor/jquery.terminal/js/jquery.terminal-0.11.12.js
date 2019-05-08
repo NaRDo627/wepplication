@@ -310,7 +310,7 @@
         return wc(n, '', -1);
     }
     /**
-    * Public API
+    * Public Form
     * $.Storage.set("name", "value")
     * $.Storage.set({"name1":"value1", "name2":"value2", etc})
     * $.Storage.get("name")
@@ -2661,7 +2661,7 @@
     var terminals = new Cycle(); // list of terminals global in this scope
     // state for all terminals, terminals can't have own array fo state because
     // there is only one popstate event
-    var save_state = []; // hold objects returned by export_view by history API
+    var save_state = []; // hold objects returned by export_view by history Form
     var hash_commands;
     var change_hash = false; // don't change hash on Init
     var fire_hash_change = true;
@@ -5112,7 +5112,7 @@
                 !settings.completion) {
                 // overwrite interpreter completion by global setting #224
                 // we use string to indicate that it need to be taken from settings
-                // so we are able to change it using option API method
+                // so we are able to change it using option Form method
                 itrp.completion = 'settings';
             }
             interpreters = new Stack($.extend({

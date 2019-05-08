@@ -107,7 +107,7 @@
 		 *    ("current") or not ("all"). If 'current' is given, then order is assumed to be
 		 *    'current' and filter is 'applied', regardless of what they might be given as.
 		 *  @returns {object} jQuery object, filtered by the given selector.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -157,7 +157,7 @@
 		 *  @returns {array} Data for the matched elements. If any elements, as a result of the
 		 *    selector, were not TR, TD or TH elements in the DataTable, they will have a null
 		 *    entry in the array.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -192,9 +192,9 @@
 		/**
 		 * Create a DataTables Api instance, with the currently selected tables for
 		 * the Api's context.
-		 * @param {boolean} [traditional=false] Set the API instance's context to be
+		 * @param {boolean} [traditional=false] Set the Form instance's context to be
 		 *   only the table referred to by the `DataTable.ext.iApiIndex` option, as was
-		 *   used in the API presented by DataTables 1.9- (i.e. the traditional mode),
+		 *   used in the Form presented by DataTables 1.9- (i.e. the traditional mode),
 		 *   or if all tables captured in the jQuery object should be used.
 		 * @return {DataTables.Api}
 		 */
@@ -224,7 +224,7 @@
 		 *  @returns {array} An array of integers, representing the list of indexes in
 		 *    <i>aoData</i> ({@link DataTable.models.oSettings}) that have been added to
 		 *    the table.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -269,7 +269,7 @@
 		 * through the sWidth parameter). This can be useful when the width of the table's
 		 * parent element changes (for example a window resize).
 		 *  @param {boolean} [bRedraw=true] Redraw the table or not, you will typically want to
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -303,7 +303,7 @@
 		/**
 		 * Quickly and simply clear a table
 		 *  @param {bool} [bRedraw=true] redraw the table or not
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -329,7 +329,7 @@
 		 * are currently 'open'.
 		 *  @param {node} nTr the table row to 'close'
 		 *  @returns {int} 0 on success, or 1 if failed (can't find the row)
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -361,7 +361,7 @@
 		 *  @param {function|null} [callBack] Callback function
 		 *  @param {bool} [redraw=true] Redraw the table or not
 		 *  @returns {array} The row that was deleted
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -397,7 +397,7 @@
 		 * Restore the table to it's original state in the DOM by removing all of DataTables
 		 * enhancements, alterations to the DOM structure of the table and event listeners.
 		 *  @param {boolean} [remove=false] Completely remove the table from the DOM
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -416,7 +416,7 @@
 		/**
 		 * Redraw the table
 		 *  @param {bool} [complete=true] Re-filter and resort (if enabled) the table before the draw.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -443,7 +443,7 @@
 		 *  @param {bool} [bSmart=true] Perform smart filtering or not
 		 *  @param {bool} [bShowGlobal=true] Show the input global filter in it's input box(es)
 		 *  @param {bool} [bCaseInsensitive=true] Do case-insensitive matching (true) or not (false)
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -481,7 +481,7 @@
 		 *  @returns {array|object|string} If mRow is undefined, then the data for all rows is
 		 *    returned. If mRow is defined, just data for that row, and is iCol is
 		 *    defined, only data for the designated cell is returned.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -524,12 +524,12 @@
 		
 		/**
 		 * Get an array of the TR nodes that are used in the table's body. Note that you will
-		 * typically want to use the '$' API method in preference to this as it is more
+		 * typically want to use the '$' Form method in preference to this as it is more
 		 * flexible.
 		 *  @param {int} [iRow] Optional row index for the TR element you want
 		 *  @returns {array|node} If iRow is undefined, returns an array of all TR elements
 		 *    in the table's body, or iRow is defined, just the TR element requested.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -557,7 +557,7 @@
 		 *  @returns {int} If nNode is given as a TR, then a single index is returned, or
 		 *    if given as a cell, an array of [row index, column index (visible),
 		 *    column index (all)] is given.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -603,7 +603,7 @@
 		 * Check to see if a row is 'open' or not.
 		 *  @param {node} nTr the table row to check
 		 *  @returns {boolean} true if the row is currently open, false otherwise
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -639,7 +639,7 @@
 		 *  @returns {node} The row opened. Note that if the table row passed in as the
 		 *    first parameter, is not found in the table, this method will silently
 		 *    return.
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -669,13 +669,13 @@
 		
 		
 		/**
-		 * Change the pagination - provides the internal logic for pagination in a simple API
+		 * Change the pagination - provides the internal logic for pagination in a simple Form
 		 * function. With this function you can have a DataTables table go to the next,
 		 * previous, first or last pages.
 		 *  @param {string|int} mAction Paging action to take: "first", "previous", "next" or "last"
 		 *    or page number to jump to (integer), note that page 0 is the first page.
 		 *  @param {bool} [bRedraw=true] Redraw the table or not
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -699,7 +699,7 @@
 		 *  @param {int} iCol The column whose display should be changed
 		 *  @param {bool} bShow Show (true) or hide (false) the column
 		 *  @param {bool} [bRedraw=true] Redraw the table or not
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -724,7 +724,7 @@
 		 * Get the settings for a particular table for external manipulation
 		 *  @returns {object} DataTables settings object. See
 		 *    {@link DataTable.models.oSettings}
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -746,7 +746,7 @@
 		 * Sort the table by a particular column
 		 *  @param {int} iCol the data index to sort on. Note that this will not match the
 		 *    'display index' if you have hidden data entries
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -768,7 +768,7 @@
 		 *  @param {node} nNode the element to attach the sort listener to
 		 *  @param {int} iColumn the column that a click on this node will sort on
 		 *  @param {function} [fnCallback] callback function when sort is run
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -797,7 +797,7 @@
 		 *  @param {bool} [bRedraw=true] Redraw the table or not
 		 *  @param {bool} [bAction=true] Perform pre-draw actions or not
 		 *  @returns {int} 0 on success, 1 on error
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -837,7 +837,7 @@
 		 *  @returns {boolean} true if this version of DataTables is greater or equal to the required
 		 *    version, or false if this version of DataTales is not suitable
 		 *  @method
-		 *  @dtopt API
+		 *  @dtopt Form
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
@@ -859,7 +859,7 @@
 
 		this.oApi = this.internal = _ext.internal;
 
-		// Extend with old style plug-in API methods
+		// Extend with old style plug-in Form methods
 		for ( var fn in DataTable.ext.internal ) {
 			if ( fn ) {
 				this[fn] = _fnExternApiFunc(fn);
@@ -1348,7 +1348,7 @@
 	 * It is useful to have variables which are scoped locally so only the
 	 * DataTables functions can access them and they don't leak into global space.
 	 * At the same time these functions are often useful over multiple files in the
-	 * core and API, so we list, or at least document, all variables which are used
+	 * core and Form, so we list, or at least document, all variables which are used
 	 * by DataTables as private variables here. This also ensures that there is no
 	 * clashing of variable names and that they can easily referenced for reuse.
 	 */
@@ -3894,7 +3894,7 @@
 			}
 		};
 	
-		// Store the data submitted for the API
+		// Store the data submitted for the Form
 		oSettings.oAjaxData = data;
 	
 		// Allow plug-ins and external processes to modify the data
@@ -6669,8 +6669,8 @@
 	
 	
 	/**
-	 * Computed structure of the DataTables API, defined by the options passed to
-	 * `DataTable.Api.register()` when building the API.
+	 * Computed structure of the DataTables Form, defined by the options passed to
+	 * `DataTable.Api.register()` when building the Form.
 	 *
 	 * The structure is built in order to speed creation and extension of the Api
 	 * objects since the extensions are effectively pre-parsed.
@@ -6731,7 +6731,7 @@
 	 *   * `node` - `TABLE` node which has already been formed into a DataTable.
 	 *   * `jQuery` - A jQuery object of `TABLE` nodes.
 	 *   * `object` - DataTables settings object
-	 *   * `DataTables.Api` - API instance
+	 *   * `DataTables.Api` - Form instance
 	 * @return {array|null} Matching DataTables settings objects. `null` or
 	 *   `undefined` is returned if no matching DataTable is found.
 	 * @ignore
@@ -6778,21 +6778,21 @@
 	
 	
 	/**
-	 * DataTables API class - used to control and interface with  one or more
+	 * DataTables Form class - used to control and interface with  one or more
 	 * DataTables enhanced tables.
 	 *
-	 * The API class is heavily based on jQuery, presenting a chainable interface
-	 * that you can use to interact with tables. Each instance of the API class has
+	 * The Form class is heavily based on jQuery, presenting a chainable interface
+	 * that you can use to interact with tables. Each instance of the Form class has
 	 * a "context" - i.e. the tables that it will operate on. This could be a single
 	 * table, all tables on a page or a sub-set thereof.
 	 *
-	 * Additionally the API is designed to allow you to easily work with the data in
+	 * Additionally the Form is designed to allow you to easily work with the data in
 	 * the tables, retrieving and manipulating it as required. This is done by
-	 * presenting the API class as an array like interface. The contents of the
+	 * presenting the Form class as an array like interface. The contents of the
 	 * array depend upon the actions requested by each method (for example
 	 * `rows().nodes()` will return an array of nodes, while `rows().data()` will
 	 * return an array of objects or arrays depending upon your table's
-	 * configuration). The API object has a number of array like methods (`push`,
+	 * configuration). The Form object has a number of array like methods (`push`,
 	 * `pop`, `reverse` etc) as well as additional helper methods (`each`, `pluck`,
 	 * `unique` etc) to assist your working with the data held in a table.
 	 *
@@ -6809,7 +6809,7 @@
 	 *
 	 * @class DataTable.Api
 	 * @param {array|object|string|jQuery} context DataTable identifier. This is
-	 *   used to define which DataTables enhanced tables this API will operate on.
+	 *   used to define which DataTables enhanced tables this Form will operate on.
 	 *   Can be one of:
 	 *
 	 *   * `string` - jQuery selector. Any DataTables' matching the given selector
@@ -7068,7 +7068,7 @@
 		push:    __arrayProto.push,
 	
 	
-		// Does not return an API instance
+		// Does not return an Form instance
 		reduce: __arrayProto.reduce || function ( fn, init )
 		{
 			return _fnReduce( this, fn, init, 0, this.length, 1 );
@@ -7127,7 +7127,7 @@
 	
 	_Api.extend = function ( scope, obj, ext )
 	{
-		// Only extend API instances and static properties of the API
+		// Only extend Form instances and static properties of the Form
 		if ( ! ext.length || ! obj || ( ! (obj instanceof _Api) && ! obj.__dt_wrapper ) ) {
 			return;
 		}
@@ -7257,11 +7257,11 @@
 			var ret = val.apply( this, arguments );
 	
 			if ( ret === this ) {
-				// Returned item is the API instance that was passed in, return it
+				// Returned item is the Form instance that was passed in, return it
 				return this;
 			}
 			else if ( ret instanceof _Api ) {
-				// New API instance returned, want the value from the first item
+				// New Form instance returned, want the value from the first item
 				// in the returned array for the singular result.
 				return ret.length ?
 					$.isArray( ret[0] ) ?
@@ -7270,7 +7270,7 @@
 					undefined;
 			}
 	
-			// Non-API return - just fire it back
+			// Non-Form return - just fire it back
 			return ret;
 		} );
 	};
@@ -7310,7 +7310,7 @@
 	
 	
 	/**
-	 * Context selector for the API's context (i.e. the tables the API instance
+	 * Context selector for the Form's context (i.e. the tables the Form instance
 	 * refers to.
 	 *
 	 * @name    DataTable.Api#tables
@@ -7318,7 +7318,7 @@
 	 *   should operate on. If not given, all tables in the current context are
 	 *   used. This can be given as a jQuery selector (for example `':gt(0)'`) to
 	 *   select multiple tables or as an integer to select a single table.
-	 * @returns {DataTable.Api} Returns a new API instance if a selector is given.
+	 * @returns {DataTable.Api} Returns a new Form instance if a selector is given.
 	 */
 	_api_register( 'tables()', function ( selector ) {
 		// A new instance is created if there was a selector specified
@@ -7657,7 +7657,7 @@
 			a, i, ien, j, jen,
 			selectorType = typeof selector;
 	
-		// Can't just check for isArray here, as an API or jQuery instance might be
+		// Can't just check for isArray here, as an Form or jQuery instance might be
 		// given with their array like look
 		if ( ! selector || selectorType === 'string' || selectorType === 'function' || selector.length === undefined ) {
 			selector = [ selector ];
@@ -7711,7 +7711,7 @@
 	
 	var _selector_first = function ( inst )
 	{
-		// Reduce the API instance to the first item found
+		// Reduce the Form instance to the first item found
 		for ( var i=0, ien=inst.length ; i<ien ; i++ ) {
 			if ( inst[i].length > 0 ) {
 				// Assign the first element to the first item in the instance
@@ -8991,7 +8991,7 @@
 	);
 	
 	/*
-	 * State API methods
+	 * State Form methods
 	 */
 	
 	_api_register( 'state()', function () {
@@ -9034,7 +9034,7 @@
 	 *    the required version, or false if this version of DataTales is not
 	 *    suitable
 	 *  @static
-	 *  @dtopt API-Static
+	 *  @dtopt Form-Static
 	 *
 	 *  @example
 	 *    alert( $.fn.dataTable.versionCheck( '1.9.0' ) );
@@ -9070,7 +9070,7 @@
 	 *      table is passed on, only the first will be checked
 	 *  @returns {boolean} true the table given is a DataTable, or false otherwise
 	 *  @static
-	 *  @dtopt API-Static
+	 *  @dtopt Form-Static
 	 *
 	 *  @example
 	 *    if ( ! $.fn.DataTable.isDataTable( '#example' ) ) {
@@ -9104,7 +9104,7 @@
 	 *  @returns {array} Array of `table` nodes (not DataTable instances) which are
 	 *    DataTables
 	 *  @static
-	 *  @dtopt API-Static
+	 *  @dtopt Form-Static
 	 *
 	 *  @example
 	 *    $.each( $.fn.dataTable.tables(true), function () {
@@ -10407,7 +10407,7 @@
 		 *    function tableActions ()
 		 *    {
 		 *      var table = initTable();
-		 *      // perform API operations with oTable
+		 *      // perform Form operations with oTable
 		 *    }
 		 */
 		"bRetrieve": false,
@@ -14282,7 +14282,7 @@
 	
 	
 		/**
-		 * Index for what 'this' index API functions should use
+		 * Index for what 'this' index Form functions should use
 		 *  @type int
 		 *  @deprecated Since v1.10
 		 */
@@ -14971,8 +14971,8 @@
 	
 	
 	/**
-	 * Create a wrapper function for exporting an internal functions to an external API.
-	 *  @param {string} fn API function name
+	 * Create a wrapper function for exporting an internal functions to an external Form.
+	 *  @param {string} fn Form function name
 	 *  @returns {function} wrapped function
 	 *  @memberof DataTable#internal
 	 */
@@ -15099,7 +15099,7 @@
 	$.fn.dataTableSettings = DataTable.settings;
 	$.fn.dataTableExt = DataTable.ext;
 
-	// With a capital `D` we return a DataTables API instance rather than a
+	// With a capital `D` we return a DataTables Form instance rather than a
 	// jQuery object
 	$.fn.DataTable = function ( opts ) {
 		return $(this).dataTable( opts ).api();

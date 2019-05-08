@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <start-class>com.wepplication.RESTful.RESTApplication</start-class>
+        <start-class>com.wepplication.RESTApplication</start-class>
     </properties>
 
 
@@ -257,7 +257,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.wepplication.RESTful.RESTApplication</mainClass>
+                            <mainClass>com.wepplication.RESTApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

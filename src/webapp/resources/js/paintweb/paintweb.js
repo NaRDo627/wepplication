@@ -325,7 +325,7 @@ function PaintWeb (win, doc) {
   };
 
   /**
-   * Tells if the browser supports the Canvas Shadows API.
+   * Tells if the browser supports the Canvas Shadows Form.
    *
    * @type Boolean
    * @default true

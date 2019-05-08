@@ -429,7 +429,7 @@
     /**
      * Horizontal text alignment. Possible values: "left", "center", "right".
      *
-     * <p>Note that the Canvas Text API also defines the "start" and "end" 
+     * <p>Note that the Canvas Text Form also defines the "start" and "end"
      * values, which are not "supported" by PaintWeb.
      *
      * @type String
