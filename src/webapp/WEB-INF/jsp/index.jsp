@@ -35,7 +35,7 @@
             <div class="col-lg-12">
                 <h1 class="page-information">환영합니다&nbsp;
                     <c:if test="${sessionScope.users ne null}">
-                        ${sessionScope.users.get('userNickname')} 님
+                        ${sessionScope.users.userNickname} 님
                     </c:if>!
                 </h1>
             </div>
@@ -73,9 +73,9 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <c:choose>
-                                            <c:when test="${sessionScope.users.get('lastUsed') ne null and sessionScope.users.get('lastUsed') != 'null'}">
+                                            <c:when test="${sessionScope.users.lastUsed ne null and sessionScope.users.lastUsed != 'null'}">
                                                 <div>최근에</div>
-                                                <div class="huge">${sessionScope.users.get('lastUsed')}</div>
+                                                <div class="huge">${sessionScope.users.lastUsed}</div>
                                                 <div>사용하셨군요!</div>
                                             </c:when>
                                             <c:otherwise>
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>현재 고객님께서는</div>
-                                        <div class="huge">${(sessionScope.user_membership.get("mno")).get("mname")}</div>
+                                        <div class="huge">${sessionScope.membership.mname}</div>
                                         <div>구독을 사용하고 계십니다</div>
                                     </div>
                                 </div>
@@ -251,7 +251,7 @@
 <%@include file="assets/IncFooter.jsp" %>
 <script>
     $(document).ready(function () {
-        var recentUsed = '${sessionScope.users.get('lastUsedUrl')}';
+        var recentUsed = '${sessionScope.users.lastUsedUrl}';
         if (recentUsed === 'null')
             recentUsed = "/editor/image_editor";
 

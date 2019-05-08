@@ -1,5 +1,6 @@
 package com.wepplication.Controller.MVC;
 
+import com.wepplication.Domain.Users;
 import com.wepplication.Util.FileUtil;
 import com.wepplication.Util.LogUtil;
 import org.codehaus.jettison.json.JSONObject;
@@ -28,7 +29,7 @@ public class EditorController {
 
         // 히스토리, 로그 업데이트
         if(session.getAttribute("users") != null) {
-            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Users userObj = (Users)session.getAttribute("users");
             Thread logThread = new Thread(() ->
                 LogUtil.writeAllActivityLog(userObj, "/editor/image_editor", "이미지 편집"));
             logThread.start();
@@ -42,7 +43,7 @@ public class EditorController {
 
         // 히스토리, 로그 업데이트
         if(session.getAttribute("users") != null) {
-            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Users userObj = (Users)session.getAttribute("users");
             Thread logThread = new Thread(() ->
                     LogUtil.writeAllActivityLog(userObj, "/editor/video_editor", "동영상 편집"));
             logThread.start();
@@ -56,7 +57,7 @@ public class EditorController {
 
         // 히스토리, 로그 업데이트
         if(session.getAttribute("users") != null) {
-            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Users userObj = (Users)session.getAttribute("users");
             Thread logThread = new Thread(() ->
                     LogUtil.writeAllActivityLog(userObj, "/editor/gif_editor", "GIF 편집"));
             logThread.start();

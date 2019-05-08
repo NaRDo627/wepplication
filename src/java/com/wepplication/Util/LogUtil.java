@@ -1,5 +1,6 @@
 package com.wepplication.Util;
 
+import com.wepplication.Domain.Users;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.util.ArrayList;
@@ -9,15 +10,15 @@ public class LogUtil {
     private static final String API_ADDRESS = "http://localhost";
     private static final String API_PORT = "8081";
 
-    static public void writeAllActivityLog(JSONObject user, String url, String description) {
+    static public void writeAllActivityLog(Users user, String url, String description) {
         writeUserActivity(user, url, description);
         writeUserLog(user, url, description);
     }
 
-    static public void writeUserActivity(JSONObject user, String url, String description) {
+    static public void writeUserActivity(Users user, String url, String description) {
         try {
-            user.put("lastUsedUrl", url);
-            user.put("lastUsed", description);
+            user.setLastUsedUrl("lastUserUrl");
+            user.setLastUsedUrl("lastUsed");
 
             List<String[]> headers = new ArrayList<>();
             headers.add(new String[]{"Accept", "*/*"});
@@ -30,10 +31,10 @@ public class LogUtil {
         }
     }
 
-    static public void writeUserLog(JSONObject user, String url, String description) {
+    static public void writeUserLog(Users user, String url, String description) {
         try {
             JSONObject userLogObj = new JSONObject();
-            userLogObj.put("uno", (int)user.get("uno"));
+            userLogObj.put("uno", user.getUno());
             userLogObj.put("reqUrl", url);
             userLogObj.put("description", description);
 

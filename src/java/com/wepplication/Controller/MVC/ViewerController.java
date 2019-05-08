@@ -1,5 +1,6 @@
 package com.wepplication.Controller.MVC;
 
+import com.wepplication.Domain.Users;
 import com.wepplication.Util.LogUtil;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ public class ViewerController {
 
         // 히스토리, 로그 업데이트
         if(session.getAttribute("users") != null) {
-            JSONObject userObj = (JSONObject)session.getAttribute("users");
+            Users userObj = (Users)session.getAttribute("users");
             Thread logThread = new Thread(() ->
                     LogUtil.writeAllActivityLog(userObj, "/viewer/ssh_terminal", "SSH 터미널"));
             logThread.start();

@@ -1,6 +1,7 @@
 <%@ page import="com.wepplication.Util.DateTimeUtil" %>
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="org.codehaus.jettison.json.JSONObject" %>
+<%@ page import="com.wepplication.Domain.UserMemberShip" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -81,7 +82,7 @@
                                                                 <p class="form-control-static">아이디</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userId')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userId}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -89,7 +90,7 @@
                                                                 <p class="form-control-static">이름</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userName')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userName}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -97,7 +98,7 @@
                                                                 <p class="form-control-static">별명</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userNickname')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userNickname}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -105,9 +106,9 @@
                                                                 <p class="form-control-static">이메일</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('email')}&nbsp;
+                                                                <p class="form-control-static">${sessionScope.users.email}&nbsp;
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.users.get('verified') == 0}">
+                                                                        <c:when test="${sessionScope.users.verified == 0}">
                                                                             <span class="text-danger"><i class="fa fa-warning"></i>인증이 필요합니다.</span>
                                                                             <a href="#" id="sendVerify" class="btn btn-success">인증하기</a>
                                                                         </c:when>
@@ -126,7 +127,7 @@
                                                                 <p class="form-control-static">구독</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                                <p class="form-control-static">${sessionScope.membership.mname}</p>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -191,7 +192,7 @@
                                                                 <p class="form-control-static">구독 이름</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                                <p class="form-control-static">${sessionScope.membership.mname}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -201,11 +202,11 @@
                                                             <td>
                                                                 <p class="form-control-static">
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                        <c:when test="${sessionScope.membership.duration == 0}">
                                                                             평생
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            ${sessionScope.user_membership.get('mno').get('duration')}
+                                                                            ${sessionScope.membership.duration}
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </p>
@@ -218,11 +219,11 @@
                                                             <td>
                                                                 <p class="form-control-static">
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                        <c:when test="${sessionScope.membership.duration == 0}">
                                                                             평생
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <%=(((Long)((JSONObject)session.getAttribute("user_membership")).get("endTime")) -
+                                                                            <%=((((UserMemberShip)session.getAttribute("user_membership")).getEndTime().getTime()) -
                                                                                     DateTimeUtil.now().getTime()) / (1000*60*60*24) + 1%>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -236,7 +237,7 @@
                                                             <td>
                                                                 <p class="form-control-static">
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('isAutoSubscribe') == 1}">
+                                                                        <c:when test="${sessionScope.user_membership.isAutoSubscribe == 1}">
                                                                             ON
                                                                         </c:when>
                                                                         <c:otherwise>
