@@ -60,12 +60,12 @@
 <%@include file="assets/IncFooter.jsp" %>
 <script>
     $(document).ready(function () {
-        // Auto-Login
-        var autoLogin = 0;
-        if($("#remember").is(":checked"))
-            autoLogin = 1;
-
         $("#btn-submit").click(function () {
+            // Auto-Login
+            var autoLogin = 0;
+            if($("#remember").prop("checked"))
+                autoLogin = 1;
+
             var arg1 = {
                 "userId": $("#id").val(),
                 "password": $("#password").val(),

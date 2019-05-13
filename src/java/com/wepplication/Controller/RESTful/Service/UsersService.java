@@ -8,6 +8,7 @@ import java.util.List;
 public interface UsersService {
     public List<Users> findUsersAll() throws Exception;
     public Users findUsersByUno(Integer uno) throws Exception;
+    public Users findUsersBySessionKey(String sessionKey) throws Exception;
     public Integer countUsersByUserId(String id) throws Exception;
     public Integer countUsersByEmail(String email) throws Exception;
 

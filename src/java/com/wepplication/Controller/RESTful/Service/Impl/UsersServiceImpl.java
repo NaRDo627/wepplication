@@ -25,6 +25,10 @@ public class UsersServiceImpl implements UsersService {
         return usersDAO.findOne(uno);
     }
 
+    public Users findUsersBySessionKey(String sessionKey) throws Exception {
+        return usersDAO.findBySessionKey(sessionKey);
+    }
+
     public Integer countUsersByUserId(String id) throws Exception {
         return usersDAO.countAllByUserId(id);
     }

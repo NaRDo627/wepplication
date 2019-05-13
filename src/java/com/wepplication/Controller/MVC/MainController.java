@@ -3,6 +3,7 @@ package com.wepplication.Controller.MVC;
 import com.wepplication.Domain.MemberShip;
 import com.wepplication.Domain.UserMemberShip;
 import com.wepplication.Domain.Users;
+import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.EncryptUtil;
 import com.wepplication.Util.RestUtil;
 //import org.codehaus.jettison.json.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Member;
@@ -195,16 +197,24 @@ public class MainController {
             session.setAttribute("user_membership", userMemberShip);
 
             obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
-//            insertTime = new Timestamp(obj.get("insertTime").getAsLong());
-//            updateTime = new Timestamp(obj.get("updateTime").getAsLong());
-            //obj.remove("insertTime");
-            //obj.remove("updateTime");
             MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
 
             session.setAttribute("membership", membershipInfo);
 
             if(autoLogin == 1){
-
+                Integer amount = 60 * 60 * 24 * 7; // 7 days
+                sessionTimeUntil = new Timestamp(DateTimeUtil.now().getTime() + amount);
+                users.setSessionKey(session.getId());
+                users.setSessionTimeUntil(sessionTimeUntil);
+                JsonObject sendUser = parser.parse(gson.toJson(users)).getAsJsonObject();
+                sendUser.addProperty("insertTime", users.getInsertTime().getTime());
+                sendUser.addProperty("updateTime", users.getUpdateTime().getTime());
+                sendUser.addProperty("sessionTimeUntil", users.getSessionTimeUntil().getTime());
+                RestUtil.requestPut(addr + "/users", headers, sendUser);
+                Cookie loginCookie = new Cookie("loginCookie", session.getId());
+                loginCookie.setPath("/");
+                loginCookie.setMaxAge(amount);
+                response.addCookie(loginCookie);
             }
 
         } catch (Exception e) {
