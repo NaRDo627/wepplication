@@ -53,7 +53,7 @@ will be disabled.
 be null, e.g. [-10, null]. If you set panRange to false, panning on that axis
 will be disabled.
 
-Example API usage:
+Example Form usage:
 
 	plot = $.plot(...);
 

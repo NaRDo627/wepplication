@@ -29,7 +29,7 @@
 if (!window.console) {
   /**
    * @namespace Holds a simple method used for debugging. Opera doesn't have the 
-   * window.console API like Firefox+Firebug has.
+   * window.console Form like Firefox+Firebug has.
    */
   window.console = {};
 }

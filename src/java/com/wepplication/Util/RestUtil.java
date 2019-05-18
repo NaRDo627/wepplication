@@ -1,6 +1,7 @@
 package com.wepplication.Util;
 
-import org.codehaus.jettison.json.JSONObject;
+//import org.codehaus.jettison.json.JSONObject;
+import com.google.gson.*;
 import org.springframework.util.Base64Utils;
 
 import java.io.BufferedReader;
@@ -12,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RestUtil {
-    static public JSONObject requestGet(String url, List<String[]> headers){
-        JSONObject returnObj = new JSONObject();
+    static public Object requestGet(String url, List<String[]> headers){
+        JsonObject returnObj = new JsonObject();
         try{
-            returnObj.put("error", true);
+            returnObj.addProperty("error", true);
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -34,8 +35,8 @@ public class RestUtil {
 
             StringBuilder sb = new StringBuilder();
             int HttpResult = con.getResponseCode();
-            returnObj.put("res_code", HttpResult);
-            returnObj.put("res_msg", con.getResponseMessage());
+            returnObj.addProperty("res_code", HttpResult);
+            returnObj.addProperty("res_msg", con.getResponseMessage());
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
                 String line = null;
@@ -45,9 +46,12 @@ public class RestUtil {
 
                 br.close();
 
-                JSONObject result = new JSONObject(sb.toString());
-                returnObj.put("result", result);
-                returnObj.put("error", false);
+                JsonParser parser = new JsonParser();
+                JsonElement result = parser.parse(sb.toString());
+                JsonArray array = new JsonArray();
+                array.add(result);
+                returnObj.add("result", result);
+                returnObj.addProperty("error", false);
                 System.out.println(""+sb.toString());
             }
 
@@ -58,10 +62,10 @@ public class RestUtil {
         return returnObj;
     }
 
-    static public JSONObject requestPost(String url, List<String[]> headers, JSONObject data){
-        JSONObject returnObj = new JSONObject();
+    static public Object requestPost(String url, List<String[]> headers, Object data){
+        JsonObject returnObj = new JsonObject();
         try{
-            returnObj.put("error", true);
+            returnObj.addProperty("error", true);
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -84,8 +88,8 @@ public class RestUtil {
 
             StringBuilder sb = new StringBuilder();
             int HttpResult = con.getResponseCode();
-            returnObj.put("res_code", HttpResult);
-            returnObj.put("res_msg", con.getResponseMessage());
+            returnObj.addProperty("res_code", HttpResult);
+            returnObj.addProperty("res_msg", con.getResponseMessage());
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
                 String line = null;
@@ -95,9 +99,10 @@ public class RestUtil {
 
                 br.close();
 
-                JSONObject result = new JSONObject(sb.toString());
-                returnObj.put("result", result);
-                returnObj.put("error", false);
+                JsonParser parser = new JsonParser();
+                JsonElement result = parser.parse(sb.toString());
+                returnObj.add("result", result);
+                returnObj.addProperty("error", false);
                 System.out.println(""+sb.toString());
             }
 
@@ -108,10 +113,10 @@ public class RestUtil {
         return returnObj;
     }
 
-    static public JSONObject requestPut(String url, List<String[]> headers){
-        JSONObject returnObj = new JSONObject();
+    static public Object requestPut(String url, List<String[]> headers){
+        JsonObject returnObj = new JsonObject();
         try{
-            returnObj.put("error", true);
+            returnObj.addProperty("error", true);
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -129,8 +134,8 @@ public class RestUtil {
 
             StringBuilder sb = new StringBuilder();
             int HttpResult = con.getResponseCode();
-            returnObj.put("res_code", HttpResult);
-            returnObj.put("res_msg", con.getResponseMessage());
+            returnObj.addProperty("res_code", HttpResult);
+            returnObj.addProperty("res_msg", con.getResponseMessage());
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
                 String line = null;
@@ -140,9 +145,10 @@ public class RestUtil {
 
                 br.close();
 
-                JSONObject result = new JSONObject(sb.toString());
-                returnObj.put("result", result);
-                returnObj.put("error", false);
+                JsonParser parser = new JsonParser();
+                JsonElement result = parser.parse(sb.toString());
+                returnObj.add("result", result);
+                returnObj.addProperty("error", false);
                 System.out.println(""+sb.toString());
             }
 
@@ -153,10 +159,10 @@ public class RestUtil {
         return returnObj;
     }
 
-    static public JSONObject requestPut(String url, List<String[]> headers, JSONObject data){
-        JSONObject returnObj = new JSONObject();
+    static public Object requestPut(String url, List<String[]> headers, Object data){
+        JsonObject returnObj = new JsonObject();
         try{
-            returnObj.put("error", true);
+            returnObj.addProperty("error", true);
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -177,8 +183,8 @@ public class RestUtil {
 
             StringBuilder sb = new StringBuilder();
             int HttpResult = con.getResponseCode();
-            returnObj.put("res_code", HttpResult);
-            returnObj.put("res_msg", con.getResponseMessage());
+            returnObj.addProperty("res_code", HttpResult);
+            returnObj.addProperty("res_msg", con.getResponseMessage());
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
                 String line = null;
@@ -188,9 +194,10 @@ public class RestUtil {
 
                 br.close();
 
-                JSONObject result = new JSONObject(sb.toString());
-                returnObj.put("result", result);
-                returnObj.put("error", false);
+                JsonParser parser = new JsonParser();
+                JsonElement result = parser.parse(sb.toString());
+                returnObj.add("result", result);
+                returnObj.addProperty("error", false);
                 System.out.println(""+sb.toString());
             }
 
@@ -201,10 +208,10 @@ public class RestUtil {
         return returnObj;
     }
 
-    static public JSONObject requestDelete(String url, List<String[]> headers){
-        JSONObject returnObj = new JSONObject();
+    static public Object requestDelete(String url, List<String[]> headers){
+        JsonObject returnObj = new JsonObject();
         try{
-            returnObj.put("error", true);
+            returnObj.addProperty("error", true);
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -223,8 +230,8 @@ public class RestUtil {
 
             StringBuilder sb = new StringBuilder();
             int HttpResult = con.getResponseCode();
-            returnObj.put("res_code", HttpResult);
-            returnObj.put("res_msg", con.getResponseMessage());
+            returnObj.addProperty("res_code", HttpResult);
+            returnObj.addProperty("res_msg", con.getResponseMessage());
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
                 String line = null;
@@ -234,9 +241,10 @@ public class RestUtil {
 
                 br.close();
 
-                JSONObject result = new JSONObject(sb.toString());
-                returnObj.put("result", result);
-                returnObj.put("error", false);
+                JsonParser parser = new JsonParser();
+                JsonElement result = parser.parse(sb.toString());
+                returnObj.add("result", result);
+                returnObj.addProperty("error", false);
                 System.out.println(""+sb.toString());
             }
 
