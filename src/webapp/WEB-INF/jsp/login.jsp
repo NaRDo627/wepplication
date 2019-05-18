@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="checkbox">
                                         <label>
-                                            <input name="remember" type="checkbox" value="Remember Me">자동 로그인
+                                            <input name="remember" id="remember" type="checkbox" value="Remember Me">자동 로그인
                                         </label>
                                     </div>
                                     <!-- Change this to a button or input when using this as a form -->
@@ -61,9 +61,15 @@
 <script>
     $(document).ready(function () {
         $("#btn-submit").click(function () {
+            // Auto-Login
+            var autoLogin = 0;
+            if($("#remember").prop("checked"))
+                autoLogin = 1;
+
             var arg1 = {
                 "userId": $("#id").val(),
-                "password": $("#password").val()
+                "password": $("#password").val(),
+                "autoLogin": autoLogin
             };
 
             $.post("/login", arg1, function (data) {
@@ -80,10 +86,7 @@
 
         });
 
-        $("#id").keyup(function (e) {
-            if (e.keyCode == 13) $("#btn-submit").trigger("click");
-        });
-        $("#password").keyup(function (e) {
+        $("input").keyup(function (e) {
             if (e.keyCode == 13) $("#btn-submit").trigger("click");
         });
     });

@@ -164,7 +164,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // ALERT DATA-API
+  // ALERT DATA-Form
   // ==============
 
   $(document).on('click.bs.alert.data-api', dismiss, Alert.prototype.close)
@@ -272,7 +272,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // BUTTON DATA-API
+  // BUTTON DATA-Form
   // ===============
 
   $(document)
@@ -492,7 +492,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // CAROUSEL DATA-API
+  // CAROUSEL DATA-Form
   // =================
 
   var clickHandler = function (e) {
@@ -721,7 +721,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // COLLAPSE DATA-API
+  // COLLAPSE DATA-Form
   // =================
 
   $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
@@ -1203,7 +1203,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // MODAL DATA-API
+  // MODAL DATA-Form
   // ==============
 
   $(document).on('click.bs.modal.data-api', '[data-toggle="modal"]', function (e) {
@@ -1976,7 +1976,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // SCROLLSPY DATA-API
+  // SCROLLSPY DATA-Form
   // ==================
 
   $(window).on('load.bs.scrollspy.data-api', function () {
@@ -2128,7 +2128,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // TAB DATA-API
+  // TAB DATA-Form
   // ============
 
   var clickHandler = function (e) {
@@ -2286,7 +2286,7 @@ if (typeof jQuery === 'undefined') {
   }
 
 
-  // AFFIX DATA-API
+  // AFFIX DATA-Form
   // ==============
 
   $(window).on('load', function () {

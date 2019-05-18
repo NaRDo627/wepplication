@@ -1324,7 +1324,7 @@ pwlib.gui = function (app) {
       _self.elems.tools.appendChild(elem);
     }
 
-    // Disable the text tool icon if the Canvas Text API is not supported.
+    // Disable the text tool icon if the Canvas Text Form is not supported.
     if (ev.id === 'text' && !app.layer.context.fillText && 
         !app.layer.context.mozPathText && elem) {
       elem.className += ' ' + _self.classPrefix + 'disabled';

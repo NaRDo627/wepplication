@@ -67,7 +67,7 @@ pwlib.tools.text = function (app) {
 
     }
 
-    // Canvas 2D Text API
+    // Canvas 2D Text Form
     if (context.fillText && context.strokeText) {
       return true;
     }
@@ -84,7 +84,7 @@ pwlib.tools.text = function (app) {
       return true;
     }*/
 
-    // Gecko 1.9.0 had its own proprietary Canvas 2D Text API.
+    // Gecko 1.9.0 had its own proprietary Canvas 2D Text Form.
 /*    if (context.mozPathText) {
       return true;
     }

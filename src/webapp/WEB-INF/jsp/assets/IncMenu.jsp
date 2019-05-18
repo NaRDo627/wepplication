@@ -21,14 +21,14 @@
                 <!-- /input-group -->
             </li>--%>
                 <li>
-                    <div style="height:60px;">
-                            <div class="centered-outer">
-                                <div class="centered-inner">
-                                    <div class="centered">
-                                        <a class="text-primary h4" href="/index" style="background-color:#f8f8f8;"><i class="fa fa-desktop fa-2x"></i></a>
-                                    </div>
+                    <div style="height:60px" class="text-center">
+                        <div class="centered-outer">
+                            <div class="centered-inner">
+                                <div class="centered">
+                                    <a class="text-primary h4" href="/index" style="background-color:#f8f8f8;"><img src="/resources/images/wepplication_logo.png" alt="Wepplication" height="45" /></a>
                                 </div>
                             </div>
+                        </div>
                     </div>
                     <!-- /input-group -->
                 </li>

@@ -1,6 +1,7 @@
 <%@ page import="com.wepplication.Util.DateTimeUtil" %>
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="org.codehaus.jettison.json.JSONObject" %>
+<%@ page import="com.wepplication.Domain.UserMemberShip" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -81,7 +82,7 @@
                                                                 <p class="form-control-static">아이디</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userId')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userId}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -89,7 +90,7 @@
                                                                 <p class="form-control-static">이름</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userName')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userName}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -97,7 +98,7 @@
                                                                 <p class="form-control-static">별명</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('userNickname')}</p>
+                                                                <p class="form-control-static">${sessionScope.users.userNickname}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -105,9 +106,9 @@
                                                                 <p class="form-control-static">이메일</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.users.get('email')}&nbsp;
+                                                                <p class="form-control-static">${sessionScope.users.email}&nbsp;
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.users.get('verified') == 0}">
+                                                                        <c:when test="${sessionScope.users.verified == 0}">
                                                                             <span class="text-danger"><i class="fa fa-warning"></i>인증이 필요합니다.</span>
                                                                             <a href="#" id="sendVerify" class="btn btn-success">인증하기</a>
                                                                         </c:when>
@@ -126,7 +127,15 @@
                                                                 <p class="form-control-static">구독</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                                <p class="form-control-static">${membership.mname}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">결제정보</p>
+                                                            </th>
+                                                            <td>
+                                                                <p class="form-control-static"></p>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -149,23 +158,31 @@
                                                         <tbody>
                                                         <tr>
                                                             <th>
-                                                                <p class="form-control-static">비밀번호</p>
+                                                                <p class="form-control-static">현재 비밀번호</p>
                                                             </th>
                                                             <td>
-                                                                <input class="form-control" placeholder="Password" name="password" type="password" id="password" value="">
+                                                                <input class="form-control" placeholder="Password" name="password" type="password" id="curPassword" value="">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <th>
-                                                                <p class="form-control-static">비밀번호 확인</p>
+                                                                <p class="form-control-static">새 비밀번호</p>
                                                             </th>
                                                             <td>
-                                                                <input class="form-control" placeholder="Password-Check" name="password-check" type="password" id="password-check" value="">
+                                                                <input class="form-control" placeholder="Password" name="password" type="password" id="newPassword" value="">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">새 비밀번호 확인</p>
+                                                            </th>
+                                                            <td>
+                                                                <input class="form-control" placeholder="Password-Check" name="password-check" type="password" id="newPasswordCheck" value="">
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2" style="text-align: center;">
-                                                                <a href="#" class="btn btn-lg btn-primary btn-block" style="width:30%; display:inline-block;">비밀번호 변경</a>
+                                                                <a href="#" class="btn btn-lg btn-primary btn-block" style="width:30%; display:inline-block;" id="btnChangePassword">비밀번호 변경</a>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -191,7 +208,7 @@
                                                                 <p class="form-control-static">구독 이름</p>
                                                             </th>
                                                             <td>
-                                                                <p class="form-control-static">${sessionScope.user_membership.get("mno").get("mname")}</p>
+                                                                <p class="form-control-static">${membership.mname}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -201,11 +218,11 @@
                                                             <td>
                                                                 <p class="form-control-static">
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                        <c:when test="${membership.duration == 0}">
                                                                             평생
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            ${sessionScope.user_membership.get('mno').get('duration')}
+                                                                            ${membership.duration}
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </p>
@@ -218,11 +235,11 @@
                                                             <td>
                                                                 <p class="form-control-static">
                                                                     <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('mno').get('duration') == 0}">
+                                                                        <c:when test="${membership.duration == 0}">
                                                                             평생
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <%=(((Long)((JSONObject)session.getAttribute("user_membership")).get("endTime")) -
+                                                                            <%=((((UserMemberShip)session.getAttribute("user_membership")).getEndTime().getTime()) -
                                                                                     DateTimeUtil.now().getTime()) / (1000*60*60*24) + 1%>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -231,37 +248,30 @@
                                                         </tr>
                                                         <tr>
                                                             <th>
-                                                                <p class="form-control-static">자동 구독</p>
+                                                                <p class="form-control-static">자동 구독 갱신</p>
                                                             </th>
                                                             <td>
                                                                 <p class="form-control-static">
-                                                                    <c:choose>
-                                                                        <c:when test="${sessionScope.user_membership.get('isAutoSubscribe') == 1}">
-                                                                            ON
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            OFF
-                                                                        </c:otherwise>
-                                                                    </c:choose>
+                                                                    <span id="autoRenewalText">
+                                                                        <c:choose>
+                                                                            <c:when test="${sessionScope.user_membership.isAutoSubscribe == 1}">
+                                                                                <span class="text-success">ON</span>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span class="text-danger">OFF</span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </span>
+                                                                    &nbsp;&nbsp;&nbsp;
+                                                                    <a href="#" class="btn btn-success" style="display:inline;" id="btnToggleAutoRenewal">자동 구독 변경</a>
                                                                 </p>
                                                             </td>
                                                         </tr>
-                                                        <%--<tr>
-                                                            <th>
-                                                                <p class="form-control-static">멤버십 등록</p>
-                                                            </th>
-                                                            <td>
-                                                                <p class="form-control-static">email@example.com</p>
+                                                        <tr>
+                                                            <td colspan="2" style="text-align: center;">
+                                                                <a href="#" class="btn btn-lg btn-primary btn-block" style="width:30%; display:inline-block;" id="btnRegisterMembership">구독 신청</a>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <th>
-                                                                <p class="form-control-static">멤버십</p>
-                                                            </th>
-                                                            <td>
-                                                                <p class="form-control-static">무료</p>
-                                                            </td>
-                                                        </tr>--%>
                                                         </tbody>
                                                     </table>
                                                     <!-- ./table responsive -->
@@ -271,60 +281,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <%--
-                            <div class="tab-pane fade" id="settings-tab">
-                                <div class="table-responsive">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">뷰어</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static"></p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">이미지편집</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static"></p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">동영상편집</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static"></p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">클라우드</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static"></p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <p class="form-control-static">암호화/복호화</p>
-                                                    </th>
-                                                    <td>
-                                                        <p class="form-control-static"></p>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                            <!-- ./table responsive -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>--%>
                         </div>
                     </div>
                     <!-- /.panel-body -->
@@ -363,10 +319,102 @@
                },
                error: function (jaXHR, textStatus, errorThrown) {
                    alert("인증메일 전송 중 오류가 발생하였습니다.");
-                   console.log(jaXHR.responseText);
+                   console.log(jaXHR);
                }
            });
        });
+
+       $("#btnChangePassword").click(function () {
+           // 빈 칸 검사
+           if($("#curPassword").val() === "" || $("#newPassword").val() === "" || $("#newPasswordCheck").val() === "") {
+               alert("입력을 확인해 주세요!");
+               return false;
+           }
+
+           // 비밀번호와 확인이 서로 같은 지 검사
+           if($("#newPassword").val() !== $("#newPasswordCheck").val()) {
+               alert("비밀번호와 비밀번호 확인이 서로 일치하지 않습니다.")
+               return false;
+           }
+
+           $.ajax({
+               url: "/changePW",
+               type: 'POST',
+               data: {
+                   'curPassword': $("#curPassword").val(),
+                   'newPassword': $("#newPassword").val()
+               },
+               success: function (result) {
+                   if(result === "ok"){
+                       alert("비밀번호 변경이 완료되었습니다.");
+                       $("#curPassword").val("");
+                       $("#newPassword").val("");
+                       $("#newPasswordCheck").val("");
+                   } else if(result === "login_first"){
+                       alert("세션에서 로그아웃 되었습니다.");
+                   } else if(result === "wrong_user"){
+                       alert("현재 비밀번호가 일치하지 않습니다.");
+                   } else {
+                       alert("비밀번호 변경 중 오류가 발생하였습니다.");
+                   }
+                   console.log(result);
+               },
+               error: function (jaXHR, textStatus, errorThrown) {
+                   alert("비밀번호 변경 중 오류가 발생하였습니다.");
+                   console.log(jaXHR);
+               }
+           });
+       });
+
+        var isAutoSubscribe = Number('${sessionScope.user_memberShip.isAutoSubscribe}');
+
+        $("#btnToggleAutoRenewal").click(function () {
+
+            $.ajax({
+                url: "/modifyAutoRenewal",
+                type: 'POST',
+                data: {
+                    'autoRenewal': (isAutoSubscribe === 0)? 1 : 0
+                },
+                success: function (result) {
+                    isAutoSubscribe = (isAutoSubscribe === 0)? 1 : 0;
+                    $("#autoRenewalText").empty();
+
+                    if(isAutoSubscribe === 1)
+                        $("#autoRenewalText").append("<span class=\"text-success\">ON</span>");
+                    else
+                        $("#autoRenewalText").append("<span class=\"text-danger\">OFF</span>");
+
+                    console.log(result);
+                },
+                error: function (jaXHR, textStatus, errorThrown) {
+                    console.log(jaXHR);
+                }
+            });
+        });
+
+       $("#btnRegisterMembership").click(function () {
+           $.ajax({
+               url: "/registerMemberShip",
+               type: 'POST',
+               data: {
+                   'mno': 2
+               },
+               success: function (result) {
+                   alert("TEST: Pro 구독으로 변경되었습니다!");
+                   location.reload();
+
+                   console.log(result);
+               },
+               error: function (jaXHR, textStatus, errorThrown) {
+                   console.log(jaXHR);
+               }
+           });
+       });
+
+        $("input").keyup(function (e) {
+            if (e.keyCode == 13) $("#btnChangePassword").trigger("click");
+        });
     });
 </script>
 </body>
