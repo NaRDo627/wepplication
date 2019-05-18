@@ -206,7 +206,11 @@
         $("#id").change(function () {
             $("#duplicate-check").text("");
             duplicate_checked = false;
-        })
+        });
+
+        $("input").keyup(function (e) {
+            if (e.keyCode == 13) $("#btn-submit").trigger("click");
+        });
     });
 </script>
 </body>

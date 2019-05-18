@@ -12,6 +12,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<!-- Favicon -->
+<link rel="shortcut icon" href="/resources/images/favicon.ico">
+
 <%--<!-- CSS -->--%>
 <link rel="stylesheet" href="/resources/vendor/wepplication/wepplication.css" media="all" />
 <%--<link rel="stylesheet" href="/resources/bootstrap/css/bootstrap.min.css" media="all" />--%>

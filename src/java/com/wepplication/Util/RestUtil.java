@@ -73,7 +73,7 @@ public class RestUtil {
             con.setDoOutput(true);
             con.setDoInput(true);
             //con.setRequestProperty("Content-Type", "application/
-            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             for(String[] header: headers) {
                 if(header.length != 2)
                     continue;
@@ -120,7 +120,7 @@ public class RestUtil {
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
-            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setDoOutput(true);
             con.setDoInput(true);
             //con.setRequestProperty("Content-Type", "application/
@@ -166,7 +166,7 @@ public class RestUtil {
 
             URL object=new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
-            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setDoOutput(true);
             con.setDoInput(true);
             //con.setRequestProperty("Content-Type", "application/

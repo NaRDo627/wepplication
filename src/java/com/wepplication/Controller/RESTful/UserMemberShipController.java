@@ -54,4 +54,14 @@ public class UserMemberShipController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.PUT)
+    public ResponseEntity<UserMemberShip> userMemberShipPut(@RequestBody UserMemberShip userMemberShip) {
+        System.out.println("update user_membership");
+        try{
+            return new ResponseEntity<>(userMemberShipService.saveUserMemberShip(userMemberShip), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

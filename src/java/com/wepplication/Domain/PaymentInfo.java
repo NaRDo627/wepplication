@@ -19,8 +19,8 @@ public class PaymentInfo implements Serializable {
     @Column(name = "mno")
     private Integer mno;
 
-    @Column(name="method")
-    private Integer method;
+    @Column(name="card_no")
+    private Integer cardNo;
 
     @Column(name="amount")
     private Integer amount;
@@ -59,12 +59,12 @@ public class PaymentInfo implements Serializable {
         this.mno = mno;
     }
 
-    public Integer getMethod() {
-        return method;
+    public Integer getCardNo() {
+        return cardNo;
     }
 
-    public void setMethod(Integer method) {
-        this.method = method;
+    public void setCardNo(Integer cardNo) {
+        this.cardNo = cardNo;
     }
 
     public Integer getAmount() {

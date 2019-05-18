@@ -1,7 +1,8 @@
 package com.wepplication.Controller.MVC;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import com.wepplication.Domain.MemberShip;
+import com.wepplication.Domain.UserMemberShip;
 import com.wepplication.Domain.Users;
 import com.wepplication.Util.EncryptUtil;
 import com.wepplication.Util.RestUtil;
@@ -37,23 +38,32 @@ public class AutoLoginInterceptor extends HandlerInterceptorAdapter {
             if (obj.has("res_code") && obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_OK){
                 JsonObject result = obj.get("result").getAsJsonObject();
 
-                // gson에서 timestamp 파싱이 안돼서 삭제 후 파싱 후 넣음. 정말 대단해!
-                Timestamp insertTime = new Timestamp(result.get("insertTime").getAsLong());
-                Timestamp updateTime = new Timestamp(result.get("updateTime").getAsLong());
-                Timestamp sessionTimeUntil = null;
-                if(!result.get("sessionTimeUntil").isJsonNull())
-                    sessionTimeUntil = new Timestamp(result.get("sessionTimeUntil").getAsLong());
-
-                result.remove("insertTime");
-                result.remove("updateTime");
-                result.remove("sessionTimeUntil");
-
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Timestamp.class, (JsonDeserializer<Timestamp>) (json, typeOfT, context) -> new Timestamp(json.getAsJsonPrimitive().getAsLong()))
+                        .registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>) (date, type, jsonSerializationContext) -> new JsonPrimitive(date.getTime()))
+                        .create();
                 Users users = gson.fromJson(result, Users.class);
-                users.setInsertTime(insertTime);
-                users.setUpdateTime(updateTime);
-                users.setSessionTimeUntil(sessionTimeUntil);
                 session.setAttribute("users", users);
+
+                // [190410][HKPARK] user_membership 레코드가 없으면 업데이트
+                obj = (JsonObject) RestUtil.requestGet(addr + "/user_membership/" + ((JsonObject)obj.get("result")).get("uno").getAsInt(), headers);
+
+                UserMemberShip userMemberShip = null;
+                if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    userMemberShip = new UserMemberShip();
+                    userMemberShip.setUno(users.getUno());
+                    userMemberShip.setMno(1);
+                    userMemberShip.setIsAutoSubscribe(0);
+                    result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", headers, gson.toJson(userMemberShip))).
+                            getAsJsonObject("result");
+
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                } else{
+                    result = obj.getAsJsonObject("result");
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                }
+
+                session.setAttribute("user_membership", userMemberShip);
             }
         }
 

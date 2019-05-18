@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="col-xs-9 text-right">
                                         <div>현재 고객님께서는</div>
-                                        <div class="huge">${sessionScope.membership.mname}</div>
+                                        <div class="huge">${membership.mname}</div>
                                         <div>구독을 사용하고 계십니다</div>
                                     </div>
                                 </div>

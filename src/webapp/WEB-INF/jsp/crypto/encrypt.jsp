@@ -40,7 +40,7 @@
                                             <div class="centered-outer">
                                                 <div class="centered-inner" style="text-align:left;">
 
-                                                    <form action="EncryptTest", method="post" enctype="multipart/form-data">
+                                                    <form action="EncryptTest", cardNo="post" enctype="multipart/form-data">
                                                         <input type="file", id="uploadfiles" ,name="uploadfile", placeholder="파일 선택" />
                                                         <input name = "enc", type="submit", value="Encrypt" class="btn btn-default">암호<span class="visible-lg-inline">화</span> <i class="fa fa-lock"></i></input>
                                                         <button name = "dec", type="button" class="btn btn-default">복호<span class="visible-lg-inline">화</span> <i class="fa fa-unlock"></i></button>

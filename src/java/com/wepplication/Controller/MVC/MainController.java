@@ -7,6 +7,7 @@ import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.EncryptUtil;
 import com.wepplication.Util.RestUtil;
 //import org.codehaus.jettison.json.JSONObject;
+//import org.graalvm.compiler.lir.LIRInstruction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,24 @@ public class MainController {
     private static final String SENDER_EMAIL_ADDR = "wepplication.do.not.reply@gmail.com";
     private static final String SENDER_EMAIL_PASS = "dnpqvmfflzpdltus";
 
+    private Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Timestamp.class, (JsonDeserializer<Timestamp>) (json, typeOfT, context) -> new Timestamp(json.getAsJsonPrimitive().getAsLong()))
+            .registerTypeAdapter(Timestamp.class, (JsonSerializer<Timestamp>) (date, type, jsonSerializationContext) -> new JsonPrimitive(date.getTime()))
+            .create();
+
     @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
     public String indexGet(Model model, HttpSession session){
+        if(session.getAttribute("user_membership") != null){
+            UserMemberShip userMemberShip = (UserMemberShip) session.getAttribute("user_membership");
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            JsonObject obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
+            MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
+            model.addAttribute("membership", membershipInfo);
+        }
+
         return "index";
     }
 
@@ -53,13 +70,54 @@ public class MainController {
 
     @RequestMapping(value = {"profile"}, method = RequestMethod.GET)
     public String profileGet(Model model, HttpSession session){
+        if(session.getAttribute("users") == null) {
+            return "redirect:/login";
+        }
+
+        if(session.getAttribute("user_membership") != null){
+            UserMemberShip userMemberShip = (UserMemberShip) session.getAttribute("user_membership");
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            JsonObject obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
+            MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
+            model.addAttribute("membership", membershipInfo);
+        }
+
+        Users users = (Users)session.getAttribute("users");
+        if(users.getVerified() == 1)
+            model.addAttribute("verfied", true);
         model.addAttribute("tab_select", "home-tab");
+        model.addAttribute("verfied", false);
+
         return "profile";
     }
 
     @RequestMapping(value = {"subscribe"}, method = RequestMethod.GET)
     public String settingGet(Model model, HttpSession session){
+        if(session.getAttribute("users") == null) {
+            return "redirect:/login";
+        }
+
+        if(session.getAttribute("user_membership") != null){
+            UserMemberShip userMemberShip = (UserMemberShip) session.getAttribute("user_membership");
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            JsonObject obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
+            MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
+            model.addAttribute("membership", membershipInfo);
+        }
+
+        Users users = (Users)session.getAttribute("users");
+
         model.addAttribute("tab_select", "membership-tab");
+        model.addAttribute("verfied", false);
+        if(users.getVerified() == 1)
+            model.addAttribute("verfied", true);
+
         return "profile";
     }
 
@@ -67,7 +125,6 @@ public class MainController {
     public String logoutGet(Model model, HttpSession session){
         session.removeAttribute("users");
         session.removeAttribute("user_membership");
-        session.removeAttribute("membership");
 
         return "login";
     }
@@ -88,14 +145,8 @@ public class MainController {
             }
 
             if(session.getAttribute("users") != null) {
-                try{
-                    JsonObject users = (JsonObject)session.getAttribute("users");
-                    session.removeAttribute("users");
-                    users.addProperty("verfied", 1);
-                    session.setAttribute("users", users);
-                } catch (Exception e){
-                    // do nothing for now
-                }
+                Users users = (Users)session.getAttribute("users");
+                users.setVerified(1);
             }
 
         } catch (Exception e) {
@@ -115,7 +166,6 @@ public class MainController {
                       Model model, HttpSession session, HttpServletResponse response) {
 
         try{
-            Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             List<String[]> headers = new ArrayList<>();
             headers.add(new String[]{"authorization", "Basic " + Base64Utils.encodeToString((userId + ":" + EncryptUtil.encryptByMd5("whfwkrtlfjbb" + password)).getBytes())});
@@ -123,32 +173,18 @@ public class MainController {
             headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
             String addr = API_ADDRESS + ":" + API_PORT;
             JsonObject obj = (JsonObject) RestUtil.requestGet(addr + "/users/myinfo", headers);
-            if(obj.get("error").getAsBoolean())
-                throw new Exception("서버 오류입니다. 나중에 다시 시도해 주세요.\n문제가 계속되면 관리자에게 문의 바랍니다.");
-
-            if (obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_UNAUTHORIZED){
+            if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_UNAUTHORIZED){
                 return "unauthorized";
             }else if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
                 return obj.get("res_msg").getAsString();
             }
+            else if(obj.get("error").getAsBoolean())
+                throw new Exception("서버 오류입니다. 나중에 다시 시도해 주세요.\n문제가 계속되면 관리자에게 문의 바랍니다.");
 
             JsonObject result = obj.get("result").getAsJsonObject();
 
-            // gson에서 timestamp 파싱이 안돼서 삭제 후 파싱 후 넣음. 정말 대단해!
-            Timestamp insertTime = new Timestamp(result.get("insertTime").getAsLong());
-            Timestamp updateTime = new Timestamp(result.get("updateTime").getAsLong());
-            Timestamp sessionTimeUntil = null;
-            if(!result.get("sessionTimeUntil").isJsonNull())
-                sessionTimeUntil = new Timestamp(result.get("sessionTimeUntil").getAsLong());
-
-            result.remove("insertTime");
-            result.remove("updateTime");
-            result.remove("sessionTimeUntil");
-
             Users users = gson.fromJson(result, Users.class);
-            users.setInsertTime(insertTime);
-            users.setUpdateTime(updateTime);
-            users.setSessionTimeUntil(sessionTimeUntil);
+
             session.setAttribute("users", users);
             Integer uno = users.getUno();
 
@@ -161,49 +197,20 @@ public class MainController {
                 userMemberShip.setUno(uno);
                 userMemberShip.setMno(1);
                 userMemberShip.setIsAutoSubscribe(0);
-                result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", headers, userMemberShip)).
-                        get("result").getAsJsonObject();
+                result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", headers, gson.toJson(userMemberShip))).
+                        getAsJsonObject("result");
 
-                insertTime = new Timestamp(result.get("insertTime").getAsLong());
-                updateTime = new Timestamp(result.get("updateTime").getAsLong());
-                Timestamp startTime = new Timestamp(result.get("startTime").getAsLong());
-                Timestamp endTime = new Timestamp(result.get("endTime").getAsLong());
-                result.remove("insertTime");
-                result.remove("updateTime");
-                result.remove("startTime");
-                result.remove("endTime");
                 userMemberShip = gson.fromJson(result, UserMemberShip.class);
-                userMemberShip.setInsertTime(insertTime);
-                userMemberShip.setUpdateTime(updateTime);
-                userMemberShip.setStartTime(startTime);
-                userMemberShip.setEndTime(endTime);
             } else{
-                result = obj.get("result").getAsJsonObject();
-                insertTime = new Timestamp(result.get("insertTime").getAsLong());
-                updateTime = new Timestamp(result.get("updateTime").getAsLong());
-                Timestamp startTime = new Timestamp(result.get("startTime").getAsLong());
-                Timestamp endTime = new Timestamp(result.get("endTime").getAsLong());
-                result.remove("insertTime");
-                result.remove("updateTime");
-                result.remove("startTime");
-                result.remove("endTime");
+                result = obj.getAsJsonObject("result");
                 userMemberShip = gson.fromJson(result, UserMemberShip.class);
-                userMemberShip.setInsertTime(insertTime);
-                userMemberShip.setUpdateTime(updateTime);
-                userMemberShip.setStartTime(startTime);
-                userMemberShip.setEndTime(endTime);
             }
 
             session.setAttribute("user_membership", userMemberShip);
 
-            obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
-            MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
-
-            session.setAttribute("membership", membershipInfo);
-
             if(autoLogin == 1){
                 Integer amount = 60 * 60 * 24 * 7; // 7 days
-                sessionTimeUntil = new Timestamp(DateTimeUtil.now().getTime() + amount);
+                Timestamp sessionTimeUntil = new Timestamp(DateTimeUtil.now().getTime() + amount);
                 users.setSessionKey(session.getId());
                 users.setSessionTimeUntil(sessionTimeUntil);
                 JsonObject sendUser = parser.parse(gson.toJson(users)).getAsJsonObject();
@@ -248,22 +255,24 @@ public class MainController {
             headers.add(new String[]{"Accept", "*/*"});
             headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
             String addr = API_ADDRESS + ":" + API_PORT;
-            JsonObject obj = (JsonObject)RestUtil.requestPost(addr + "/users", headers, jsonObject);
-            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
-                return obj.get("res_msg").getAsString();
-            }
 
-            String password = ((JsonObject)obj.get("result")).get("password").getAsString();
 
             // 이메일 중복 체크
-            obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email, headers);
+            JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email, headers);
             if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
                 return obj.get("res_msg").getAsString();
             }
 
-            if(((JsonObject)obj.get("result")).get("duplicate").getAsBoolean())
+            if(obj.getAsJsonObject("result").get("duplicate").getAsBoolean())
                 return "duplicate email";
 
+            obj = (JsonObject)RestUtil.requestPost(addr + "/users", headers, jsonObject);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return obj.get("res_msg").getAsString();
+            }
+
+            Users users = gson.fromJson((obj.get("result")), Users.class);
+            String password = users.getPassword();
 
             // [190412][HKPARK] 이메일 인증
             JsonObject emailObj = new JsonObject();
@@ -288,6 +297,90 @@ public class MainController {
         return "ok";
     }
 
+    @RequestMapping(value = {"changePW"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String changePWPost(@RequestParam("curPassword") String curPassword,
+                      @RequestParam("newPassword") String newPassword, HttpSession session){
+        try{
+            if(session.getAttribute("users") == null) {
+                return "login_first";
+            }
+            Users users = (Users)session.getAttribute("users");
+            if(!users.getPassword().equals(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + curPassword)))
+                return "wrong_user";
+
+            users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + newPassword));
+
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            RestUtil.requestPut(apiAddress + "/users", headers, gson.toJson(users));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
+    }
+
+    @RequestMapping(value = {"modifyAutoRenewal"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String modifyAutoRenewalPost(@RequestParam("autoRenewal") Integer autoRenewal, HttpSession session){
+        try{
+            if(session.getAttribute("users") == null ||
+                    session.getAttribute("user_membership") == null) {
+                return "login_first";
+            }
+            UserMemberShip userMemberShip = (UserMemberShip)session.getAttribute("user_membership");
+            userMemberShip.setIsAutoSubscribe(autoRenewal);
+
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            JsonObject obj = (JsonObject) RestUtil.requestPut(apiAddress + "/user_membership", headers, gson.toJson(userMemberShip));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                throw new Exception("Request_ERROR");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
+    }
+
+    @RequestMapping(value = {"registerMemberShip"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String registerMemberShipPost(@RequestParam("mno") Integer mno, HttpSession session){
+        try{
+            if(session.getAttribute("users") == null ||
+                    session.getAttribute("user_membership") == null) {
+                return "login_first";
+            }
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            UserMemberShip userMemberShip = (UserMemberShip)session.getAttribute("user_membership");
+            JsonObject obj = (JsonObject) RestUtil.requestGet(addr + "/membership/" + userMemberShip.getMno(), headers);
+            MemberShip membershipInfo = gson.fromJson(obj.get("result"), MemberShip.class);
+
+            userMemberShip.setMno(mno);
+            userMemberShip.setStartTime(DateTimeUtil.now());
+            userMemberShip.setEndTime(new Timestamp(DateTimeUtil.now().getTime() + membershipInfo.getDuration() * 60000));
+
+            obj = (JsonObject) RestUtil.requestPut(addr + "/user_membership", headers, gson.toJson(userMemberShip));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                throw new Exception("Request_ERROR");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
+    }
+
     @RequestMapping(value = {"send_verify_mail"}, method = RequestMethod.POST)
     public @ResponseBody
     String sendVerifyMailGet(Model model, HttpSession session){
@@ -295,11 +388,11 @@ public class MainController {
             return "login first";
 
         try{
-            JsonObject users = (JsonObject) session.getAttribute("users");
-            String userId = users.get("userId").getAsString();
-            String password = users.get("password").getAsString();
-            String email = users.get("email").getAsString();
-            String userName = users.get("userName").getAsString();
+            Users users = (Users) session.getAttribute("users");
+            String userId = users.getUserId();
+            String password = users.getPassword();
+            String email = users.getEmail();
+            String userName = users.getUserName();
 
             JsonObject emailObj = new JsonObject();
             emailObj.addProperty("sender", SENDER_EMAIL_ADDR);
