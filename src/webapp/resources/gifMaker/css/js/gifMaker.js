@@ -155,7 +155,7 @@ if (!URL) {
     function inputRatio() {
         //짤 비율 설정
         var prevRatio = document.getElementById("sizeVideo").value;
-        ratio = prevRatio / 100;
+        ratio = prevRatio / 100;        
     }
     //동영상 재생시 이벤트 발생
     //변환되는 GIF 크기 설정
@@ -166,7 +166,7 @@ if (!URL) {
         canvas.height = ch;
         draw(vMake,context,cw,ch);
     },false);
-
+    
     /*-----FRAME 지정-----*/
     /*
     //FRAME 시작*/

@@ -122,7 +122,7 @@
     padding-top: 1%;
     padding-bottom: 1%;
     display: block;
-}
+ }
 /*짤을 어느 정도 속도로 재생할건지 제어하는 영역*/
 #frameControl {
     margin: inherit;
