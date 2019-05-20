@@ -44,6 +44,7 @@ public class UsersController {
         System.out.println("select count(users) where email="+email);
         try{
             JSONObject obj = new JSONObject();
+            email = email.replace("_", ".");
             Integer recordCount = usersService.countUsersByEmail(email);
             if(recordCount > 0)
                 obj.put("duplicate", true);
@@ -158,4 +159,36 @@ public class UsersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(value = {"/userId"}, method = RequestMethod.GET)
+    public ResponseEntity<String> usersUserIDGet(@RequestParam(name = "userName") String userName,
+                                                @RequestParam(name = "userEmail") String userEmail) {
+        System.out.println("select users by username and email");
+        try{
+            userEmail = userEmail.replace("_", ".");
+            Users users = usersService.findUsersByUserNameAndEmail(userName, userEmail);
+            System.out.println(users.getUserName());
+            return  new ResponseEntity<>(users.getUserId(), HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    /*
+    @RequestMapping(value = {"/user"}, method = RequestMethod.GET)
+    public ResponseEntity<Users> usersUserIDGet(@RequestParam(name = "userName") String userName,
+                                                @RequestParam(name = "userEmail") String userEmail) {
+        System.out.println("select users by username and email");
+        try{
+            userEmail = userEmail.replace("_", ".");
+            Users users = usersService.findUsersByUserNameAndEmail(userName, userEmail);
+            System.out.println(users.getUserName());
+            return  new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
 }

@@ -29,6 +29,13 @@ public class UsersServiceImpl implements UsersService {
         return usersDAO.findBySessionKey(sessionKey);
     }
 
+    public Users findUsersByUserNameAndEmail(String userName, String email) throws Exception {
+        return usersDAO.findByUserNameAndEmail(userName, email);
+    }
+    public Users findUsersByUserIdAndEmail(String userId, String email) throws Exception{
+        return usersDAO.findByUserIdAndEmail(userId, email);
+    }
+
     public Integer countUsersByUserId(String id) throws Exception {
         return usersDAO.countAllByUserId(id);
     }

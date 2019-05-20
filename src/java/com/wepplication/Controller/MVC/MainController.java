@@ -68,6 +68,12 @@ public class MainController {
         return "member";
     }
 
+    @RequestMapping(value = {"findMember"}, method = RequestMethod.GET)
+    public String findMemberGet(Model model, HttpSession session){
+
+        return "findMember";
+    }
+
     @RequestMapping(value = {"profile"}, method = RequestMethod.GET)
     public String profileGet(Model model, HttpSession session){
         if(session.getAttribute("users") == null) {
@@ -155,6 +161,30 @@ public class MainController {
         }
 
         return "verified";
+    }
+
+    @RequestMapping(value = {"findMemberID"}, method = RequestMethod.POST)
+    public String findMemberIDPost(@RequestParam("userName") String userName,
+                                   @RequestParam("email") String email, HttpSession session){
+        try{
+//
+//            Users users = (Users)session.getAttribute("users");
+//
+//            users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + newPassword));
+//
+//            List<String[]> headers = new ArrayList<>();
+//            headers.add(new String[]{"Accept", "*/*"});
+//            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+//            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+//            String email_replaced = email.replace(".", "_");
+//            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/userId?userName" + userName + "&userEmail=" + email_replaced , headers);
+//
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
     }
 
     /* api */
@@ -258,7 +288,8 @@ public class MainController {
 
 
             // 이메일 중복 체크
-            JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email, headers);
+            String email_replaced = email.replace(".", "_");
+            JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email_replaced, headers);
             if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
                 return obj.get("res_msg").getAsString();
             }

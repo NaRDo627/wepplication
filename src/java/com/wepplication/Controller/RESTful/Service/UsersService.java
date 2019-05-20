@@ -9,6 +9,8 @@ public interface UsersService {
     public List<Users> findUsersAll() throws Exception;
     public Users findUsersByUno(Integer uno) throws Exception;
     public Users findUsersBySessionKey(String sessionKey) throws Exception;
+    public Users findUsersByUserNameAndEmail(String userName, String email) throws Exception;
+    public Users findUsersByUserIdAndEmail(String userId, String email) throws Exception;
     public Integer countUsersByUserId(String id) throws Exception;
     public Integer countUsersByEmail(String email) throws Exception;
 
