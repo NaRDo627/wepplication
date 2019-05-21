@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Member;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,20 +167,76 @@ public class MainController {
 
     @RequestMapping(value = {"findMemberID"}, method = RequestMethod.POST)
     public String findMemberIDPost(@RequestParam("userName") String userName,
-                                   @RequestParam("email") String email, HttpSession session){
+                                   @RequestParam("email") String email, Model model){
         try{
-//
-//            Users users = (Users)session.getAttribute("users");
-//
-//            users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + newPassword));
-//
-//            List<String[]> headers = new ArrayList<>();
-//            headers.add(new String[]{"Accept", "*/*"});
-//            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
-//            String apiAddress = API_ADDRESS  + ":" + API_PORT;
-//            String email_replaced = email.replace(".", "_");
-//            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/userId?userName" + userName + "&userEmail=" + email_replaced , headers);
-//
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            String email_replaced = email.replace(".", "*");
+            userName = URLEncoder.encode(userName, StandardCharsets.UTF_8.toString());
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/userId?userName=" + userName + "&userEmail=" + email_replaced , headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                model.addAttribute("found", false);
+                return "findMemberID";
+            }
+            String foundId = obj.get("result").getAsString();
+            Integer maskLength = foundId.length() - 3;
+            foundId = foundId.substring(0, maskLength) + "***";
+            //foundId = foundId.replaceAll("(?<=^\\d{3,})\\d", "*");
+            model.addAttribute("found", true);
+            model.addAttribute("foundID", foundId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "findMemberID";
+    }
+
+    @RequestMapping(value = {"findMemberPW/{encUno}"}, method = RequestMethod.GET)
+    public String findMemberPWGet(@PathVariable("encUno") String encUno, Model model){
+        try{
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            encUno = new String(Base64Utils.decodeFromString(encUno));
+            Integer uno = Integer.parseInt(encUno);
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/" + uno, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "redirect:/";
+            }
+            model.addAttribute("uno", uno);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
+        }
+
+        return "findMemberPW";
+    }
+
+    @RequestMapping(value = {"findMemberPW"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String findMemberPWPost(@RequestParam("uno") Integer uno,
+                            @RequestParam("newPassword") String newPassword,
+                            Model model){
+        try{
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/" + uno, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "redirect:/";
+            }
+            Users users = gson.fromJson(obj.getAsJsonObject("result"), Users.class);
+            users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + newPassword));
+            obj = (JsonObject)RestUtil.requestPut(apiAddress + "/users", headers, gson.toJson(users));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return obj.get("res_msg").getAsString();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return e.toString();
@@ -288,7 +346,7 @@ public class MainController {
 
 
             // 이메일 중복 체크
-            String email_replaced = email.replace(".", "_");
+            String email_replaced = email.replace(".", "*");
             JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email_replaced, headers);
             if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
                 return obj.get("res_msg").getAsString();
@@ -347,6 +405,46 @@ public class MainController {
             headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
             String apiAddress = API_ADDRESS  + ":" + API_PORT;
             RestUtil.requestPut(apiAddress + "/users", headers, gson.toJson(users));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
+    }
+
+    @RequestMapping(value = {"sendChangePWMail"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String sendChangePWMailPost(@RequestParam("userID") String userID,
+                        @RequestParam("email") String email, HttpSession session){
+        try{
+            String email_replaced = email.replace(".", "*");
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/uno?userID=" + userID + "&userEmail=" + email_replaced, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "no_user_exists";
+            }
+            Integer uno = obj.get("result").getAsInt();
+
+            // sending mail..
+            JsonObject emailObj = new JsonObject();
+            emailObj.addProperty("sender", SENDER_EMAIL_ADDR);
+            emailObj.addProperty("password", SENDER_EMAIL_PASS);
+            emailObj.addProperty("receiver", email);
+            emailObj.addProperty("title", "웹플리케이션 비밀번호 분실 관련 메일입니다.");
+            emailObj.addProperty("content", "비밀번호 초기화 메일입니다.<br>" +
+                    "비밀번호를 초기화를 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/findMemberPW/" + Base64Utils.encodeToString((uno.toString()).getBytes()) + "'>비밀번호 초기화</a>");
+
+            String addr = API_ADDRESS + ":" + API_PORT;
+            Thread logThread = new Thread(() ->
+                    RestUtil.requestPost(addr + "/api/mail/send", headers, emailObj));
+            logThread.start();
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return e.toString();

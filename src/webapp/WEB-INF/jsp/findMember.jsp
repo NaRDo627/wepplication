@@ -43,7 +43,7 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">유저 프로필</h1>
+                <h1 class="page-header">아이디/비밀번호 찾기</h1>
             </div>
             <div class="clear"></div>
             <!-- /.col-lg-12 -->
@@ -71,22 +71,24 @@
                                         <div class="table-responsive">
                                             <div class="panel panel-default">
                                                 <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <label for="ID_userName">이름</label>
-                                                        <input class="form-control" placeholder="Name" name="userName" type="text" id="ID_userName"
-                                                               autofocus required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="hidden" name="email" id="email">
-                                                        <label for="ID_email1">이메일</label><br>
-                                                        <input class="form-control" placeholder="test" type="text"
-                                                               id="ID_email1" style="width:40%; display: inline;"
-                                                               required>&nbsp;@&nbsp;<input class="form-control"
-                                                                                            placeholder="example.com"
-                                                                                            type="text" id="ID_email2"
-                                                                                            style="width:50%; display: inline;"
-                                                                                            required>
-                                                    </div>
+                                                    <form method="post" action="/findMemberID" id="frmFindID">
+                                                        <div class="form-group">
+                                                            <label for="ID_userName">이름</label>
+                                                            <input class="form-control" placeholder="Name" name="userName" type="text" id="ID_userName"
+                                                                   autofocus required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="email" id="email">
+                                                            <label for="ID_email1">이메일</label><br>
+                                                            <input class="form-control" placeholder="test" type="text"
+                                                                   id="ID_email1" style="width:40%; display: inline;"
+                                                                   required>&nbsp;@&nbsp;<input class="form-control"
+                                                                                                placeholder="example.com"
+                                                                                                type="text" id="ID_email2"
+                                                                                                style="width:50%; display: inline;"
+                                                                                                required>
+                                                        </div>
+                                                    </form>
                                                     <a href="#" class="btn btn-lg btn-success btn-block" id="btnFindID">아이디 찾기</a>
                                                 </div>
                                             </div>
@@ -146,18 +148,45 @@
        $("#id-tab").addClass("active");
        
        $("#btnFindID").click(function () {
-           location.href = '/findMemberID';
+           var email = $("#ID_email1").val() + "@" + $("#ID_email2").val();
+           $("#email").val(email);
+
+           $("#frmFindID").submit();
        });
 
        $("#btnFindPW").click(function () {
-           location.href = '/findMemberPW';
+           var email = $("#PW_email1").val() + "@" + $("#PW_email2").val();
+
+           $.ajax({
+               url: "/sendChangePWMail",
+               type: 'POST',
+               data: {
+                   'userID':  $("#PW_userId").val(),
+                   'email': email
+               },
+               success: function (result) {
+                   if(result === "ok"){
+                       alert("메일이 전송되었습니다. 메일함을 확인해 주세요.");
+                   } else if(result === "no_user_exists"){
+                       alert("해당되는 회원 정보를 찾지 못하였습니다. 입력을 확인해 주세요.");
+                   }
+                   else {
+                       alert("비밀번호 찾기 중 오류가 발생하였습니다.");
+                   }
+                   console.log(result);
+               },
+               error: function (jaXHR, textStatus, errorThrown) {
+                   alert("비밀번호 찾기 중 오류가 발생하였습니다.");
+                   console.log(jaXHR);
+               }
+           });
        });
 
-        $("#btnFindID input").keyup(function (e) {
+        $("#id-tab input").keyup(function (e) {
             if (e.keyCode == 13) $("#btnFindID").trigger("click");
         });
 
-        $("#btnFindPW input").keyup(function (e) {
+        $("#password-tab input").keyup(function (e) {
             if (e.keyCode == 13) $("#btnFindPW").trigger("click");
         });
     });

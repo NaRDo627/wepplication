@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/users")
@@ -44,7 +46,7 @@ public class UsersController {
         System.out.println("select count(users) where email="+email);
         try{
             JSONObject obj = new JSONObject();
-            email = email.replace("_", ".");
+            email = email.replace("*", ".");
             Integer recordCount = usersService.countUsersByEmail(email);
             if(recordCount > 0)
                 obj.put("duplicate", true);
@@ -165,8 +167,12 @@ public class UsersController {
                                                 @RequestParam(name = "userEmail") String userEmail) {
         System.out.println("select users by username and email");
         try{
-            userEmail = userEmail.replace("_", ".");
+            userEmail = userEmail.replace("*", ".");
+            userName = URLDecoder.decode(userName, StandardCharsets.UTF_8.toString());
             Users users = usersService.findUsersByUserNameAndEmail(userName, userEmail);
+            if(users == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
             System.out.println(users.getUserName());
             return  new ResponseEntity<>(users.getUserId(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
@@ -175,20 +181,22 @@ public class UsersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    /*
-    @RequestMapping(value = {"/user"}, method = RequestMethod.GET)
-    public ResponseEntity<Users> usersUserIDGet(@RequestParam(name = "userName") String userName,
+    @RequestMapping(value = {"/uno"}, method = RequestMethod.GET)
+    public ResponseEntity<Integer> usersUserExistsGet(@RequestParam(name = "userID") String userID,
                                                 @RequestParam(name = "userEmail") String userEmail) {
-        System.out.println("select users by username and email");
+        System.out.println("select users by userID and email");
         try{
-            userEmail = userEmail.replace("_", ".");
-            Users users = usersService.findUsersByUserNameAndEmail(userName, userEmail);
+            userEmail = userEmail.replace("*", ".");
+            Users users = usersService.findUsersByUserIdAndEmail(userID, userEmail);
+            if(users == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
             System.out.println(users.getUserName());
-            return  new ResponseEntity<>(users, HttpStatus.OK);
+            return  new ResponseEntity<>(users.getUno(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
 }

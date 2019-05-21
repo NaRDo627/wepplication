@@ -43,7 +43,7 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">유저 프로필</h1>
+                <h1 class="page-header">아이디 찾기</h1>
             </div>
             <div class="clear"></div>
             <!-- /.col-lg-12 -->
@@ -54,9 +54,18 @@
                 <div class="panel panel-default">
                     <!-- /.panel-heading -->
                     <div class="panel-body">
-                        <p>고객님의 아이디는 ${userId} 입니다.</p>
-                        <br>
-                        <p><a href="/login">로그인 창으로</a> </p>
+                        <c:choose>
+                            <c:when test="${found eq false}">
+                                <p>입력하신 정보를 확인해 주세요.</p>
+                                <br>
+                                <p><a href="/findMember">돌아가기</a> </p>
+                            </c:when>
+                            <c:otherwise>
+                                <p>고객님의 아이디는 ${foundID} 입니다.</p>
+                                <br>
+                                <p><a href="/login">로그인 창으로</a> </p>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <!-- /.panel-body -->
                 </div>
@@ -73,31 +82,12 @@
 
 <%@include file="assets/IncFooter.jsp" %>
 <script>
-    $(document).ready(function () {
+   /* $(document).ready(function () {
        $("a[href='#id-tab").parent().addClass("active");
        $("#id-tab").addClass("in");
        $("#id-tab").addClass("active");
        
-       $("#sendVerify").click(function () {
-           $.ajax({
-               url: "/send_verify_mail",
-               type: 'POST',
-               success: function (result) {
-                   if(result === "ok"){
-                       alert("인증 메일이 전송되었습니다. 이메일을 확인해 주세요.");
-                   } else if(result === "login first"){
-                       alert("세션에서 로그아웃 되었습니다.");
-                   } else {
-                       alert("인증메일 전송 중 오류가 발생하였습니다.");
-                   }
-                   console.log(result);
-               },
-               error: function (jaXHR, textStatus, errorThrown) {
-                   alert("인증메일 전송 중 오류가 발생하였습니다.");
-                   console.log(jaXHR);
-               }
-           });
-       });
+
 
        $("#btnChangePassword").click(function () {
            // 빈 칸 검사
@@ -171,7 +161,7 @@
         $("input").keyup(function (e) {
             if (e.keyCode == 13) $("#btnChangePassword").trigger("click");
         });
-    });
+    });*/
 </script>
 </body>
 
