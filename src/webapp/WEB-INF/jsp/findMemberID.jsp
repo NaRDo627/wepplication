@@ -82,7 +82,7 @@
 
 <%@include file="assets/IncFooter.jsp" %>
 <script>
- 
+
 </script>
 </body>
 

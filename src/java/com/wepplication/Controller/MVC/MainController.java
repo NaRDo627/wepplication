@@ -1,19 +1,47 @@
 package com.wepplication.Controller.MVC;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+//import com.sun.org.slf4j.internal.Logger;
+//import com.sun.org.slf4j.internal.LoggerFactory;
 import com.wepplication.Domain.MemberShip;
 import com.wepplication.Domain.UserMemberShip;
 import com.wepplication.Domain.Users;
+import com.wepplication.Form.AuthInfo;
 import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.EncryptUtil;
 import com.wepplication.Util.RestUtil;
 //import org.codehaus.jettison.json.JSONObject;
 //import org.graalvm.compiler.lir.LIRInstruction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.api.impl.GoogleTemplate;
+import org.springframework.social.google.api.plus.Person;
+import org.springframework.social.google.api.plus.PlusOperations;
+import org.springframework.social.google.connect.GoogleConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.GrantType;
+import org.springframework.social.oauth2.OAuth2Operations;
+import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.*;
 
+import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Member;
@@ -22,10 +50,12 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.util.Base64Utils;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by NESOY on 2017-02-04.
@@ -38,6 +68,18 @@ public class MainController {
     private static final String API_PORT = "8081";
     private static final String SENDER_EMAIL_ADDR = "wepplication.do.not.reply@gmail.com";
     private static final String SENDER_EMAIL_PASS = "dnpqvmfflzpdltus";
+    //private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+    /* GoogleLogin */
+    @Inject
+    private AuthInfo authInfo;
+
+    @Autowired
+    private GoogleConnectionFactory googleConnectionFactory;
+
+    @Autowired
+    private OAuth2Parameters googleOAuth2Parameters;
+
 
     private Gson gson = new GsonBuilder()
             .registerTypeAdapter(Timestamp.class, (JsonDeserializer<Timestamp>) (json, typeOfT, context) -> new Timestamp(json.getAsJsonPrimitive().getAsLong()))
@@ -62,7 +104,103 @@ public class MainController {
 
     @RequestMapping(value = {"login"}, method = RequestMethod.GET)
     public String loginGet(Model model, HttpSession session){
+        /* 구글code 발행 */
+        OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
+        String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
+
+        model.addAttribute("google_url", url);
+
         return "login";
+    }
+
+    @RequestMapping(value = {"oauth2login"}, method = RequestMethod.GET)
+    public String oauth2LoginGet(HttpServletRequest request,
+                                 Model model, HttpSession session){
+
+        String code = request.getParameter("code");
+        System.out.println(code);
+
+        List<String[]> headers = new ArrayList<>();
+        //headers.add(new String[]{"Accept", "*/*"});
+       // headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+        headers.add(new String[]{"Content-Type", MediaType.APPLICATION_FORM_URLENCODED.toString()});
+
+        String requestBodyString = "code=" + code + "&" +
+                "client_id=" + authInfo.getClientId() + "&" +
+                "client_secret=" + authInfo.getClientSecret() + "&" +
+                "redirect_uri=" +  googleOAuth2Parameters.getRedirectUri() + "&" +
+                "grant_type=" + "authorization_code";
+
+        JsonObject obj = (JsonObject) RestUtil.requestPost("https://www.googleapis.com/oauth2/v4/token", headers, requestBodyString);
+        if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+            return "redirect:/";
+
+        JsonObject result = obj.getAsJsonObject("result");
+       /* //RestTemplate을 사용하여 Access Token 및 profile을 요청한다.
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("code", code);
+        parameters.add("client_id", authInfo.getClientId());
+        parameters.add("client_secret", authInfo.getClientSecret());
+        parameters.add("redirect_uri", googleOAuth2Parameters.getRedirectUri());
+        parameters.add("grant_type", "authorization_code");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED.toString());
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(parameters, headers);
+        ResponseEntity<Map> responseEntity = restTemplate.exchange("https://www.googleapis.com/oauth2/v4/token", HttpMethod.POST, requestEntity, Map.class);
+        Map<String, Object> responseMap = responseEntity.getBody();
+*/
+        // id_token 라는 키에 사용자가 정보가 존재한다.
+        // 받아온 결과는 JWT (Json Web Token) 형식으로 받아온다. 콤마 단위로 끊어서 첫 번째는 현 토큰에 대한 메타 정보, 두 번째는 우리가 필요한 내용이 존재한다.
+        // 세번째 부분에는 위변조를 방지하기 위한 특정 알고리즘으로 암호화되어 사이닝에 사용한다.
+        //Base 64로 인코딩 되어 있으므로 디코딩한다.
+
+        String[] tokens = result.get("id_token").getAsString().split("\\.");
+        try{
+            String body = new String(Base64Utils.decode(tokens[1].getBytes()), StandardCharsets.UTF_8);
+
+            System.out.println(tokens.length);
+            System.out.println(new String(Base64Utils.decode(tokens[0].getBytes()), StandardCharsets.UTF_8));
+            System.out.println(new String(Base64Utils.decode(tokens[1].getBytes()), StandardCharsets.UTF_8));
+        } catch (Exception e) {
+
+        }
+
+
+
+
+        //Jackson을 사용한 JSON을 자바 Map 형식으로 변환
+      /*  ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> result = mapper.readValue(body, Map.class);
+        System.out.println(result.get(""));
+*/
+        /*// 구글 로그인 처리
+        System.out.println("it works! code:" + code);
+        OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
+        AccessGrant accessGrant = oauthOperations.exchangeForAccess(code, googleOAuth2Parameters.getRedirectUri(), null);
+        String accessToken = accessGrant.getAccessToken();
+        Long expireTime = accessGrant.getExpireTime();
+        if (expireTime != null && expireTime < System.currentTimeMillis())
+        {
+            accessToken = accessGrant.getRefreshToken();
+            //logger.info("accessToken is expired. refresh token = {}" , accessToken);
+        }
+
+        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+        Plus plus = new Plus.builder(new NetHttpTransport(),
+                JacksonFactory.getDefaultInstance(),
+                credential)
+                .setApplicationName("Google-PlusSample/1.0")
+                .build();*/
+
+      /*  Connection<Google> connection = googleConnectionFactory.createConnection(accessGrant);
+        Google google = connection == null ? new GoogleTemplate(accessToken) : connection.getApi();
+        PlusOperations plusOperations = google.plusOperations();
+        Person person = plusOperations.getGoogleProfile();*/
+
+
+        return "index";
     }
 
     @RequestMapping(value = {"member"}, method = RequestMethod.GET)
@@ -134,7 +272,7 @@ public class MainController {
         session.removeAttribute("users");
         session.removeAttribute("user_membership");
 
-        return "login";
+        return "redirect:/login";
     }
 
     @RequestMapping(value = {"verify/{auth}"}, method = RequestMethod.GET)
