@@ -136,25 +136,6 @@ public class MainController {
             return "redirect:/";
 
         JsonObject result = obj.getAsJsonObject("result");
-       /* //RestTemplate을 사용하여 Access Token 및 profile을 요청한다.
-        RestTemplate restTemplate = new RestTemplate();
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("code", code);
-        parameters.add("client_id", authInfo.getClientId());
-        parameters.add("client_secret", authInfo.getClientSecret());
-        parameters.add("redirect_uri", googleOAuth2Parameters.getRedirectUri());
-        parameters.add("grant_type", "authorization_code");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED.toString());
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(parameters, headers);
-        ResponseEntity<Map> responseEntity = restTemplate.exchange("https://www.googleapis.com/oauth2/v4/token", HttpMethod.POST, requestEntity, Map.class);
-        Map<String, Object> responseMap = responseEntity.getBody();
-*/
-        // id_token 라는 키에 사용자가 정보가 존재한다.
-        // 받아온 결과는 JWT (Json Web Token) 형식으로 받아온다. 콤마 단위로 끊어서 첫 번째는 현 토큰에 대한 메타 정보, 두 번째는 우리가 필요한 내용이 존재한다.
-        // 세번째 부분에는 위변조를 방지하기 위한 특정 알고리즘으로 암호화되어 사이닝에 사용한다.
-        //Base 64로 인코딩 되어 있으므로 디코딩한다.
 
         String[] tokens = result.get("id_token").getAsString().split("\\.");
         try{
@@ -163,44 +144,133 @@ public class MainController {
             System.out.println(tokens.length);
             System.out.println(new String(Base64Utils.decode(tokens[0].getBytes()), StandardCharsets.UTF_8));
             System.out.println(new String(Base64Utils.decode(tokens[1].getBytes()), StandardCharsets.UTF_8));
+            //System.out.println(new String(Base64Utils.decode(tokens[2].getBytes()), StandardCharsets.UTF_8));
+            JsonParser parser = new JsonParser();
+            JsonObject idToken = parser.parse(body).getAsJsonObject();
+
+            String userId = idToken.get("sub").getAsString();
+            String password = idToken.get("sub").getAsString();
+            String userName = idToken.get("name").getAsString();
+            String userNickName = idToken.get("given_name").getAsString();
+            String email = idToken.get("email").getAsString();
+
+
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> reqHeaders = new ArrayList<>();
+            reqHeaders.add(new String[]{"Accept", "*/*"});
+            reqHeaders.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+
+            // 유저 ID가 존재하면 로그인, 아니면 자동 회원가입
+            obj = (JsonObject) RestUtil.requestGet(addr + "/users/check_duplicate_id/" + userId, reqHeaders);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                throw new Exception("Core server error");
+
+            Boolean duplicate = obj.getAsJsonObject("result").get("duplicate").getAsBoolean();
+            if(duplicate)
+            {
+                String email_replaced = email.replace(".", "*");
+                obj = (JsonObject) RestUtil.requestGet(addr + String.format("/users/%s/%s", userId, email_replaced), reqHeaders);
+                if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                    throw new Exception("Core server error");
+
+                result = obj.get("result").getAsJsonObject();
+                Users users = gson.fromJson(result, Users.class);
+
+                session.setAttribute("users", users);
+                Integer uno = users.getUno();
+
+                // [190410][HKPARK] user_membership 레코드가 없으면 업데이트
+                obj = (JsonObject) RestUtil.requestGet(addr + "/user_membership/" + ((JsonObject)obj.get("result")).get("uno").getAsInt(), reqHeaders);
+
+                UserMemberShip userMemberShip = null;
+                if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    userMemberShip = new UserMemberShip();
+                    userMemberShip.setUno(uno);
+                    userMemberShip.setMno(1);
+                    userMemberShip.setIsAutoSubscribe(0);
+                    result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", reqHeaders, gson.toJson(userMemberShip))).
+                            getAsJsonObject("result");
+
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                } else{
+                    result = obj.getAsJsonObject("result");
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                }
+
+                session.setAttribute("user_membership", userMemberShip);
+                return "redirect:/";
+            }
+
+            // 이메일 중복 체크
+            String email_replaced = email.replace(".", "*");
+            obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email_replaced, reqHeaders);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                throw new Exception("Core server error");
+            }
+
+            if(obj.getAsJsonObject("result").get("duplicate").getAsBoolean())
+                throw new Exception("duplicate email");
+
+            // 없으면 새로 생성
+            Users users = new Users();
+            users.setUserId(userId);
+            users.setPassword(password);
+            users.setUserName(userName);
+            users.setUserNickname(userNickName);
+            users.setEmail(email);
+            users.setVerified(1);
+
+            obj = (JsonObject)RestUtil.requestPost(addr + "/users", reqHeaders, gson.toJson(users));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                throw new Exception("Core server error");
+            }
+
+            users = gson.fromJson((obj.get("result")), Users.class);
+            session.setAttribute("users", users);
+
+            // [190410][HKPARK] user_membership 레코드가 없으면 업데이트
+            obj = (JsonObject) RestUtil.requestGet(addr + "/user_membership/" + ((JsonObject)obj.get("result")).get("uno").getAsInt(), reqHeaders);
+
+            UserMemberShip userMemberShip = null;
+            if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_NOT_FOUND) {
+                userMemberShip = new UserMemberShip();
+                userMemberShip.setUno(users.getUno());
+                userMemberShip.setMno(1);
+                userMemberShip.setIsAutoSubscribe(0);
+                result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", reqHeaders, gson.toJson(userMemberShip))).
+                        getAsJsonObject("result");
+
+                userMemberShip = gson.fromJson(result, UserMemberShip.class);
+            } else{
+                result = obj.getAsJsonObject("result");
+                userMemberShip = gson.fromJson(result, UserMemberShip.class);
+            }
+
+            session.setAttribute("user_membership", userMemberShip);
+
+            password = users.getPassword();
+
+            // [190412][HKPARK] 이메일 인증
+            JsonObject emailObj = new JsonObject();
+            emailObj.addProperty("sender", SENDER_EMAIL_ADDR);
+            emailObj.addProperty("password", SENDER_EMAIL_PASS);
+            emailObj.addProperty("receiver", email);
+            emailObj.addProperty("title", "웹플리케이션 인증 메일입니다.");
+            emailObj.addProperty("content", "안녕하세요, "+ userName + "님!<br>" +
+                    "저희 웹플리케이션에 가입해주셔서 감사합니다.<br>" +
+                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()) + "'>인증하기</a>");
+
+            Thread logThread = new Thread(() ->
+                    RestUtil.requestPost(addr + "/api/mail/send", reqHeaders, emailObj));
+            logThread.start();
         } catch (Exception e) {
-
+            e.printStackTrace();
+            return "redirect:/";
         }
 
 
-
-
-        //Jackson을 사용한 JSON을 자바 Map 형식으로 변환
-      /*  ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> result = mapper.readValue(body, Map.class);
-        System.out.println(result.get(""));
-*/
-        /*// 구글 로그인 처리
-        System.out.println("it works! code:" + code);
-        OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
-        AccessGrant accessGrant = oauthOperations.exchangeForAccess(code, googleOAuth2Parameters.getRedirectUri(), null);
-        String accessToken = accessGrant.getAccessToken();
-        Long expireTime = accessGrant.getExpireTime();
-        if (expireTime != null && expireTime < System.currentTimeMillis())
-        {
-            accessToken = accessGrant.getRefreshToken();
-            //logger.info("accessToken is expired. refresh token = {}" , accessToken);
-        }
-
-        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-        Plus plus = new Plus.builder(new NetHttpTransport(),
-                JacksonFactory.getDefaultInstance(),
-                credential)
-                .setApplicationName("Google-PlusSample/1.0")
-                .build();*/
-
-      /*  Connection<Google> connection = googleConnectionFactory.createConnection(accessGrant);
-        Google google = connection == null ? new GoogleTemplate(accessToken) : connection.getApi();
-        PlusOperations plusOperations = google.plusOperations();
-        Person person = plusOperations.getGoogleProfile();*/
-
-
-        return "index";
+        return "redirect:/";
     }
 
     @RequestMapping(value = {"member"}, method = RequestMethod.GET)

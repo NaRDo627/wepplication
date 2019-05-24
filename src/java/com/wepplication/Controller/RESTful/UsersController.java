@@ -75,6 +75,24 @@ public class UsersController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = {"/{userId}/{userEmail}"}, method = RequestMethod.GET)
+    public ResponseEntity<Users> usersUserIDUserEmailGet(@PathVariable(value="userId") String userId,
+                                                         @PathVariable(value="userEmail") String userEmail) {
+        System.out.println("select users where user_id=" + userId + "and email=" + userEmail);
+        userEmail = userEmail.replace("*", ".");
+        try{
+            Users user = usersService.findUsersByUserIdAndEmail(userId, userEmail);
+            if(user == null)
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @CrossOrigin
     @RequestMapping(value = {"/get_session/{sessionId}"}, method = RequestMethod.GET)
     public ResponseEntity<Users> usersGet(@PathVariable(value="sessionId") String sessionId) {
         System.out.println("select users where sessionId=" +sessionId);

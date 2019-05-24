@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "userlog")
+@Table(name = "user_access_log")
 public class UserAccessLog implements Serializable {
     private static final long serialVersionUID = 1L;
 
