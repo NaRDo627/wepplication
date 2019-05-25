@@ -35,7 +35,8 @@
                         <div class="panel panel-default">
                             <div class="panel-body" style="height:1000px;padding: 0;">
                                 <!-- 최후의 최후의 최후의 수단... -->
-                                <iframe style="width:100%; height:1000px; border: hidden; "  src="http://parkkiho.asuscomm.com:8080/angular-moviemasher/app/"></iframe>
+                                <input type="hidden" id="mno" value="${sessionScope.user_membership.mno}" />
+                                <iframe style="width:100%; height:1000px; border: hidden; "  src="http://parkkiho.asuscomm.com:8080/angular-moviemasher/app/" id="movieMasher"></iframe>
                             </div>
                         </div>
                     </div>
@@ -115,6 +116,16 @@
     <!-- /#wrapper -->
 
     <%@include file="../assets/IncFooter.jsp"%>
+<script>
+    window.addEventListener('message', function(e) {
+        console.log(e.data); // { hello: 'parent' }
+        document.getElementById('movieMasher').contentWindow.postMessage($("#mno").val(), '*');
+    })
+
+    $(document).ready(function () {
+
+    });
+</script>
 </body>
 
 </html>

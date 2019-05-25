@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "user_access_log")
-public class UserAccessLog implements Serializable {
+public class UserAccessLog implements Serializable, Comparable<UserAccessLog> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -63,5 +63,15 @@ public class UserAccessLog implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int compareTo(UserAccessLog userAccessLog) {
+        if(this.reqTime.getTime() < userAccessLog.getReqTime().getTime()){
+            return 1;
+        } else if(this.reqTime.getTime() > userAccessLog.getReqTime().getTime()){
+            return -1;
+        }
+        return 0;
     }
 }

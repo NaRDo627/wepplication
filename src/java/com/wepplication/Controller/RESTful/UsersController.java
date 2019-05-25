@@ -117,7 +117,8 @@ public class UsersController {
         System.out.println("Insert " + users.getUserName());
         try{
             users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + users.getPassword()));
-            users.setVerified(0);
+            if(users.getVerified() == null)
+                users.setVerified(0);
             users.setInsertTime(DateTimeUtil.now());
             users.setUpdateTime(DateTimeUtil.now());
             return new ResponseEntity<>(usersService.saveUser(users), HttpStatus.OK);

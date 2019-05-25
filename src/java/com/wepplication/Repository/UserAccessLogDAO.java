@@ -4,7 +4,9 @@ import com.wepplication.Domain.UserAccessLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("userLogDAO")
-public interface UserAccessLogDAO extends JpaRepository<UserAccessLog, Integer> {
+import java.util.List;
 
+@Repository("userAccessLogDAO")
+public interface UserAccessLogDAO extends JpaRepository<UserAccessLog, Integer> {
+    List<UserAccessLog> findAllByUno(Integer uno);
 }

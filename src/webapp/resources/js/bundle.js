@@ -9889,6 +9889,11 @@
                             1 == n.length && (this.SAVE_NAME = s.name.split(".")[s.name.split(".").length - 2]);
                             var l = new FileReader;
                             l.file = n[i], l.onload = function(e) {
+                                if (this.file.size > 1024 * 1024 && ($("#mno").val() === '' || Number($("#mno").val()) === 1)){
+                                    alert("1MB 이상의 업로드는 Pro만 가능합니다!");
+                                    return;
+                                }
+
                                 if (this.file.type.match("image.*")) {
                                     var n = a + o[this.file.name],
                                         r = {
