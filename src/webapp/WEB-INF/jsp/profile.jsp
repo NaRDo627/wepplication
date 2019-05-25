@@ -460,8 +460,8 @@
 
         // 사용량 그래프 그리기
         $.ajax({
-           // url: REST_URL + "/userlog/users/" + Number('${sessionScope.users.uno}') ,
-            url: "http://localhost:8081" + "/userlog/users/" + Number('${sessionScope.users.uno}') ,
+            url: REST_URL + "/userlog/users/" + Number('${sessionScope.users.uno}') ,
+           // url: "http://localhost:8081" + "/userlog/users/" + Number('${sessionScope.users.uno}') ,
             type: 'GET',
             success: function (result) {
                /* var dataString =
