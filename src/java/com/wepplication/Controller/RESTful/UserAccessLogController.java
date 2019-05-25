@@ -1,5 +1,6 @@
 package com.wepplication.Controller.RESTful;
 
+import com.google.gson.JsonObject;
 import com.wepplication.Controller.RESTful.Service.UserAccessLogService;
 import com.wepplication.Domain.UserAccessLog;
 import com.wepplication.Util.DateTimeUtil;
@@ -19,7 +20,7 @@ public class UserAccessLogController {
     // 로그 생성
     @CrossOrigin
     @RequestMapping(value = {"", "/"}, method = RequestMethod.POST)
-    public ResponseEntity<UserAccessLog> usersPost(@RequestBody UserAccessLog userAccessLog) {
+    public ResponseEntity<UserAccessLog> userLogPost(@RequestBody UserAccessLog userAccessLog) {
         if (userAccessLog == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         System.out.println("Insert user_log");
@@ -32,4 +33,17 @@ public class UserAccessLogController {
     }
 
     // 로그 조회
+    @CrossOrigin
+    @RequestMapping(value = {"users/{uno}"}, method = RequestMethod.GET)
+    public ResponseEntity<JsonObject> userLogUsersGet(@PathVariable(name = "uno") Integer uno) {
+        if (uno == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        System.out.println("Insert user_log");
+        try {
+
+            return new ResponseEntity<>(userAccessLogService.saveUserLog(userAccessLog), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
