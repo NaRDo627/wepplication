@@ -1,29 +1,61 @@
 package com.wepplication.Controller.MVC;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+//import com.sun.org.slf4j.internal.Logger;
+//import com.sun.org.slf4j.internal.LoggerFactory;
 import com.wepplication.Domain.MemberShip;
 import com.wepplication.Domain.UserMemberShip;
 import com.wepplication.Domain.Users;
+import com.wepplication.Form.AuthInfo;
 import com.wepplication.Util.DateTimeUtil;
 import com.wepplication.Util.EncryptUtil;
 import com.wepplication.Util.RestUtil;
 //import org.codehaus.jettison.json.JSONObject;
 //import org.graalvm.compiler.lir.LIRInstruction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.api.impl.GoogleTemplate;
+import org.springframework.social.google.api.plus.Person;
+import org.springframework.social.google.api.plus.PlusOperations;
+import org.springframework.social.google.connect.GoogleConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.GrantType;
+import org.springframework.social.oauth2.OAuth2Operations;
+import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import com.google.gson.*;
 
+import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Member;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.util.Base64Utils;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by NESOY on 2017-02-04.
@@ -36,6 +68,18 @@ public class MainController {
     private static final String API_PORT = "8081";
     private static final String SENDER_EMAIL_ADDR = "wepplication.do.not.reply@gmail.com";
     private static final String SENDER_EMAIL_PASS = "dnpqvmfflzpdltus";
+    //private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+    /* GoogleLogin */
+    @Inject
+    private AuthInfo authInfo;
+
+    @Autowired
+    private GoogleConnectionFactory googleConnectionFactory;
+
+    @Autowired
+    private OAuth2Parameters googleOAuth2Parameters;
+
 
     private Gson gson = new GsonBuilder()
             .registerTypeAdapter(Timestamp.class, (JsonDeserializer<Timestamp>) (json, typeOfT, context) -> new Timestamp(json.getAsJsonPrimitive().getAsLong()))
@@ -60,12 +104,184 @@ public class MainController {
 
     @RequestMapping(value = {"login"}, method = RequestMethod.GET)
     public String loginGet(Model model, HttpSession session){
+        /* 구글code 발행 */
+        OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
+        String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
+
+        model.addAttribute("google_url", url);
+
         return "login";
+    }
+
+    @RequestMapping(value = {"oauth2login"}, method = RequestMethod.GET)
+    public String oauth2LoginGet(HttpServletRequest request,
+                                 Model model, HttpSession session){
+
+        String code = request.getParameter("code");
+        System.out.println(code);
+
+        List<String[]> headers = new ArrayList<>();
+        //headers.add(new String[]{"Accept", "*/*"});
+       // headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+        headers.add(new String[]{"Content-Type", MediaType.APPLICATION_FORM_URLENCODED.toString()});
+
+        String requestBodyString = "code=" + code + "&" +
+                "client_id=" + authInfo.getClientId() + "&" +
+                "client_secret=" + authInfo.getClientSecret() + "&" +
+                "redirect_uri=" +  googleOAuth2Parameters.getRedirectUri() + "&" +
+                "grant_type=" + "authorization_code";
+
+        JsonObject obj = (JsonObject) RestUtil.requestPost("https://www.googleapis.com/oauth2/v4/token", headers, requestBodyString);
+        if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+            return "redirect:/";
+
+        JsonObject result = obj.getAsJsonObject("result");
+
+        String[] tokens = result.get("id_token").getAsString().split("\\.");
+        try{
+            String body = new String(Base64Utils.decode(tokens[1].getBytes()), StandardCharsets.UTF_8);
+
+            System.out.println(tokens.length);
+            System.out.println(new String(Base64Utils.decode(tokens[0].getBytes()), StandardCharsets.UTF_8));
+            System.out.println(new String(Base64Utils.decode(tokens[1].getBytes()), StandardCharsets.UTF_8));
+            //System.out.println(new String(Base64Utils.decode(tokens[2].getBytes()), StandardCharsets.UTF_8));
+            JsonParser parser = new JsonParser();
+            JsonObject idToken = parser.parse(body).getAsJsonObject();
+
+            String userId = idToken.get("sub").getAsString();
+            String password = idToken.get("sub").getAsString();
+            String userName = idToken.get("name").getAsString();
+            String userNickName = idToken.get("given_name").getAsString();
+            String email = idToken.get("email").getAsString();
+
+
+            String addr = API_ADDRESS + ":" + API_PORT;
+            List<String[]> reqHeaders = new ArrayList<>();
+            reqHeaders.add(new String[]{"Accept", "*/*"});
+            reqHeaders.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+
+            // 유저 ID가 존재하면 로그인, 아니면 자동 회원가입
+            obj = (JsonObject) RestUtil.requestGet(addr + "/users/check_duplicate_id/" + userId, reqHeaders);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                throw new Exception("Core server error");
+
+            Boolean duplicate = obj.getAsJsonObject("result").get("duplicate").getAsBoolean();
+            if(duplicate)
+            {
+                String email_replaced = email.replace(".", "*");
+                obj = (JsonObject) RestUtil.requestGet(addr + String.format("/users/%s/%s", userId, email_replaced), reqHeaders);
+                if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK)
+                    throw new Exception("Core server error");
+
+                result = obj.get("result").getAsJsonObject();
+                Users users = gson.fromJson(result, Users.class);
+
+                session.setAttribute("users", users);
+                Integer uno = users.getUno();
+
+                // [190410][HKPARK] user_membership 레코드가 없으면 업데이트
+                obj = (JsonObject) RestUtil.requestGet(addr + "/user_membership/" + ((JsonObject)obj.get("result")).get("uno").getAsInt(), reqHeaders);
+
+                UserMemberShip userMemberShip = null;
+                if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    userMemberShip = new UserMemberShip();
+                    userMemberShip.setUno(uno);
+                    userMemberShip.setMno(1);
+                    userMemberShip.setIsAutoSubscribe(0);
+                    result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", reqHeaders, gson.toJson(userMemberShip))).
+                            getAsJsonObject("result");
+
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                } else{
+                    result = obj.getAsJsonObject("result");
+                    userMemberShip = gson.fromJson(result, UserMemberShip.class);
+                }
+
+                session.setAttribute("user_membership", userMemberShip);
+                return "redirect:/";
+            }
+
+            // 이메일 중복 체크
+            String email_replaced = email.replace(".", "*");
+            obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email_replaced, reqHeaders);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                throw new Exception("Core server error");
+            }
+
+            if(obj.getAsJsonObject("result").get("duplicate").getAsBoolean())
+                throw new Exception("duplicate email");
+
+            // 없으면 새로 생성
+            Users users = new Users();
+            users.setUserId(userId);
+            users.setPassword(password);
+            users.setUserName(userName);
+            users.setUserNickname(userNickName);
+            users.setEmail(email);
+            users.setVerified(1);
+
+            obj = (JsonObject)RestUtil.requestPost(addr + "/users", reqHeaders, gson.toJson(users));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                throw new Exception("Core server error");
+            }
+
+            users = gson.fromJson((obj.get("result")), Users.class);
+            session.setAttribute("users", users);
+
+            // [190410][HKPARK] user_membership 레코드가 없으면 업데이트
+            obj = (JsonObject) RestUtil.requestGet(addr + "/user_membership/" + ((JsonObject)obj.get("result")).get("uno").getAsInt(), reqHeaders);
+
+            UserMemberShip userMemberShip = null;
+            if(obj.get("res_code").getAsInt() == HttpURLConnection.HTTP_NOT_FOUND) {
+                userMemberShip = new UserMemberShip();
+                userMemberShip.setUno(users.getUno());
+                userMemberShip.setMno(1);
+                userMemberShip.setIsAutoSubscribe(0);
+                result = ((JsonObject)RestUtil.requestPost(addr + "/user_membership/", reqHeaders, gson.toJson(userMemberShip))).
+                        getAsJsonObject("result");
+
+                userMemberShip = gson.fromJson(result, UserMemberShip.class);
+            } else{
+                result = obj.getAsJsonObject("result");
+                userMemberShip = gson.fromJson(result, UserMemberShip.class);
+            }
+
+            session.setAttribute("user_membership", userMemberShip);
+
+            password = users.getPassword();
+
+            // [190412][HKPARK] 이메일 인증
+            JsonObject emailObj = new JsonObject();
+            emailObj.addProperty("sender", SENDER_EMAIL_ADDR);
+            emailObj.addProperty("password", SENDER_EMAIL_PASS);
+            emailObj.addProperty("receiver", email);
+            emailObj.addProperty("title", "웹플리케이션 인증 메일입니다.");
+            emailObj.addProperty("content", "안녕하세요, "+ userName + "님!<br>" +
+                    "저희 웹플리케이션에 가입해주셔서 감사합니다.<br>" +
+                    "이메일 인증을 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/verify/" + Base64Utils.encodeToString((userId + ":" + password).getBytes()) + "'>인증하기</a>");
+
+            Thread logThread = new Thread(() ->
+                    RestUtil.requestPost(addr + "/api/mail/send", reqHeaders, emailObj));
+            logThread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
+        }
+
+
+        return "redirect:/";
     }
 
     @RequestMapping(value = {"member"}, method = RequestMethod.GET)
     public String memberGet(Model model, HttpSession session){
         return "member";
+    }
+
+    @RequestMapping(value = {"findMember"}, method = RequestMethod.GET)
+    public String findMemberGet(Model model, HttpSession session){
+
+        return "findMember";
     }
 
     @RequestMapping(value = {"profile"}, method = RequestMethod.GET)
@@ -126,7 +342,7 @@ public class MainController {
         session.removeAttribute("users");
         session.removeAttribute("user_membership");
 
-        return "login";
+        return "redirect:/login";
     }
 
     @RequestMapping(value = {"verify/{auth}"}, method = RequestMethod.GET)
@@ -155,6 +371,86 @@ public class MainController {
         }
 
         return "verified";
+    }
+
+    @RequestMapping(value = {"findMemberID"}, method = RequestMethod.POST)
+    public String findMemberIDPost(@RequestParam("userName") String userName,
+                                   @RequestParam("email") String email, Model model){
+        try{
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            String email_replaced = email.replace(".", "*");
+            userName = URLEncoder.encode(userName, StandardCharsets.UTF_8.toString());
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/userId?userName=" + userName + "&userEmail=" + email_replaced , headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                model.addAttribute("found", false);
+                return "findMemberID";
+            }
+            String foundId = obj.get("result").getAsString();
+            Integer maskLength = foundId.length() - 3;
+            foundId = foundId.substring(0, maskLength) + "***";
+            //foundId = foundId.replaceAll("(?<=^\\d{3,})\\d", "*");
+            model.addAttribute("found", true);
+            model.addAttribute("foundID", foundId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "findMemberID";
+    }
+
+    @RequestMapping(value = {"findMemberPW/{encUno}"}, method = RequestMethod.GET)
+    public String findMemberPWGet(@PathVariable("encUno") String encUno, Model model){
+        try{
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            encUno = new String(Base64Utils.decodeFromString(encUno));
+            Integer uno = Integer.parseInt(encUno);
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/" + uno, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "redirect:/";
+            }
+            model.addAttribute("uno", uno);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
+        }
+
+        return "findMemberPW";
+    }
+
+    @RequestMapping(value = {"findMemberPW"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String findMemberPWPost(@RequestParam("uno") Integer uno,
+                            @RequestParam("newPassword") String newPassword,
+                            Model model){
+        try{
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/" + uno, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "redirect:/";
+            }
+            Users users = gson.fromJson(obj.getAsJsonObject("result"), Users.class);
+            users.setPassword(EncryptUtil.encryptByMd5("whfwkrtlfjbb" + newPassword));
+            obj = (JsonObject)RestUtil.requestPut(apiAddress + "/users", headers, gson.toJson(users));
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return obj.get("res_msg").getAsString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
     }
 
     /* api */
@@ -258,7 +554,8 @@ public class MainController {
 
 
             // 이메일 중복 체크
-            JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email, headers);
+            String email_replaced = email.replace(".", "*");
+            JsonObject obj = (JsonObject)RestUtil.requestGet(addr + "/users/check_duplicate_email/" + email_replaced, headers);
             if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
                 return obj.get("res_msg").getAsString();
             }
@@ -316,6 +613,46 @@ public class MainController {
             headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
             String apiAddress = API_ADDRESS  + ":" + API_PORT;
             RestUtil.requestPut(apiAddress + "/users", headers, gson.toJson(users));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+
+        return "ok";
+    }
+
+    @RequestMapping(value = {"sendChangePWMail"}, method = RequestMethod.POST)
+    public @ResponseBody
+    String sendChangePWMailPost(@RequestParam("userID") String userID,
+                        @RequestParam("email") String email, HttpSession session){
+        try{
+            String email_replaced = email.replace(".", "*");
+            List<String[]> headers = new ArrayList<>();
+            headers.add(new String[]{"Accept", "*/*"});
+            headers.add(new String[]{"X-Requested-With", "XMLHttpRequest"});
+            String apiAddress = API_ADDRESS  + ":" + API_PORT;
+            JsonObject obj = (JsonObject) RestUtil.requestGet(apiAddress + "/users/uno?userID=" + userID + "&userEmail=" + email_replaced, headers);
+            if(obj.get("res_code").getAsInt() != HttpURLConnection.HTTP_OK){
+                return "no_user_exists";
+            }
+            Integer uno = obj.get("result").getAsInt();
+
+            // sending mail..
+            JsonObject emailObj = new JsonObject();
+            emailObj.addProperty("sender", SENDER_EMAIL_ADDR);
+            emailObj.addProperty("password", SENDER_EMAIL_PASS);
+            emailObj.addProperty("receiver", email);
+            emailObj.addProperty("title", "웹플리케이션 비밀번호 분실 관련 메일입니다.");
+            emailObj.addProperty("content", "비밀번호 초기화 메일입니다.<br>" +
+                    "비밀번호를 초기화를 하시려면 아래의 링크를 클릭해주세요.<br><br>" +
+                    "<a href='http://parkkiho.asuscomm.com/findMemberPW/" + Base64Utils.encodeToString((uno.toString()).getBytes()) + "'>비밀번호 초기화</a>");
+
+            String addr = API_ADDRESS + ":" + API_PORT;
+            Thread logThread = new Thread(() ->
+                    RestUtil.requestPost(addr + "/api/mail/send", headers, emailObj));
+            logThread.start();
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return e.toString();

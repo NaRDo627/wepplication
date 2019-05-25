@@ -47,7 +47,10 @@
                                     </div>
                                     <!-- Change this to a button or input when using this as a form -->
                                     <a href="#" class="btn btn-lg btn-success btn-block" id="btn-submit">로그인</a>
+                                    <a href="${google_url}" class="btn btn-lg btn-default btn-block" id="btn-google"><i class="fa fa-google"></i> 구글 로그인</a>
                                     <a href="/member" class="btn btn-lg btn-primary btn-block">회원가입</a>
+                                    <br>
+                                    <center><a href="/findMember">아이디/비밀번호 찾기</a></center>
                                 </fieldset>
                             </form>
                         </div>

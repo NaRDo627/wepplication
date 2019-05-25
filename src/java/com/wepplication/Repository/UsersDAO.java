@@ -10,4 +10,6 @@ public interface UsersDAO extends JpaRepository<Users, Integer> {
     Users findBySessionKey(String sessionKey);
     Integer countAllByUserId(String userId);
     Integer countAllByEmail(String email);
+    Users findByUserNameAndEmail(String userName, String email);
+    Users findByUserIdAndEmail(String userId, String email);
 }
