@@ -16,6 +16,9 @@
     <title>웹플리케이션</title>
 
     <%@include file="assets/IncAsset.jsp" %>
+
+    <!--필요 css파일-->
+    <link rel="stylesheet" href="../../resources/chart/css/ref/morris.css">
     <style>
         li.active > a {
             background-color: #f8f8f8 !important;
@@ -61,6 +64,8 @@
                             <li><a href="#password-tab" data-toggle="tab">비밀번호</a>
                             </li>
                             <li><a href="#membership-tab" data-toggle="tab">구독</a>
+                            </li>
+                            <li><a href="#usageGraph-tab" data-toggle="tab">사용량</a>
                             </li><%--
                             <li><a href="#settings-tab" data-toggle="tab">설정</a>
                             </li>--%>
@@ -281,6 +286,34 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="usageGraph-tab">
+                                <div class="row">
+                                    <br><br>
+                                    <div class="col-md-8 col-md-offset-2">
+                                        <div class="table-responsive">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>
+                                                                <p class="form-control-static">월별 사용량 그래프</p>
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div id="morrisLine_who2" style="width:520px; height:300px;"></div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- ./table responsive -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- /.panel-body -->
@@ -290,6 +323,12 @@
             </div>
         </div>
         <!-- /.row -->
+        <!--필수 js-->
+        <script type="text/javascript" src="../../resources/chart/js/ref/jquery-3.4.1.js"></script>
+        <script type="text/javascript" src="../../resources/chart/js/ref/morris.js"></script>
+        <script type="text/javascript" src="../../resources/chart/js/ref/raphael.js"></script>
+        <!--chart display js-->
+        <script type="text/javascript" src="../../resources/chart/js/displayChart_profile.js"></script>
     </div>
     <!-- /#page-wrapper -->
 
@@ -297,6 +336,7 @@
 <!-- /#wrapper -->
 
 <%@include file="assets/IncFooter.jsp" %>
+
 <script>
     $(document).ready(function () {
        $("a[href='#"+'${tab_select}'+"'").parent().addClass("active");
