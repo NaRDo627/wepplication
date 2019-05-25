@@ -130,14 +130,6 @@
                                                                 <p class="form-control-static">${membership.mname}</p>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <th>
-                                                                <p class="form-control-static">결제정보</p>
-                                                            </th>
-                                                            <td>
-                                                                <p class="form-control-static"></p>
-                                                            </td>
-                                                        </tr>
                                                         </tbody>
                                                     </table>
                                                     <!-- ./table responsive -->

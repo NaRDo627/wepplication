@@ -58,6 +58,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="panel panel-default">
+                            <input type="hidden" id="mno" value="${sessionScope.user_membership.mno}" />
                             <%--
                             <div class="panel-heading">
                                 <br>
